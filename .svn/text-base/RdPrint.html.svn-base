@@ -1,0 +1,149 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>打印测试</title>
+    <link href="Content/Site.css" rel="stylesheet" type="text/css" />
+    <script src="Scripts/jquery-1.4.4.min.js" type="text/javascript"></script>
+    <script src="Scripts/jquery.printarea.js" type="text/javascript"></script>
+    <script src="Scripts/jquery.cookie.js" type="text/javascript"></script>
+</head>
+<body onunload="CloseCom()">
+<h2>可视卡打印机设置</h2>
+<object id="LODOP" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" style=" display:none; width:0; height:0"> 
+</object>
+<object id="Printer" classid="clsid:159E7C4D-59C7-42A4-90E6-66AC332DE295" style=" display:none; width:0; height:0"> 
+</object>
+    <script type="text/javascript">
+        var LODOP = document.getElementById("LODOP"); //这行语句是为了符合DTD规范        
+    </script>
+    <div style="padding-left:50px;border: 1px solid #AAAAAA;">
+    <p>荣大可视IC卡打印测试页</p>
+    <p><label id="commsg" style="color:Red; font-size:85%;">串口未打开！请检查打印驱动是否安装成功！</label>　　　　　 <label id="msg" style="color:Blue">准备好了吗？</label></p>
+    <p>串口号：<input type="text" id="txtCom" />
+         <input type="button" onclick="OpenCom()" value="打开串口" />
+         <input type="button" onclick="CloseCom()" value="关闭串口" />
+         <input type="button" onclick="ClearCard()" value="清除卡面" />
+         <input type="button" onclick="PopupCard()" value="弹出卡片" />
+         <input type="button" onclick="CleanPrinter()" value="清洗机器" />
+         <input type="button" value="测试安装" onclick="test();" />
+    </p>
+    <p><input type="text" id="txtID" /><input type="button" onclick="SearchCard()" value="读卡号" /></p>
+    <p><input type="text" id="txtWData" /><input type="button" onclick="WriteData()" value="写数据" /></p>
+    <p><input type="text" id="txtRData" /><input type="button" onclick="ReadData()" value="读数据" /></p>
+    
+    <textarea id="printTxt" style="margin-left:213px; margin-top:10px;" cols="25" rows="8">
+    </textarea>    
+    <p style="padding-left:110px;">
+    <input type="button" onclick="prn1_preview()" value="打印预览" />
+    <input type="button" onclick="prn1_print()" value="打印卡面" />
+    </p>
+    <p></p>
+    </div>
+
+<script language="javascript" type="text/javascript">
+    function prn1_preview() {
+        CreateOneFormPage();
+        LODOP.PREVIEW();
+    };
+    function prn1_print() {
+//        CreateOneFormPage();
+        //        LODOP.PRINT();
+//        var bdhtml=window.document.body.innerHTML; 
+//        //alert(bdhtml.length);//4619 
+//        var sprnstart="<!--startprint-->"; 
+//        var sprnend="<!--endprint-->"; 
+//        //alert(bdhtml.indexOf(sprnstart)+17);//582 
+//        var sprnhtml=bdhtml.substring(bdhtml.indexOf(sprnstart)+17,bdhtml.length);                
+//        //alert(sprnhtml.indexOf(sprnend));//3246 
+//        sprnhtml=sprnhtml.substring(0,sprnhtml.indexOf(sprnend)); 
+//        window.document.body.innerHTML=sprnhtml; 
+//        window.print(); 
+        /*开新窗口打印尚未实现 
+        var printwin=window.open("print.html"); 
+        printwin.document.body.innerHTML=sprnhtml; 
+        printwin.print(); 
+        */
+        $("div#myPrintArea").printArea();
+    };
+    function CreateOneFormPage() {
+        var maxlen = 16;
+        var left = 90;
+        var wid = 350;
+        var heg = 20;
+        var lineheg = 16;
+        var top = 70;
+        var LODOP = document.getElementById("LODOP");
+        LODOP.SET_PRINT_PAGESIZE(2, 1380, 880, "");
+        LODOP.SET_PRINT_STYLE("FontSize", 10);
+        LODOP.ADD_PRINT_TEXT(top + lineheg * 0, left, wid, heg, "卡  号:");
+        LODOP.ADD_PRINT_TEXT(top + lineheg * 1, left, wid, heg, "姓  名:");
+        LODOP.ADD_PRINT_TEXT(top + lineheg * 2, left, wid, heg, "车  牌:");
+        LODOP.ADD_PRINT_TEXT(top + lineheg * 3, left, wid, heg, "VIN:");
+
+        LODOP.ADD_PRINT_TEXT(top + lineheg * 4, left, wid, heg, "本次积分:0");
+        LODOP.ADD_PRINT_TEXT(top + lineheg * 5, left, wid, heg, "使用积分:0");
+        LODOP.ADD_PRINT_TEXT(top + lineheg * 6, left, wid, heg, "剩余积分:0");
+        LODOP.ADD_PRINT_TEXT(top + lineheg * 7, left, wid, heg, "储值余额:0");
+        var msg = "五一本店举行车友活动，欢迎会员参加，参加有积分赠送！";
+
+            var msgArr = new Array();
+            var times = msg.length % maxlen;
+            for (var i = 0; i < msg.length / maxlen; i++) {
+                msgArr[i] = msg.substr(i * maxlen, maxlen);
+            }
+            for (var i = 0; i < msgArr.length; i++) {
+                var hg = top + lineheg * (i + 8);
+                LODOP.ADD_PRINT_TEXT(hg, left, wid, heg, msgArr[i]);
+            }
+    };	
+</script> 
+<script type="text/javascript">
+    var Printer = document.getElementById("Printer");
+    function test() {
+        var result = Printer.HelloWorld("liquanchun");
+        alert(result);
+    }
+    function OpenCom() {
+        var result = Printer.OpenCom(4);
+        if (result == true) {
+            document.getElementById("commsg").innerHTML = "串口已打开！";
+        }
+        else {
+            document.getElementById("commsg").innerHTML = "串口打开失败！";
+        }
+    }
+    function CloseCom() {
+        var result = Printer.CloseCom();
+        if (result == true) {
+            document.getElementById("commsg").innerHTML = "串口已关闭！";
+        }
+    }
+    function PopupCard() {
+        var result = Printer.PopupCard();
+    }
+    function ClearCard() {
+        var result = Printer.ClearCard();
+    }
+    function CleanPrinter() {
+        var result = Printer.CleanPrinter();
+    }
+    function SearchCard() {
+        var result = Printer.SearchCard();
+        document.getElementById("txtID").value = result;
+    }
+    function ReadData() {
+        var result = Printer.ReadData();
+        document.getElementById("txtRData").value = result;
+    }
+    function WriteData() {
+        var wd = document.getElementById("txtWData").value;
+        var result = Printer.WriteData(wd);
+        if (result == true) {
+            alert("写数据成功！");
+        }
+    }
+    </script> 
+</body>
+</html>
+
+

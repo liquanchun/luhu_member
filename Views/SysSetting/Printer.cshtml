@@ -1,0 +1,163 @@
+﻿@{
+    ViewBag.Title = "可视卡打印机设置";
+}
+<h2>可视卡打印机设置</h2>
+<script src="../../Scripts/jquery-1.4.4.min.js" type="text/javascript"></script>
+<script src="../../Scripts/jquery.cookie.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (typeof (callbackObj) != "undefined") {
+
+            var para = callbackObj.getPrinterPara();
+
+            $("#txtCom").val(para.split(',')[0]);
+            $("#txtAddress").val(para.split(',')[1]);
+            $("#prleft").val(para.split(',')[2]);
+            $("#prtop").val(para.split(',')[3]);
+
+            if (callbackObj.getStatus() == "1") {
+                document.getElementById("commsg").innerText = "串口已打开。";
+            }
+        }
+    });
+    function SetCom() {
+        //setCookie('com', $("#txtCom").val());
+        //setCookie('address', $("#txtAddress").val());
+        //setCookie('prleft', $("#prleft").val());
+        //setCookie('prtop', $("#prtop").val());
+        if (typeof (callbackObj) != "undefined") {
+            callbackObj.setPrinterPara($("#txtCom").val(), $("#txtAddress").val(), $("#prleft").val(), $("#prtop").val());
+        };
+    }
+    function OpenCom() {
+        if (callbackObj.getStatus() == "0") {
+            var com = $("#txtCom").val();
+            isopen = callbackObj.openCom(parseInt(com));
+            if (isopen == true) {
+                document.getElementById("commsg").innerText = "串口已打开。";
+            }
+            else {
+                document.getElementById("commsg").innerText = "串口打开失败。";
+            }
+        }
+    }
+    function CardIn() {
+        if (callbackObj.getStatus() == "1") {
+            callbackObj.cardIn();
+        }
+        else {
+            OpenCom();
+            CardIn();
+        }
+    }
+    function CardOut() {
+        if (callbackObj.getStatus() == "1") {
+            callbackObj.cardOut();
+        }
+        else {
+            OpenCom();
+            CardOut();
+        }
+    }
+    function IniPrinter() {
+        if (callbackObj.getStatus() == "1") {
+            callbackObj.iniPrinter();
+        }
+        else {
+            OpenCom();
+            IniPrinter();
+        }
+    }
+    function ReadCard() {
+        var address = $("#txtAddress").val();
+        if (callbackObj.getStatus() == "1") {
+            CardIn();
+            $("#txtRData").val(callbackObj.readCard(address));
+        }
+        else {
+            OpenCom();
+            ReadCard();
+        }
+    }
+    function WriteCard() {
+        var address = $("#txtAddress").val();
+        var cardno = $("#txtWData").val();
+        if (callbackObj.getStatus() == "1") {
+            CardIn();
+            callbackObj.writeCard(address, cardno);
+        }
+        else {
+            OpenCom();
+            WriteCard();
+        }
+    }
+    function PrintCard() {
+        var printdata = $("#printTxt").val();
+        var left = $("#prleft").val();
+        var top = $("#prtop").val();
+        if (callbackObj.getStatus() == "1" && left != "" && top != "") {
+            CardIn();
+            callbackObj.printCard(1, parseInt(left), parseInt(top), printdata);
+        }
+        else {
+            OpenCom();
+            PrintCard();
+        }
+    }
+    function ClearCard() {
+        if (callbackObj.getStatus() == "1") {
+            CardIn();
+            callbackObj.clearCard();
+        }
+        else {
+            OpenCom();
+            ClearCard();
+        }
+    }
+    function CloseCom() {
+        var com = $("#txtCom").val();
+        if (callbackObj.getStatus() == "1") {
+            callbackObj.closeCom(parseInt(com));
+        }
+    }
+    function Hello() {
+        alert(callbackObj.hello());
+    }
+</script>
+<div style="padding-left: 50px; border: 1px solid #AAAAAA;">
+    </p>
+    <p>Star可视IC卡打印测试页</p>
+    <p>
+        <label id="commsg" style="color: Red; font-size: 90%;">串口未打开。</label>
+    <p>
+        串口号：<input type="text" style="width: 40px;" id="txtCom" />
+        地址：<input type="text" style="width: 120px;" id="txtAddress" />
+    打印左边距:<input type="text" id="prleft" style="width:60px;" />
+    打印上边距:<input type="text" id="prtop" style="width:60px;" />
+        <input type="button" onclick="SetCom()" value="设置串口" />
+        <br /><br />
+        <input type="button" onclick="OpenCom()" value="打开串口" />
+        <input type="button" onclick="IniPrinter()" value="初始化" />
+        <input type="button" onclick="CardIn()" value="进卡" />
+        <input type="button" onclick="ClearCard()" value="清除卡面" />
+        <input type="button" onclick="CardOut()" value="弹出卡片" />
+        <input type="button" onclick="CloseCom()" value="关闭串口" />
+        <input type="button" onclick="Hello()" value="测试控件" />
+    </p>
+    <p>
+        <input type="text" id="txtWData" /><input type="button" onclick="WriteCard()" value="写数据" /></p>
+    <p>
+        <input type="text" id="txtRData" /><input type="button" onclick="ReadCard()" value="读数据" /></p>
+    <div>
+        <textarea id="printTxt" style="margin-top: 8px;" cols="25" rows="15">
+        </textarea>
+    </div>
+    <div>
+        <input type="button" onclick="PrintCard()" value="打印卡面" />
+
+    </div>
+
+    <div id="myPrintArea" class="printarea" style="visibility: hidden">
+    </div>
+</div>
+

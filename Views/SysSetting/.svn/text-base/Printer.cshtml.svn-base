@@ -1,0 +1,163 @@
+﻿@{
+    ViewBag.Title = "可视卡打印机设置";
+}
+<h2>可视卡打印机设置</h2>
+<link href="../../Content/ThickBox.css" rel="stylesheet" type="text/css" />
+<object id="LODOP" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" style=" display:none; width:0; height:0"> 
+</object>
+<object id="Dayin" classid="clsid:159E7C4D-59C7-42A4-90E6-66AC332DE295" style=" display:none; width:0; height:0"> 
+</object>
+    <script src="../../Scripts/jquery.cookie.js" type="text/javascript"></script>
+    <script src="../../Scripts/thickbox-compressed.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var LODOP = document.getElementById("LODOP"); //这行语句是为了符合DTD规范
+    </script>
+    <div style="padding-left:50px;border: 1px solid #AAAAAA;">
+    <p>下载控件并安装：1.<a href="../../prtdll.exe">打印机驱动下载</a> 2.<a href="../../install_lodop.exe">打印控件下载</a>
+    </p>
+    <p>荣大可视IC卡打印测试页</p>
+    <p><label id="commsg" style="color:Red; font-size:90%;">串口未打开！请检查打印驱动是否安装成功！</label>　　　　　 <label id="msg" style="color:Blue">准备好了吗？</label></p>
+    <p>串口号：<input type="text" style="width:40px;" readonly="readonly" id="txtCom" />
+         <a href="../../SetCom.html?height=50&width=150&modal=true" class="thickbox" title="">设置串口</a>
+         <input type="button" onclick="OpenCom()" value="打开串口" />
+         <input type="button" onclick="CloseCom()" value="关闭串口" />
+         <input type="button" onclick="ClearCard()" value="清除卡面" />
+         <input type="button" onclick="PopupCard()" value="弹出卡片" />
+         <input type="button" onclick="CleanDayin()" value="清洗机器" />
+         <input type="button" value="测试安装" onclick="test();" />
+         <input type="button" value="本地测试" onclick="Run('C:/windows/system32/打印机测试.exe')" /> 
+    </p>
+    <p><input type="text" id="txtID" /><input type="button" onclick="SearchCard()" value="读卡号" /></p>
+    <p><input type="text" id="txtWData" /><input type="button" onclick="WriteData()" value="写数据" /></p>
+    <p><input type="text" id="txtRData" /><input type="button" onclick="ReadData()" value="读数据" /></p>
+    <div>
+        <textarea id="printTxt" style=" margin-top:8px;" cols="25" rows="15">
+        </textarea>
+    </div>
+    <div>
+    <input type="button" onclick="prn1_preview()" value="打印预览" />
+    <input type="button" onclick="prn1_print()" value="打印卡面" />
+    
+    </div>
+
+    <div id="myPrintArea" class="printarea" style="visibility:hidden" >
+    </div>
+    </div>
+
+<script language="javascript" type="text/javascript">
+    function prn1_preview() {
+        CreateOneFormPage();
+        LODOP.PREVIEW();
+    };
+    function prn1_print() {
+        CreateOneFormPage();
+        LODOP.PRINT();
+    };
+    function CreateOneFormPage() {
+        var left = 108;
+        var top = 265;
+        var wid = 350;
+        var heg = 20;
+        var lineheg = 13;
+        var maxlen = 17; 
+        
+        LODOP.SET_PRINT_PAGESIZE(2, 1380, 880, "");
+        LODOP.SET_PRINT_STYLE("FontSize", 10);
+        if ($("#printTxt").html() != "") {
+            var valstrs = $("#printTxt").html().split("\r\n");
+            $("#myPrintArea").empty();
+
+            for (var i = 0; i < valstrs.length; i++) {
+                LODOP.ADD_PRINT_TEXT(top + lineheg * i, left, wid, heg, valstrs[i]);
+            }
+        }
+    };	
+</script> 
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#txtCom").val(getCookie('com'));
+    });
+        var isopen = false;
+        $(window).unload(function () {
+           if(isopen == true) CloseCom();
+        });
+        function Run(strPath) {
+            if (isopen == true)  CloseCom();
+            try {
+                var objShell = new ActiveXObject("wscript.shell");
+                objShell.Run(strPath);
+                objShell = null;
+            }
+            catch (e) {
+                alert('找不到文件"' + strPath + '"(或它的组件之一)。请确定路径和文件名是否正确，而且所需的库文件均可用。')
+            }
+        }
+        var Dayin = document.getElementById("Dayin");
+         function test() {
+             var result = Dayin.HelloWorld("");
+             alert(result);
+         }
+         function OpenCom() {
+             if ($("#txtCom").val() == "") {
+                 alert("请输入串口号!");
+                 return;
+             }
+             var result = Dayin.OpenCom($("#txtCom").val());
+             if (result == true) {
+                 document.getElementById("commsg").innerHTML = "串口已打开！";
+                 isopen = true;
+             }
+             else {
+                 document.getElementById("commsg").innerHTML = "串口打开失败！";
+             }
+         }
+         function CloseCom() {
+             if (isopen == true) {
+                 var result = Dayin.CloseCom();
+                 if (result == true) {
+                     document.getElementById("commsg").innerHTML = "串口已关闭！";
+                 }
+             }
+         }
+         function PopupCard() {
+             if (Dayin.State() == 2) {
+                 var result = Dayin.PopupCard();
+             }
+         }
+         function ClearCard() {
+             if (Dayin.State() == 2) {
+                 var result = Dayin.ClearCard();
+             }
+         }
+         function CleanDayin() {
+             if (Dayin.State() == 2) {
+                 var result = Dayin.CleanDayin();
+             }
+         }
+         function SearchCard() {
+             if (Dayin.State() == 2) {
+                 var result = Dayin.SearchCard();
+                 document.getElementById("txtID").value = result;
+             }
+         }
+         function ReadData() {
+             if (Dayin.State() == 2) {
+                 var result = Dayin.ReadData();
+                 document.getElementById("txtRData").value = result;
+             }
+         }
+         function WriteData() {
+             if (Dayin.State() == 2) {
+                 var wd = document.getElementById("txtWData").value;
+                 if (wd == "") {
+                     alert("请输入你要写的数据");
+                 }
+                 else {
+                     var result = Dayin.WriteData(wd);
+                     if (result == true) {
+                         alert("写数据成功！");
+                     }
+                 }
+             }
+         }
+    </script> 

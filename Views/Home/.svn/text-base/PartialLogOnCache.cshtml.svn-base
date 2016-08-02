@@ -1,0 +1,24 @@
+﻿@if (Session["UserID"]!=null)
+{
+    <text>欢迎 @ViewBag.dmsname - @Session["RoleName"] - @Session["UserName"]!
+    [ @Html.ActionLink("退出", "LogOff", "Account") ]</text>
+}
+　　<a href="javascript:void(0);" onclick="toDesktop('http://localhost:1238','在线会员系统')">桌面快捷方式</a> <text> |</text> 
+<a href="javascript:void(0);" onclick="this.style.behavior='url(#default#homepage)';this.setHomePage('http://localhost:1238');">设为首页</a> <text> | </text>
+@Html.ActionLink("反馈意见", "Index", "GuestBook", null, new { target = "_blank" }) <text> | </text>
+
+<script type="text/javascript">
+    function toDesktop(sUrl, sName) {
+        try {
+            var WshShell = new ActiveXObject("WScript.Shell");
+            var oUrlLink = WshShell.CreateShortcut(WshShell.SpecialFolders("Desktop") + "\\" + sName + ".url");
+            oUrlLink.TargetPath = sUrl;
+            oUrlLink.Save();
+        }
+        catch (e) {
+            alert("IE安全级别不允许操作！请点击右键->创建快捷方式。");
+        }
+    } 
+</script>
+
+

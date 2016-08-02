@@ -1,0 +1,217 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using System.Configuration;
+using Webdiyer.WebControls.Mvc;
+using MvcMember.Models;
+namespace MvcMember.Controllers
+{
+    public class ConsumeController : Controller
+    {
+        WebMemberDBContext DBContext = new WebMemberDBContext();
+        ClsSys clssys = new ClsSys();
+        //
+        // GET: /Consume/
+        [CheckLogin]
+        public ActionResult Index()
+        {
+            IDictionary<string, string> searchConditions = new Dictionary<string, string>();
+            if (this.Request.Form.AllKeys.Length > 0)
+            {
+                searchConditions.Add("Date1", Request["Date1"]);
+                searchConditions.Add("Date2", Request["Date2"]);
+                searchConditions.Add("Name", Request["Name"]);
+                searchConditions.Add("CarNo", Request["CarNo"]);
+                searchConditions.Add("CardNo", Request["CardNo"]);
+            }
+            else
+            {
+                object values = null;
+                if (this.TempData.TryGetValue("SearchConditions", out values))
+                {
+                    searchConditions = values as Dictionary<string, string>;
+                }
+            }
+            this.TempData["SearchConditions"] = searchConditions;
+            string Date1 = GetSearchConditionValue(searchConditions, "Date1");
+            string Date2 = GetSearchConditionValue(searchConditions, "Date2");
+            string Name = GetSearchConditionValue(searchConditions, "Name");
+            string CarNo = GetSearchConditionValue(searchConditions, "CarNo");
+            string CardNo = GetSearchConditionValue(searchConditions, "CardNo");
+            DateTime dt1 = string.IsNullOrEmpty(Date1) ? DateTime.Today.AddYears(-10) : DateTime.Parse(Date1);
+            DateTime dt2 = string.IsNullOrEmpty(Date2) ? DateTime.Today.AddDays(1) : DateTime.Parse(Date2).AddDays(1);
+            if (string.IsNullOrEmpty(Name) && string.IsNullOrEmpty(CardNo) && string.IsNullOrEmpty(CarNo) && string.IsNullOrEmpty(Date1))
+            {
+                dt1 = DateTime.Today.AddYears(-10);
+            }
+            var dmsid = Session["DmsID"].ToString();
+            var result = (from c in DBContext.V_ConsumeDb
+                          where c.DmsID == dmsid && (string.IsNullOrEmpty(Name.Trim()) || c.Name.StartsWith(Name.Trim()))
+                          && (string.IsNullOrEmpty(CarNo.Trim()) || c.CarNO.Trim().EndsWith(CarNo.Trim()))
+                          && (string.IsNullOrEmpty(CardNo.Trim()) || c.CardNo.StartsWith(CardNo.Trim()))
+                          && c.CreateDate.CompareTo(dt1) >= 0 && c.CreateDate.CompareTo(dt2) < 0
+                          select c).ToList().OrderByDescending(o => o.CreateDate);
+            this.ViewData.Model = result;
+            CommonCls.WriteSysLog("查看消费积分记录", Request.RawUrl, this.Session["UserName"].ToString());
+            return View();
+        }
+        private static string GetSearchConditionValue(IDictionary<string, string> searchConditions, string key)
+        {
+            string tempValue = string.Empty;
+            if (searchConditions != null && searchConditions.Count > 0)
+            {
+                searchConditions.TryGetValue(key, out tempValue);
+            }
+            return tempValue;
+        }
+        //
+        // GET: /Consume/Details/5
+        [CheckLogin]
+        public ActionResult Details(int id)
+        {
+            var v_consume = DBContext.V_ConsumeDb.FirstOrDefault(f => f.ID == id);
+            ViewBag.ServiceType =(from c in DBContext.ConsumeItemDb where c.BillNo == v_consume.BillNo select c).ToList();
+            ViewBag.PayList = (from c in DBContext.PayListDb where c.BillNo == v_consume.BillNo select c).ToList();
+            return View(v_consume);
+        }
+
+        //
+        // GET: /Consume/Create
+        [CheckLogin]
+        public ActionResult Create()
+        {
+            var consume = new V_Consume();
+            var dmsid = Session["DmsID"].ToString();
+            ViewBag.ServiceInte = DBContext.ServiceInteDb.Distinct().ToList();
+
+            //var result = (from serinte in DBContext.ServiceInteDb
+            //             where serinte.DmsID == dmsid
+            //              select new { ServiceType = serinte.ServiceType }).Distinct();
+
+            //ViewBag.ServiceInte = result;
+            if (DBContext.ActivityDb.Where(w => w.DmsID == dmsid).Count() > 0)
+            {
+                ViewBag.hdxx = DBContext.ActivityDb.Where(w => w.DmsID == dmsid).OrderByDescending(A => A.StartTime).FirstOrDefault().Name;
+            }
+            else
+            {
+                ViewBag.hdxx = string.Empty;
+            }
+            ViewBag.username = this.Session["UserName"].ToString();
+            ViewBag.sksj = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+
+            ViewBag.InteToMoneyRate = ConfigurationManager.AppSettings["InteToMoneyRate"].ToString(); //积分兑换消费结算金额比例
+            ViewBag.InteToMoneyMax = ConfigurationManager.AppSettings["InteToMoneyMax"].ToString();   //积分兑换消费结算金额比例
+
+            ViewBag.DmsID = Session["DmsID"].ToString();
+            //积分单号  
+            return View(consume);
+        }
+        [CheckLogin]
+        public ActionResult Create2()
+        {
+            var consume = new V_Consume();
+            var dmsid = Session["DmsID"].ToString();
+            ViewBag.ServiceInte = DBContext.ServiceInteDb.ToList();
+            //var result = (from serinte in DBContext.ServiceInteDb
+            //              where serinte.DmsID == dmsid
+            //              select new { ServiceType = serinte.ServiceType }).Distinct().ToList();
+
+            //ViewBag.ServiceInte = result;
+            if (DBContext.ActivityDb.Where(w => w.DmsID == dmsid).Count() > 0)
+            {
+                ViewBag.hdxx = DBContext.ActivityDb.Where(w => w.DmsID == dmsid).OrderByDescending(A => A.StartTime).FirstOrDefault().Name;
+            }
+            else
+            {
+                ViewBag.hdxx = string.Empty;
+            }
+            ViewBag.username = this.Session["UserName"].ToString();
+
+            ViewBag.InteToMoneyRate = ConfigurationManager.AppSettings["InteToMoneyRate"].ToString(); //积分兑换消费结算金额比例
+            ViewBag.InteToMoneyMax = ConfigurationManager.AppSettings["InteToMoneyMax"].ToString(); //积分兑换消费结算金额比例
+            int parentid = DBContext.ItemListDb.Where(w => w.ItemName == "付款方式").First().ID;
+            ViewBag.RechargeType = DBContext.ItemListDb.Where(w => w.ItemParent == parentid).ToList();
+
+            ViewBag.ServiceItem = DBContext.ServiceItemDb.Where(w => w.DmsID == dmsid && w.ItemType == "单项服务").ToList();
+
+            ViewBag.DmsID = Session["DmsID"].ToString();
+            //积分单号  
+            return View(consume);
+        }
+        [CheckLogin]
+        public ActionResult Create3()
+        {
+            var consume = new V_Consume();
+            var dmsid = Session["DmsID"].ToString();
+            ViewBag.ServiceInte = DBContext.ServiceInteDb.ToList();
+            //var result = (from serinte in DBContext.ServiceInteDb
+            //              where serinte.DmsID == dmsid
+            //              select new { ServiceType = serinte.ServiceType }).Distinct().ToList();
+
+            //ViewBag.ServiceInte = result;
+            if (DBContext.ActivityDb.Where(w => w.DmsID == dmsid).Count() > 0)
+            {
+                ViewBag.hdxx = DBContext.ActivityDb.Where(w => w.DmsID == dmsid).OrderByDescending(A => A.StartTime).FirstOrDefault().Name;
+            }
+            else
+            {
+                ViewBag.hdxx = string.Empty;
+            }
+            ViewBag.username = this.Session["UserName"].ToString();
+
+            ViewBag.InteToMoneyRate = ConfigurationManager.AppSettings["InteToMoneyRate"].ToString(); //积分兑换消费结算金额比例
+            ViewBag.InteToMoneyMax = ConfigurationManager.AppSettings["InteToMoneyMax"].ToString(); //积分兑换消费结算金额比例
+            int parentid = DBContext.ItemListDb.Where(w => w.ItemName == "付款方式").First().ID;
+            ViewBag.RechargeType = DBContext.ItemListDb.Where(w => w.ItemParent == parentid).ToList();
+
+            ViewBag.ServiceItem = DBContext.ServiceItemDb.Where(w => w.DmsID == dmsid && w.ItemType == "单项服务").ToList();
+
+            ViewBag.DmsID = Session["DmsID"].ToString();
+            //积分单号  
+            return View(consume);
+        }
+        //
+        // POST: /Consume/Create
+
+        [HttpPost]
+        public ActionResult Create(FormCollection collection)
+        {
+            try
+            {
+                //string memberid = collection["MemberID"];
+                V_Consume v_consume = new V_Consume();
+                //// TODO: Add insert logic here
+                //Consume consume = new Consume();
+                //consume.MemberID = v_consume.MemberID;
+                //consume.CardNo = v_consume.CardNo;
+                //consume.CurBIntegral = v_consume.CurBIntegral;
+                //consume.Integral = v_consume.Integral;
+                //consume.BalanceMoney = v_consume.BalanceMoney;
+                //consume.SumFee = v_consume.SumFee;
+                //consume.InteToMoney= v_consume.InteToMoney;
+                //consume.DeductInte = v_consume.DeductInte;
+                //consume.CreateDate = DateTime.Now;
+                //if (Session["UserName"] != null)
+                //{
+                //    consume.Creator = Session["UserName"].ToString();
+                //}
+                //DBContext.ConsumeDb.Add(consume);
+                //DBContext.SaveChanges();
+                var v_consume2 = new V_Consume();
+                CommonCls.WriteSysLog("新增消费记录,卡号:" + v_consume.CardNo + ",MembeID:" + v_consume.MemberID + ",金额:" + v_consume.SumFee, Request.RawUrl, this.Session["UserName"].ToString());
+
+                ViewBag.SaveMsg = "保存成功！";
+                return View(v_consume2);
+            }
+            catch
+            {
+                var v_consume2 = new V_Consume();
+                ViewBag.SaveMsg = "保存失败！";
+                return View(v_consume2);
+            }
+        }
+    }
+}

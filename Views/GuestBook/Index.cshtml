@@ -1,0 +1,294 @@
+﻿@using Webdiyer.WebControls.Mvc
+@model Webdiyer.WebControls.Mvc.PagedList<MvcMember.Models.GuestBook>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>会员系统-意见反馈</title>
+    <script src="../../Scripts/jquery-1.4.4.min.js" type="text/javascript"></script>
+    <style  type="text/css">
+        p
+        {
+            margin: 0;
+            padding: 0;
+        }
+
+        a
+        {
+            color: #003399;
+        }
+
+        #container
+        {
+            padding-top: 5px;
+            margin: 0 auto;
+            padding: 5px 0 10px;
+            width: 810px;
+            padding-left: 20px;
+            font-size: 80%;
+        }
+
+        .top_tips
+        {
+            background: none repeat scroll 0 0 #E7F3FB;
+            border-bottom: 1px solid #C3DAE8;
+            color: #39558C;
+            font-size: 14px;
+            height: 28px;
+            line-height: 28px;
+            padding-left: 10px;
+            position: relative;
+        }
+
+        .discuss ul li
+        {
+            border-bottom: 1px solid #E1ECF0;
+            padding: 1px 0;
+        }
+
+        .discuss h3
+        {
+            font-size: 14px;
+            height: 22px;
+            line-height: 30px;
+        }
+
+        .ico_talk
+        {
+            display: inline-block;
+            height: 20px;
+            vertical-align: text-bottom;
+            width: 20px;
+        }
+
+        .discuss .comment
+        {
+            padding: 0 20px;
+        }
+
+        .author_info, .floor_info
+        {
+            color: #8C8A8C;
+            padding: 2px 0 2px;
+        }
+
+        .comment .answer
+        {
+            background: none repeat scroll 0 0 #FFFFFF;
+        }
+
+        .discuss .answer
+        {
+            border: medium none;
+            color: #8C8A8C;
+            padding: 1px 0 0;
+            margin-top: 8px;
+        }
+
+        .answer .an_info
+        {
+            color: #333333;
+            padding-top: 5px;
+        }
+
+        .tx_thin2
+        {
+            color: #FF6633;
+        }
+        /*分页工具栏样式*/
+        .pages
+        {
+            color: #045FB4;
+            font-weight: bold;
+            font-size: 12px;
+            padding-top: 4px;
+        }
+
+            .pages .item
+            {
+                padding: 1px 4px;
+                font-size: 12px;
+            }
+            /*号码页数*/
+
+            .pages .cpb
+            {
+                color: #045FB4;
+                padding: 1px 6px;
+                font-size: 12px;
+            }
+            /*当前页数*/
+            .pages select
+            {
+                width: 50px;
+            }
+
+            .pages a
+            {
+                text-decoration: none;
+                padding: 0 4px;
+                border: 1px solid #BDBDBD;
+                margin: 0 2px;
+                color: #000;
+                font-weight: normal;
+            }
+
+                .pages a:hover
+                {
+                    background-color: #0174DF;
+                    color: #fff;
+                    border: 1px solid #0174DF;
+                    text-decoration: none;
+                    font-weight: normal;
+                }
+
+        #comment
+        {
+            padding-top: 5px;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".divreplay").css("display", "none");
+            if ($("#反馈意见").val() == "0") {
+                $("#turn_page a").css("display", "none");
+            }
+            if ($("#删除").val() == "0") {
+                $("#del").css("display", "none");
+            }
+            $(".save").bind("click", function () {
+                var id = $(this).parent().parent().attr("id");
+                var message = $(this).parent().parent().children("textarea").val();
+                var username = $("#username").val();
+                $.ajax({
+                    type: 'post',
+                    url: '@Url.Content("../AjaxService.svc/SaveGuestBook")',
+                    contentType: 'application/json',
+                    dataType: 'text',
+                    data: '{"id":' + id + ',"username":"' + username + '","message":"' + message + '"}',
+                    success: function (msg) {
+                        var a = eval('(' + msg + ')');
+                        if (a.d.length == 1) {
+                            alert("保存成功！");
+                            location.reload();
+                        }
+                    }
+
+                });
+            });
+        });
+        function control(div, css) {
+            $("#" + div).css("display", css);
+            if (css == "block") {
+                $("#" + div).focus();
+            }
+        };
+        function Del(id) {
+            if (confirm("你确定要删除吗？"))
+            {
+                $.ajax({
+                    type: 'post',
+                    url: '@Url.Content("../AjaxService.svc/DelGuestBook")',
+                    contentType: 'application/json',
+                    dataType: 'text',
+                    data: '{"id":' + id + '}',
+                    success: function (msg) {
+                        var a = eval('(' + msg + ')');
+                        if (a.d.length == 1) {
+                            location.reload();
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+</head>
+<body>
+    @if (ViewBag.authlist != null)
+    {
+        foreach (var it in ViewBag.authlist)
+        {
+            <input type="hidden" id="@it.FunName" value="@it.IsUse" />
+        }
+    }
+@using (Ajax.BeginForm("Index", "GuestBook", new AjaxOptions { UpdateTargetId = "discuss_content" }))
+{
+  <div id="container">
+  <input type="hidden" id="username"  value="@ViewBag.username" />
+  <div class="theme" id="hotTopic" style="display: none;"></div>
+  <!--tips-->
+  <div class="top_tips" id="top_tips"> 
+    <div class="tit_page" id="turn_page"> <span id="soso">关于该软件在使用过程中发现问题或有改进意见和建议。<a style="display: none;" class="tx_link">首页 <span style="display: none;" class="dis">上一页</span><span style="display: none;" class="dis">下一页</span></a><a style="display: none;" class="tx_link">尾页</a>
+    <span style="text-align:right; display:block;">@Html.ActionLink("我要反馈意见和建议", "Create", null, new { title = "反馈意见" })</span>
+    </div>
+  </div>
+  <!--贴子内容-->
+  <div id="discuss_content" class="discuss">
+    <ul>
+      @foreach (var item in Model)
+      {	
+      <li>
+        <h3><span class="ico_talk" id="post_style_0"></span><a class="tx_link" href="javascript:void(0);">@item.Title</a></h3>
+        @if (ViewBag.username == "admin")
+        { 
+            <div style="float:right;"><a href="javascript:void(0);" title="删除" id="del" onclick="Del(@item.ID)">删除</a></div>
+        }
+        <div class="comment">
+          <p class="author_info" id="author_info">反馈人：@item.ContactWay <span id="comTime_0">反馈时间：@item.LTime.ToString("yyyy-MM-dd HH:mm")</span></p>
+          <p class="elide" id="comment">@item.LContent
+            </p>
+          <div class="answer">
+            <p id="answer_info">回答人：@if (item.ReplyMan != null)
+                                    { @item.ReplyMan<span class="tx_thin2">（产品经理）</span> if (item.ReplyTime.HasValue)
+                                                                                         { @item.ReplyTime.Value.ToString("yyyy-MM-dd HH:mm")}
+                                    }
+                                    else
+                                    {
+                                        <span class="tx_thin2" >（未回复）</span>
+                                        <span class="tx_thin2" ><a href="javascript:void(0);"  onclick="control('@item.ID','block')" class="replay">我来回复</a></span>
+                                    }
+            </p>
+            <p class="an_info">@item.Reply</p>
+          </div>
+          <div id="@item.ID" class="divreplay">
+                <h3> 回复:</h3>
+                <textarea rows="5" cols="60" id="repaly" name="replay" style="font-size:12px;"></textarea><br />
+                <span style="display:inline-block"><input type="button" value="保存" class="save" /><input type="button" id="cancel" onclick="control('@item.ID    ','none')" value="取消" /></span>
+          </div>
+        </div>
+      </li>
+      }
+    </ul>
+  </div>
+  <div id="Pager">
+   @Html.Pager(Model, new PagerOptions
+{
+    PageIndexParameterName = "id",
+    CssClass = "pages",
+    FirstPageText = "首页",
+    LastPageText = "末页",
+    PrevPageText = "上一页",
+    NextPageText = "下一页",
+    CurrentPagerItemWrapperFormatString = "<span class=\"cpb\">{0}</span>",
+    ShowPageIndexBox = true,
+    NumericPagerItemWrapperFormatString = "<span class=\"item\">{0}</span>",
+    PageIndexBoxType = PageIndexBoxType.DropDownList,
+    ShowGoButton = false,
+    PageIndexBoxWrapperFormatString = " 转到{0}",
+    SeparatorHtml = ""
+})
+
+</div>
+  <!-- 无建议Tips-->
+  <div style="display: none;" class="page_tips" id="page_tips">
+	<p>抱歉！暂时没有帖子。<a class="underline" href="/write.shtml?fid=350" id="propose">我要提建议</a></p>
+  </div>
+</div>
+}
+</body>
+</html>

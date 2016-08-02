@@ -1,0 +1,335 @@
+﻿@model MvcMember.Models.V_CardInfo
+
+@{
+    ViewBag.Title = "新增会员";
+}
+
+<h2>新增会员</h2>
+<object id="LODOP" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" style=" display:none; width:0; height:0"> 
+</object>
+<object id="Dayin" classid="clsid:159E7C4D-59C7-42A4-90E6-66AC332DE295" style=" display:none; width:0; height:0"> 
+</object>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+<script src="@Url.Content("~/Scripts/jquery.ui.autocomplete.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.ui.position.js")" type="text/javascript"></script>
+
+<form id="firstform">
+    <div id="contentdiv">
+        <div class="formdiv">
+        
+        <div class="headp" style="margin-bottom:8px;">　填写客户入会信息</div>
+        @Html.HiddenFor(model => model.MemberID)
+        @Html.HiddenFor(model => model.DmsID)
+        <input type="hidden" id="hdxx" value="@ViewBag.hdxx" />
+        <input type="hidden" id="username" value="@ViewBag.UserName" />
+        <table>
+        <tr>
+        <td class="labtd">车牌号码/客户名称：</td><td><input type="text" name="SelCarNo" value="" id="SelCarNo" title="输入车牌号码前几位，选择自动完成"  class="vtip"/>
+           </td>
+            <td></td>
+        </tr>
+        <tr>
+        <td class="labtd">会员卡号：</td><td><input type="text" name="CardNo" value="@ViewBag.CardNo" id="CardNo" datatype="n" nullmsg="请输入会员卡号！"  errormsg="请输入会员卡号！" title="卡号是自动分配，可以修改" class="vtip" />
+           </td>
+            <td><div class="Validform_checktip"></div></td>
+        </tr>
+       <tr>
+            <td class="labtd">会员级别：</td>
+            <td> @Html.DropDownList("TypeID", new SelectList(ViewBag.TypeList as System.Collections.IEnumerable,
+                "TypeID", "CardLevel", Model.TypeID))
+             </td>
+             <td></td>
+        </tr>
+
+         <tr>
+            <td class="labtd">入会方式：</td>
+            <td>@Html.DropDownList("ComeType", new SelectList(ViewBag.ComeTypeList as System.Collections.IEnumerable,
+         "ItemName", "ItemName", Model.ComeType))
+            </td>
+            <td></td>
+         </tr>
+
+         <tr>
+            <td class="labtd">赠送积分：</td>
+            <td>@Html.EditorFor(model => model.InitialIntegral, new { value = "0" })</td>
+            <td></td>
+          </tr>
+
+         <tr>
+            <td class="labtd">　销售员：</td>
+            <td> @Html.DropDownList("SaleMan", new SelectList(ViewBag.EmpList as System.Collections.IEnumerable,
+                "Name", "Name", Model.SaleMan))
+            </td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td class="labtd">入会日期：</td>
+            <td>@Html.EditorFor(model => model.StartDate)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="labtd">有效期限：</td>
+            <td> @Html.EditorFor(model => model.EndDate)</td>
+            <td> </td>
+         </tr>
+         <tr>
+            <td class="labtd"><input id="chkcard" style=" width:20px;" type="checkbox" checked="checked"/></td>
+            <td><label for="chkcard">写卡号并打印卡面</label> </td>
+            <td> </td>
+         </tr>
+      </table>
+        <p class="baidubtn">
+            <a href="javascript:void(0)" onclick="Commit()">提 交</a>
+        </p>
+    </div>
+
+         <div class="infodiv">
+            <p class="headp">　客户信息确认</p>
+            <ul class="sidebar_box">
+			
+			<li>客户姓名<input type="text" class="infoinput" readonly="readonly" name="Name" value="@ViewBag.Name" id="Name" /></li>
+			
+            <li>联系电话<input type="text" class="infoinput" readonly="readonly" name="Mobile" value="@ViewBag.Mobile" id="Mobile" /></li>
+
+			<li>车牌号码<input type="text" class="infoinput" readonly="readonly" name="CarNo" value="@ViewBag.CarNo" id="CarNo" /></li>
+			
+			<li>车架号码<input type="text" class="infoinput" readonly="readonly" name="VinNO" value="@ViewBag.VinNO" id="VinNO" /></li>
+			
+		    </ul>
+            <div class="sidebar_box_bottom"></div>
+            <div class="baidubtn">
+                <a href="/member/create" title="如果客户资料不存在" style="margin-left:2px; float:left; " class="vtip">新增客户</a>
+                <a href="/member/index" title="如果客户资料已经存在,查找客户资料点击“入会”" style="margin-left:2px; float:right; " class="vtip">查找客户</a>
+            </div>
+        </div>
+
+    </div>
+    </form>
+    <div style="clear:both;"></div>
+<div id="backdiv">
+    @Html.ActionLink("返回列表", "Index")
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#firstform').bind('keypress', function (e) {
+            return e.keyCode !== 13;
+        });
+        $("#StartDate").datepicker();
+        $("#EndDate").datepicker();
+        $("#SelCarNo").focus();
+        $("#CardNo").numeral();
+        $("#txtCom").val(getCookie("com"));
+
+        $("#firstform").Validform({
+            tiptype: 2,
+            postonce: true,
+            ajaxPost: true,
+            callback: function (data) {
+                if (data.status == "y") {
+                    setTimeout(function () {
+                        $.Hidemsg(); //公用方法关闭信息提示框;
+                    }, 2000);
+                }
+            }
+        });
+        //输入框鼠标样式
+        $(".formdiv input[type='text']").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv select").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv input[type='text']").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+        $(".formdiv select").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+        if ($("#Name").val() == "") {
+            $("#msg").css("display", "block");
+        }
+        if ($("#Name").val() != "") {
+            $("tr:first").remove();
+        }
+        else {
+            $.ajax({
+                type: 'post',
+                url: '@Url.Content("../AjaxServiceSave.svc/GetCarNo")',
+                contentType: 'application/json',
+                dataType: 'text',
+                success: function (msg) {
+                }
+            });
+        }
+    });
+    function Commit() {
+        if ($("#MemberID").val() == "") {
+            alert("请确认客户信息！");
+            return false;
+        }
+        if ($("#CardNo").val() == "") {
+            return false;
+        }
+        //string memberid,string cardno,string typeid,string iniintegral,string saleman,string cometype,string startdate,string enddate,string creator
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../../AjaxServiceSave.svc/SaveCardInfo")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"memberid":"' + $("#MemberID").val() + '","cardno":"' + $("#CardNo").val() + '","typeid":"' + $("#TypeID").find("option:selected").val() + '","iniintegral":"' + $("#InitialIntegral").val() + '","saleman":"' + $("#SaleMan").find("option:selected").text() + '","cometype":"' + $("#ComeType").find("option:selected").text() + '","startdate":"' + $("#StartDate").val() + '","enddate":"' + $("#EndDate").val() + '","creator":"' + $("#username").val() + '"}',
+            success: function (msg) {
+                var a = eval('(' + msg + ')');
+                if (a.d == 1) {
+                    alert("操作成功！");
+                    $("input[type='text']").val('');
+                }
+                else if (a.d == 2) {
+                    alert("会员卡号已经存在或该客户已经发卡！");
+                }
+                else {
+                    alert("提交失败！");
+                }
+            },
+            error: function () {
+                alert("发生错误！");
+            },
+            beforeSend: function () {
+                $(".baidubtn a").text("正在提交...");
+            },
+            complete: function () {
+                $(".baidubtn a").text("提 交");
+            }
+        });
+
+        //写卡号
+        try {
+            if ($("#chkcard").attr("checked") == true) {
+                var Dayin = document.getElementById("Dayin");
+                var wd = $("#CardNo").val();
+                var com = getCookie("com");
+                if (com == "") com = 1;
+                if (com == "") {
+                    alert("请设置串口");
+                    return false;
+                }
+                var result = Dayin.OpenCom(com);
+                if (result == false) {
+                    alert("串口打开失败！请打开“卡打印机设置页面”设置串口！");
+                    return false;
+                }
+                if (Dayin.State() == 2) {
+                    var result1 = Dayin.WriteData(wd);
+                    if (result1 == false) {
+                        alert("写卡号失败！");
+                        result1 = Dayin.CloseCom()
+                        return false;
+                    }
+                }
+                else {
+                    alert("请将卡插入机器！");
+                }
+                var result2 = Dayin.CloseCom();
+                prn1_print();
+            }
+            else {
+                return true;
+            }
+            return true;
+        }
+        catch (err) {
+            return true;
+        }
+    }
+    //打印卡
+    function prn1_print() {
+        var left = 108;
+        var top = 265;
+        var wid = 350;
+        var heg = 20;
+        var lineheg = 13;
+        var maxlen = 17;
+        var LODOP = document.getElementById("LODOP");
+        LODOP.SET_PRINT_PAGESIZE(2, 1380, 880, "");
+        LODOP.SET_PRINT_STYLE("FontSize", 10);
+        LODOP.ADD_PRINT_TEXT(top + lineheg * 0, left, wid, heg, "卡  号:" + $("#CardNo").val());
+        LODOP.ADD_PRINT_TEXT(top + lineheg * 1, left, wid, heg, "姓  名:" + $("#Name").val());
+        LODOP.ADD_PRINT_TEXT(top + lineheg * 2, left, wid, heg, "车  牌:" + $("#CarNO").val());
+        LODOP.ADD_PRINT_TEXT(top + lineheg * 3, left, wid, heg, "VIN:" + $("#VinNO").val());
+
+        LODOP.ADD_PRINT_TEXT(top + lineheg * 4, left, wid, heg, "本次积分:0");
+        LODOP.ADD_PRINT_TEXT(top + lineheg * 5, left, wid, heg, "使用积分:0");
+        LODOP.ADD_PRINT_TEXT(top + lineheg * 6, left, wid, heg, "剩余积分:0");
+        LODOP.ADD_PRINT_TEXT(top + lineheg * 7, left, wid, heg, "储值余额:0");
+        if ($("#hdmsg").val() != "") {
+            var msg = $("#hdmsg").val();
+            var msgArr = new Array();
+            var times = msg.length % maxlen;
+            for (var i = 0; i < msg.length / maxlen; i++) {
+                msgArr[i] = msg.substr(i * maxlen, maxlen);
+            }
+            for (var i = 0; i < msgArr.length; i++) {
+                var hg = top + lineheg * (i + 8);
+                LODOP.ADD_PRINT_TEXT(hg, left, wid, heg, msgArr[i]);
+            }
+        }
+
+        LODOP.PRINT();
+    };	
+
+</script>
+<script type="text/javascript">
+    //自动完成
+    $(function () {
+        $.ajax({
+            url: "../../carnolist.xml",
+            dataType: "xml",
+            success: function (xmlResponse) {
+                var data = $("Member", xmlResponse).map(function () {
+                    return {
+                        value: $("carno", this).text() + ", " + ($.trim($("name", this).text())),
+                        carno: $("carno", this).text(),
+                        name: $("name", this).text(),
+                        vinno: $("vinno", this).text(),
+                        mobile: $("mobile", this).text(),
+                        memberid: $("memberid", this).text()
+                    };
+                }).get();
+                $("#SelCarNo").autocomplete({
+                    source: data,
+                    minLength: 0,
+                    select: function (event, ui) {
+                        $("#CarNo").val(ui.item.carno);
+                        $("#Name").val(ui.item.name);
+                        $("#Mobile").val(ui.item.mobile);
+                        $("#VinNO").val(ui.item.vinno);
+                        $("#MemberID").val(ui.item.memberid);
+                        LoadCardNo();
+                    }
+                });
+            }
+        });
+        //自动分配新的卡号
+        function LoadCardNo() {
+            if ($("label[for='BillNo']").text() == "") {
+                $.ajax({
+                    type: 'post',
+                    url: '@Url.Content("../AjaxService.svc/NewCardNo")',
+                    contentType: 'application/json',
+                    dataType: 'text',
+                    success: function (msg) {
+                        var a = eval('(' + msg + ')');
+                        if (a.d.length > 1) {
+                            $("#CardNo").val(a.d);
+                        }
+                    }
+                });
+            }
+        }
+    });
+    
+</script>
+

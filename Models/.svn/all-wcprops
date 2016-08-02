@@ -1,0 +1,245 @@
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/WebMember1/!svn/ver/297/MvcMember/Models
+END
+SysSetting.cs
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/WebMember1/!svn/ver/17/MvcMember/Models/SysSetting.cs
+END
+V_AdminUser.cs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/WebMember1/!svn/ver/446/MvcMember/Models/V_AdminUser.cs
+END
+ServiceItem.cs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/WebMember1/!svn/ver/297/MvcMember/Models/ServiceItem.cs
+END
+Employee.cs
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/WebMember1/!svn/ver/230/MvcMember/Models/Employee.cs
+END
+SysLog.cs
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/WebMember1/!svn/ver/230/MvcMember/Models/SysLog.cs
+END
+Recharge.cs
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/WebMember1/!svn/ver/446/MvcMember/Models/Recharge.cs
+END
+WebMemberDBContext.cs
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/WebMember1/!svn/ver/446/MvcMember/Models/WebMemberDBContext.cs
+END
+ServiceInte.cs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/WebMember1/!svn/ver/230/MvcMember/Models/ServiceInte.cs
+END
+V_CallBack.cs
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/WebMember1/!svn/ver/342/MvcMember/Models/V_CallBack.cs
+END
+AdminUser.cs
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/WebMember1/!svn/ver/230/MvcMember/Models/AdminUser.cs
+END
+ConsumeItem.cs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/WebMember1/!svn/ver/114/MvcMember/Models/ConsumeItem.cs
+END
+Member2.cs
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/WebMember1/!svn/ver/26/MvcMember/Models/Member2.cs
+END
+ItemList.cs
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/WebMember1/!svn/ver/17/MvcMember/Models/ItemList.cs
+END
+V_R_CardInfo.cs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/WebMember1/!svn/ver/31/MvcMember/Models/V_R_CardInfo.cs
+END
+V_CardServiceItem.cs
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/WebMember1/!svn/ver/297/MvcMember/Models/V_CardServiceItem.cs
+END
+V_SysFunRole.cs
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/WebMember1/!svn/ver/178/MvcMember/Models/V_SysFunRole.cs
+END
+V_Consume.cs
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/WebMember1/!svn/ver/446/MvcMember/Models/V_Consume.cs
+END
+V_MemberUpdate.cs
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/WebMember1/!svn/ver/230/MvcMember/Models/V_MemberUpdate.cs
+END
+UserAuth.cs
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/WebMember1/!svn/ver/178/MvcMember/Models/UserAuth.cs
+END
+AccountModels.cs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/WebMember1/!svn/ver/4/MvcMember/Models/AccountModels.cs
+END
+Complain.cs
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/WebMember1/!svn/ver/342/MvcMember/Models/Complain.cs
+END
+V_Recharge.cs
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/WebMember1/!svn/ver/446/MvcMember/Models/V_Recharge.cs
+END
+Member.cs
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/WebMember1/!svn/ver/230/MvcMember/Models/Member.cs
+END
+CardServiceItem.cs
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/WebMember1/!svn/ver/297/MvcMember/Models/CardServiceItem.cs
+END
+Consume.cs
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/WebMember1/!svn/ver/103/MvcMember/Models/Consume.cs
+END
+AdjustInte.cs
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/WebMember1/!svn/ver/161/MvcMember/Models/AdjustInte.cs
+END
+CardType.cs
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/WebMember1/!svn/ver/297/MvcMember/Models/CardType.cs
+END
+Smssend.cs
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/WebMember1/!svn/ver/322/MvcMember/Models/Smssend.cs
+END
+V_ExchangePoint.cs
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/WebMember1/!svn/ver/342/MvcMember/Models/V_ExchangePoint.cs
+END
+PayList.cs
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/WebMember1/!svn/ver/114/MvcMember/Models/PayList.cs
+END
+CardInfo.cs
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/WebMember1/!svn/ver/297/MvcMember/Models/CardInfo.cs
+END
+SysFun.cs
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/WebMember1/!svn/ver/178/MvcMember/Models/SysFun.cs
+END
+Activity.cs
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/WebMember1/!svn/ver/230/MvcMember/Models/Activity.cs
+END
+V_Member.cs
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/WebMember1/!svn/ver/446/MvcMember/Models/V_Member.cs
+END
+Branch.cs
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/WebMember1/!svn/ver/230/MvcMember/Models/Branch.cs
+END
+ServiceItem2.cs
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/WebMember1/!svn/ver/297/MvcMember/Models/ServiceItem2.cs
+END
+GuestBook.cs
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/WebMember1/!svn/ver/130/MvcMember/Models/GuestBook.cs
+END
+GiftInfo.cs
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/WebMember1/!svn/ver/342/MvcMember/Models/GiftInfo.cs
+END
+MemberUpdate.cs
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/WebMember1/!svn/ver/230/MvcMember/Models/MemberUpdate.cs
+END
+V_CardInfo.cs
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/WebMember1/!svn/ver/446/MvcMember/Models/V_CardInfo.cs
+END

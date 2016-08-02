@@ -1,0 +1,123 @@
+﻿@model MvcMember.Models.V_Member
+
+@{
+    ViewBag.Title = "客户资料详情";
+}
+
+<h2>客户资料详情</h2>
+
+<fieldset>
+    <legend>@Model.Name 的详细资料</legend>
+    <table id="mbtable" style="border: 0;">
+        <tr>
+            <td>客户类型</td>
+            <td>@Model.ClientType</td>
+        </tr>
+        <tr>
+            <td>客户姓名</td>
+            <td>@Model.Name</td>
+        </tr>
+        <tr>
+            <td>性别</td>
+            <td>@Model.Sex</td>
+        </tr>
+        <tr>
+            <td>联系电话</td>
+            <td>@Model.Mobile</td>
+        </tr>
+        <tr>
+            <td>生日</td>
+            <td>@Model.Birthday</td>
+        </tr>
+        <tr>
+            <td>身份证号</td>
+            <td>@Model.IDCard</td>
+        </tr>
+        <tr>
+            <td>电子邮件</td>
+            <td>@Model.Email</td>
+        </tr>
+        <tr>
+            <td>所在地区</td>
+            <td>@Model.District</td>
+        </tr>
+        <tr>
+            <td>爱好</td>
+            <td>@Model.Hobby</td>
+        </tr>
+        <tr>
+            <td>邮编</td>
+            <td>@Model.Postcode</td>
+        </tr>
+        <tr>
+            <td>地址</td>
+            <td>@Model.Address</td>
+        </tr>
+        <tr>
+            <td>来店次数</td>
+            <td>@Model.ComeTimes</td>
+        </tr>
+        <tr>
+            <td>最后一次来店</td>
+            <td>@Model.LastComeDate</td>
+        </tr>
+
+        <tr>
+            <td>车牌号码</td>
+            <td>@Model.CarNO</td>
+        </tr>
+        <tr>
+            <td>车架号</td>
+            <td>@Model.VinNO</td>
+        </tr>
+        <tr>
+            <td>车主</td>
+            <td>@Model.CarOwner</td>
+        </tr>
+        <tr>
+            <td>车型</td>
+            <td>@Model.CarType</td>
+        </tr>
+        <tr>
+            <td>行使公里</td>
+            <td>@Model.RunKM</td>
+        </tr>
+        <tr>
+            <td>预计下次保养公里</td>
+            <td>@Model.NextMaintainKM</td>
+        </tr>
+        <tr>
+            <td>预计下次保养日期</td>
+            <td>@Model.NextMaintainDate</td>
+        </tr>
+        <tr>
+            <td>驾照到期日期</td>
+            <td>@Model.LicenseExpire</td>
+        </tr>
+        <tr>
+            <td>保险到期日期</td>
+            <td>@Model.InsureExpire</td>
+        </tr>
+        <tr>
+            <td>年审到期日期</td>
+            <td>@Model.YearCheckDate</td>
+        </tr>
+        <tr>
+            <td>备注</td>
+            <td>@Model.Remark</td>
+        </tr>
+        <tr>
+            <td>创建人</td>
+            <td>@Model.Creator</td>
+        </tr>
+        <tr>
+            <td>创建日期</td>
+            <td>@Model.CreateDate</td>
+        </tr>
+    </table>
+</fieldset>
+<p style="padding-left: 5px;">
+    @Html.ActionLink("修改", "Edit", new { id = @Model.MemberID }) |
+    @Html.ActionLink("返回列表", "Index")
+</p>
+

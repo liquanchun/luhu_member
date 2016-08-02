@@ -1,0 +1,201 @@
+﻿@model IEnumerable<MvcMember.Models.V_Member>
+
+@{
+    ViewBag.Title = "车主信息提醒";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#NextMaintainDate").datepicker({
+            minDate: 0
+        });
+        $("#LicenseExpire").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            minDate: 0
+        });
+        $("#InsureExpire").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            minDate: 0
+        });
+        $("#YearCheckDate").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            minDate: 0
+        });
+        $("#Birthday").datepicker({
+            changeMonth: true,
+            changeYear: true
+        });
+
+        $("#grid td").each(function () {
+            if ($(this).text().indexOf("1900") > -1) {
+                $(this).text('');
+            }
+        });
+        //输入框鼠标样式
+        $(".formdiv input[type='text']").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv select").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv input[type='text']").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+        $(".formdiv select").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+    });
+    function UpdateDate(memberid, d1, d2, d3, d4, d5) {
+        $("#memberid").val(memberid);
+        if (d1.indexOf("1900") == 0) {
+            $("#NextMaintainDate").val('');
+        }
+        else {
+            $("#NextMaintainDate").val(d1);
+        }
+        if (d2.indexOf("1900") == 0) {
+            $("#LicenseExpire").val('');
+        }
+        else {
+            $("#LicenseExpire").val(d2);
+        }
+        if (d3.indexOf("1900") == 0) {
+            $("#InsureExpire").val('');
+        } 
+        else {
+            $("#InsureExpire").val(d3);
+        }
+        if (d4.indexOf("1900") == 0) {
+            $("#YearCheckDate").val('');
+        }
+        else {
+            $("#YearCheckDate").val(d4);
+        }
+        if (d5.indexOf("1900") == 0) {
+            $("#Birthday").val('');
+        }
+        else {
+            $("#Birthday").val(d5);
+        }
+    }
+    function Commit() {
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxServiceSave.svc/SaveRemind")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"memberid":"' + $("#memberid").val() + '","d1":"' + $("#NextMaintainDate").val() + '","d2":"' + $("#LicenseExpire").val() + '","d3":"' + $("#InsureExpire").val() + '","d4":"' + $("#YearCheckDate").val() + '","d5":"' + $("#Birthday").val() + '"}',
+            success: function (msg) {
+                var a = eval('(' + msg + ')');
+                if (parseInt(a.d) > 0) {
+                    alert("操作成功！");
+                    var memberid = $("#memberid").val();
+                    $("#" + memberid).parent().parent().children().each(function (index) {
+                        if (index == 4) $(this).text($("#NextMaintainDate").val());
+                        if (index == 5) $(this).text($("#LicenseExpire").val());
+                        if (index == 6) $(this).text($("#InsureExpire").val());
+                        if (index == 7) $(this).text($("#YearCheckDate").val());
+                        if (index == 8) $(this).text($("#Birthday").val());
+                    });
+                    tb_remove();
+                }
+            },
+            error: function () {
+                alert("发生错误！");
+            },
+            beforeSend: function () {
+                $(".baidubtn input").text("正在提交...");
+            },
+            complete: function () {
+                $(".baidubtn input").text("提 交");
+            }
+        });
+    }
+</script>
+<h2>车主信息提醒</h2>
+
+ <div id="formdiv" class="formdiv" style="display:none;">
+        <input type="hidden" value="" id="memberid" />
+        <table>
+        <tr>
+            <td class="labtd">预计保养日期：</td><td><input type="text" name="NextMaintainDate" id="NextMaintainDate" /></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="labtd">驾照到期日：</td><td><input type="text" name="LicenseExpire" id="LicenseExpire" /></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="labtd">保险到期日：</td>
+                <td><input type="text" name="InsureExpire" id="InsureExpire" /> </td>
+            <td></td>
+         </tr>
+         <tr>
+            <td class="labtd">年审日期：</td>
+                <td><input type="text" name="YearCheckDate" id="YearCheckDate" /></td>
+            <td></td>
+         </tr>
+         <tr>
+            　<td class="labtd">生日：</td>
+            <td><input type="text" name="Birthday" id="Birthday" /></td><td></td>
+         </tr>
+         </table>
+        <p class="baidubtn" style="padding-left:100px;">
+            <input type="button" style="width:80px;" value="提 交" onclick="Commit()" />
+        </p>
+  </div>
+
+@Html.Partial("_LoadAuth")
+@using (Ajax.BeginForm("Index", "Member", new AjaxOptions { UpdateTargetId = "grid" })) 
+{
+    IDictionary<string, string> searchConditions = new Dictionary<string, string>();
+    if(TempData["SearchConditions"]!=null)
+    {
+        searchConditions = TempData["SearchConditions"] as  Dictionary<string, string>;
+    }
+    this.TempData["SearchConditions"]=searchConditions;
+    string name = searchConditions.Keys.Contains("Name") ? searchConditions["Name"] : string.Empty;
+    string mobile = searchConditions.Keys.Contains("Mobile") ? searchConditions["Mobile"] : string.Empty;
+    string carno = searchConditions.Keys.Contains("CarNo") ? searchConditions["CarNo"] : string.Empty;
+    
+    var grid = new WebGrid(source: Model,
+        ajaxUpdateContainerId: "grid",
+        rowsPerPage: 12,
+        canPage: true,
+        pageFieldName: "paging",
+        sortFieldName: "sortField",
+        selectionFieldName:"SelectedRow");
+
+<div style="background-color:#dbeafd;margin-left:5px; margin-bottom:3px;" >
+    客户姓名：@Html.TextBox("Name", @name, new { style = "width: 60px;" })
+    电话号码：@Html.TextBox("Mobile", @mobile, new { style = "width: 90px;" })
+    车牌号码：@Html.TextBox("CarNo", @carno, new { style = "width: 70px;" })
+    <input type="submit" style="width:80px;" value="查 询"/>
+</div>    
+<div id="grid" style="padding-left:5px;">
+    @grid.GetHtml(
+    tableStyle: "grid",
+    headerStyle: "head",
+    selectedRowStyle: "alt",
+    alternatingRowStyle: "alt",
+    rowStyle:"webgrid-row-style",
+    nextText: "下一页",
+    previousText: "上一页",
+    numericLinksCount: 10,
+    columns: grid.Columns(
+            grid.Column(format: @<text><a id="@item.MemberID" onclick="UpdateDate(@item.MemberID,'@item.NextMaintainDate','@item.LicenseExpire','@item.InsureExpire','@item.YearCheckDate','@item.Birthday')"  title="@item.CarNo －修改提醒日期信息" class="thickbox" href="#TB_inline?height=250&width=320&inlineId=formdiv"><img src="../../Content/Images/edit.png" /></a></text>),
+            grid.Column("Name", "客户名称"),
+            grid.Column("CarNo", "车牌号码"),
+            grid.Column("Mobile", "联系电话"),
+            grid.Column("NextMaintainDate", "预计保养日期", format: @<text>@item.NextMaintainDate.ToShortDateString() </text>),
+            grid.Column("LicenseExpire", "驾照到期日", format: @<text>@item.LicenseExpire.ToShortDateString() </text>),
+            grid.Column("InsureExpire", "保险到期日", format: @<text>@item.InsureExpire.ToShortDateString() </text>),
+            grid.Column("YearCheckDate", "年审日期", format: @<text>@item.YearCheckDate.ToShortDateString() </text>),
+            grid.Column("Birthday", "生日", format: @<text>@item.Birthday </text>)
+            )
+        )
+</div>
+<p>　总记录数：@Html.Encode(grid.TotalRowCount)　总页数：@Html.Encode(grid.PageCount)</p>
+    }

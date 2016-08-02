@@ -1,0 +1,297 @@
+﻿@model MvcMember.Models.V_Recharge
+
+@{
+    ViewBag.Title = "会员充值";
+}
+<h2>会员充值</h2>
+<form id="firstform" action="">
+    <div id="contentdiv">
+       <div class="formdiv">
+       <input type="hidden" name="selitemid" id="selitemid" />
+       <input type="hidden" name="MemberID" id="MemberID" />
+       <input type="hidden" value="@ViewBag.username" id="userid" />
+       <input type="hidden" value="@ViewBag.DmsID" id="dmsid" />
+        <div class="headp">　填写储值信息</div>
+        <table>
+        <tr>
+        <td class="labtd">会员卡号：</td><td><input type="text" name="CardNo" id="CardNo" datatype="n" nullmsg="请输入会员卡号！"  errormsg="请输入会员卡号！" title="请输入6位数字卡号按回车键，或直接点击读卡按钮" class="vtip" />
+            <input type="button" style=" width:60px;" value="读卡" onclick="SelectMemberByCardNo()" /></td>
+            <td><div class="Validform_checktip"></div></td>
+        </tr>
+        <tr>
+            <td class="labtd">充值金额：</td><td><input type="text" name="InMoney" id="InMoney" datatype="n" nullmsg="请输入充值金额！"  errormsg="充值金额数字！" /></td>
+            <td><div class="Validform_checktip"></div></td>
+        </tr>
+        <tr>
+            <td class="labtd">付款方式：</td>
+           <td> @Html.DropDownList("InType", new SelectList(ViewBag.RechargeType as System.Collections.IEnumerable,
+         "ItemName", "ItemName", Model.InType))</td>
+            <td></td>
+         </tr>
+         <tr>
+            <td class="labtd">赠送类型：</td>
+            <td>
+                <input type="radio" id="radio1" class="pr1" name="give" checked="checked" value="1" /><label for="radio1">金额</label> 
+                <input type="radio" id="radio2" class="pr1" name="give" value="2" /><label for="radio2">积分</label>
+                <input type="radio" id="radio3" class="pr1" name="give" value="3" /><label for="radio3">服务项目</label>
+            </td>
+            <td></td>
+         </tr>
+         <tr id="give1">
+            <td class="labtd">赠送金额：</td>
+            <td><input type="text" name="GiveMoney" id="GiveMoney" class="vtip" />  <a href="../recharge/rechargegive" >查看储值赠送方案</a>
+            </td>
+            <td></td>
+         </tr>
+         <tr id="give2" style="display:none;">
+            <td class="labtd">赠送积分：</td><td><input type="text" name="GiveInte" id="GiveInte" class="vtip" /></td><td></td>
+         </tr>
+         <tr id="give3" style="display:none;">
+            <td class="labtd">赠送服务项目：</td>
+            <td><select id="ServiceItem" name="ServiceItem">
+                <option value="-1">--请选择--</option>
+                @foreach (var si in ViewBag.ServiceItem)
+                { 
+                    <option title="@si.Remark" class="@si.ItemType" value="@si.ItemID">@si.ItemName</option>
+                }
+            </select>
+            <span class="ts">次数</span>
+            <input class="ts" style="width:30px;" type="text" id="times" name="times" />
+            </td>
+            <td></td>
+         </tr>
+         <tr>
+            　<td class="labtd">备注：</td><td><input type="text" name="Remark" id="Remark" /></td><td></td>
+         </tr>
+         </table>
+        <p class="baidubtn">
+            <a href="javascript:void(0)" onclick="Commit()">提 交</a>
+        </p>
+        </div>
+        <div class="infodiv">
+            <p class="headp">　客户信息确认</p>
+            <ul class="sidebar_box">
+			
+			<li>客户姓名<input type="text" class="infoinput" readonly="readonly" name="Name" id="Name" /></li>
+			
+			<li>车牌号码<input type="text" class="infoinput" readonly="readonly" name="CarNo" id="CarNo" /></li>
+			
+			<li>当前余额<input type="text" class="infoinput" readonly="readonly" name="Balance" id="Balance" /></li>
+			
+			<li>会员级别<input type="text" class="infoinput" readonly="readonly" name="CardLevel" id="CardLevel" /></li>
+
+            <li>剩余积分<input type="text" class="infoinput" readonly="readonly" name="CurBIntegral" id="CurBIntegral" /></li>
+		    </ul>
+            <div class="sidebar_box_bottom"></div>
+        </div>
+    </div>
+</form>
+<div style="clear:both;"></div>
+<div id="backdiv">
+    @Html.ActionLink("返回列表", "Index")
+</div>
+<script type="text/javascript">
+    var ary = new Array();
+    $(document).ready(function () {
+        $('#firstform').bind('keypress', function (e) {
+            return e.keyCode !== 13;
+        });
+        $("#CardNo").keypress(function (e) {
+            var code = (e.keyCode ? e.keyCode : e.which);
+            if (code == 13) {
+                SelectMemberByCardNo();
+            }
+        });
+        //输入框鼠标样式
+        $(".formdiv input[type='text']").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv select").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv input[type='text']").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+        $(".formdiv select").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+
+        $("#times").css("width", "30px");
+
+        $("#CardNo").numeral();
+        $("#InMoney").numeral();
+        $("#GiveMoney").numeral();
+        $("#GiveInte").numeral();
+
+        $(".ts").css("visibility", "hidden");
+        $("#ServiceItem").bind("change", function () {
+            var itemtype = $("#ServiceItem").find("option:selected").attr("class");
+            if (itemtype == "单项服务") {
+                $(".ts").css("visibility", "visible");
+                $("#times").focus();
+            }
+            else {
+                $(".ts").css("visibility", "hidden");
+                $("#times").val("");
+                $("#Remark").val("赠送" + $("#ServiceItem").find("option:selected").text());
+            }
+            var itemid = $("#ServiceItem").find("option:selected").val();
+            $("#selitemid").val(itemid);
+            $("#times").focus();
+        });
+        $("#CardNo").focus();
+        $("#times").bind("change", function () {
+            $("#Remark").val("赠送" + $("#times").val() + "次" + $("#ServiceItem").find("option:selected").text());
+        });
+
+        $(".formdiv input[type='radio']").bind("change", function () {
+            $("#give1").css("display", "none");
+            $("#give2").css("display", "none");
+            $("#give3").css("display", "none");
+            $('#ServiceItem')[0].selectedIndex = 0;
+            $("#GiveMoney").val('');
+            $("#GiveInte").val('');
+            $("#give" + $(this).val()).removeAttr("style");
+        });
+
+        $("#firstform").Validform({
+            tiptype: 2,
+            postonce: true,
+            ajaxPost: true,
+            callback: function (data) {
+                if (data.status == "y") {
+                    setTimeout(function () {
+                        $.Hidemsg(); //公用方法关闭信息提示框;
+                    }, 2000);
+                }
+            }
+        });
+        //输入储值金额,检查赠送方案
+        $("#InMoney").keyup(function () {
+            $.each(ary, function (k, v) {
+                var m1 = v[0];
+                var m2 = v[1];
+                var gm = v[2];
+                var gr = v[3];
+                var gp = v[4];
+                if (parseInt(m1) <= parseInt($("#InMoney").val()) && parseInt(m2) >= parseInt($("#InMoney").val())) {
+                    if (gm > 0) {  //赠送固定积分
+                        $("#GiveMoney").val(gm);
+                    }
+                    if (gr > 0) {   //赠送金额比例
+                        $("#GiveMoney").val(parseInt(parseInt($("#InMoney").val()) * gr / 100));
+                        $("#GiveMoney").attr("title", "储值金额的" + gr + "%");
+                    }
+                    if (gp > 0) {   //赠送积分
+                        $("#GiveInte").val(gp);
+                    }
+                }
+            });
+        });
+        //获取储值优惠方案
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxServiceSave.svc/GetRechargeGive")',
+            contentType: 'application/json',
+            dataType: 'text',
+            success: function (data) {
+                var dl = eval('(' + data + ')');
+                var dld = eval('(' + dl.d + ')');
+                $.each(dld, function (k, v) {
+                    $.each(v, function (kk, vv) {
+                        var aryamount = new Array();
+                        aryamount.push(vv.Amount1);
+                        aryamount.push(vv.Amount2);
+                        aryamount.push(vv.GiveMoney);
+                        aryamount.push(vv.GiveRate);
+                        aryamount.push(vv.GivePoints);
+                        ary.push(aryamount);
+                        if (parseInt(vv.GiveMoney) > 0) {
+                            $("input[name='give']").get(0).checked = true;
+                        }
+                        if (parseInt(vv.GiveRate) > 0) {
+                            $("input[name='give']").get(0).checked = true;
+                        }
+                        if (parseInt(vv.GivePoints) > 0) {
+                            $("input[name='give']").get(1).checked = true;
+                        }
+                    });
+                });
+            }
+        });
+    });
+
+    function SelectMemberByCardNo() {
+        if ($("#CardNo").val() == "") {
+            alert("请输入会员卡号！");
+            return;
+        }
+        var cardno = $("#CardNo").val();
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxService.svc/SelectMemberByCardNo")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"cardno":"' + cardno + '"}',
+            success: function (msg) {
+                var a = eval('(' + msg + ')');
+                if (a.d.length > 1) {
+                    var arrs = a.d.split(",");
+                    $("#MemberID").val(arrs[0]);
+                    $("#CarNo").val(arrs[2]);
+                    $("#Name").val(arrs[3]);
+                    $("#CurBIntegral").val(arrs[5]);
+                    $("#Balance").val(arrs[6]);
+                    $("#CardLevel").val(arrs[7]);
+                    $("#InMoney").focus();
+                }
+                else {
+                    alert("未找到该卡号相关资料，请确认是否发卡！");
+                }
+            }
+        });
+    }
+    function Commit() {
+        if ($("#InMoney").val() == "") {
+            return false;
+        }
+        if ($("#MemberID").val() == "") {
+            alert("请确认会员信息！");
+            return false;
+        }
+        var conf = confirm("请确认会员卡号" + $("#CardNo").val() + "充值金额" + $("#InMoney").val());
+        //int memberid,string cardno, int balance, int giveinte, int inmoney, string intype, string remark, string selitemid,int times,string userid
+        if (conf) {
+            $.ajax({
+                type: 'post',
+                url: '@Url.Content("../AjaxServiceSave.svc/SaveRecharge")',
+                contentType: 'application/json',
+                dataType: 'text',
+                data: '{"memberid":"' + $("#MemberID").val() + '","cardno":"' + $("#CardNo").val() + '","balance":"' + $("#Balance").val() + '","giveinte":"' + $("#GiveInte").val() + '","inmoney":"' + $("#InMoney").val() + '","intype":"' + $("#InType").find("option:selected").text() + '","remark":"' + $("#Remark").val() + '","selitemid":"' + $("#selitemid").val() + '","times":"' + $("#times").val() + '","givemoney":"' + $("#GiveMoney").val() + '","userid":"' + $("#userid").val() + '","dmsid":"' + $("#dmsid").val() + '"}',
+                success: function (msg) {
+                    var a = eval('(' + msg + ')');
+                    if (a.d == 1) {
+                        alert("操作成功！");
+                        $("input[type='text']").val('');
+                    }
+                    else if (a.d == 2) {
+                        alert("项目编号或项目名称已经存在！");
+                    }
+                    else {
+                        alert("提交失败！");
+                    }
+                },
+                error: function () {
+                    alert("发生错误！");
+                },
+                beforeSend: function () {
+                    $(".baidubtn a").text("正在提交...");
+                },
+                complete: function () {
+                    $(".baidubtn a").text("提 交");
+                }
+            });
+        }
+    }
+      
+</script>

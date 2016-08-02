@@ -1,0 +1,91 @@
+﻿@model MvcMember.Models.ServiceItem
+
+@{
+    ViewBag.Title = "修改服务项目";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        var itemname = $("#ItemType").find("option:selected").text();
+        if (itemname == "套餐服务") {
+            $("#ItemType").attr("disabled", "disabled");
+        }
+    });
+</script>
+<h2>修改服务项目</h2>
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>服务项目</legend>
+
+        <p>
+            编号
+            @Html.EditorFor(model => model.ItemID)
+            @Html.ValidationMessageFor(model => model.ItemID)
+        </p>
+
+        <p>
+            名称
+            @Html.EditorFor(model => model.ItemName)
+            @Html.ValidationMessageFor(model => model.ItemName)
+        </p>
+        <p>
+            类型
+            @Html.DropDownList("ItemType",
+new SelectList(ViewBag.ItemList as System.Collections.IEnumerable, "ItemName", "ItemName", Model.ItemType))
+        </p>
+        @if (Model.ItemType == "套餐服务")
+        {       
+            <div id="taocan" style="margin-left: 50px; padding: 8px; border-style: solid; border-width: 1px; border-top-color: #dbeafd; border-right-color: #dbeafd; border-bottom-color: #dbeafd; border-left-color: #dbeafd;">
+                <span>本套餐包含以下服务项目：</span>
+                <table class="table30">
+                    <tr>
+                        <th>编号</th>
+                        <th>名称</th>
+                        <th>次数</th>
+                    </tr>
+                    @foreach (var tc in ViewBag.taocan)
+                    {
+                        var lst = ViewBag.SerLst as IEnumerable<MvcMember.Models.ServiceItem>;
+                        <tr>
+                            <td>@tc.ChildItemID</td>
+                            <td>@lst.First(f => f.ItemID == tc.ChildItemID).ItemName</td>
+                            <td>@tc.Times</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        }
+        <p>
+            价格
+            @Html.EditorFor(model => model.Price)
+            @Html.ValidationMessageFor(model => model.Price)
+        </p>
+        <p>
+            积分
+            @Html.EditorFor(model => model.Integral)
+            @Html.ValidationMessageFor(model => model.Integral)
+        </p>
+
+        <p>
+            数量
+            @Html.EditorFor(model => model.Number)
+            @Html.ValidationMessageFor(model => model.Number)
+        </p>
+
+        <p>
+            备注
+            @Html.EditorFor(model => model.Remark)
+            @Html.ValidationMessageFor(model => model.Remark)
+        </p>
+
+        <p style="margin-left: 55px;">
+            <input type="submit" value="保 存" />
+        </p>
+    </fieldset>
+}
+
+
+<div style="padding-bottom: 10px; padding-left: 5px;">
+    @Html.ActionLink("返回列表", "Index")
+</div>

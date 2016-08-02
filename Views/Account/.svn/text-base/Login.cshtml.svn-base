@@ -1,0 +1,184 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html;" />
+<title>汽车会员管理系统</title>
+<style type="text/css">
+body{font-family: 微软雅黑;font-size: 13px;text-align: center;margin: 0;padding:0;}
+.nTab{width: 400px;margin: 10px auto auto 20px;border-bottom:1px #C7C7CD solid;background:#d5d5d5;background-position:left;background-repeat:repeat-y;margin-bottom:2px;}
+.nTab .TabTitle{clear: both;height: 26px;overflow: hidden;}
+.nTab .TabTitle ul{margin:0;padding:0;}
+.nTab .TabTitle li{float: left;width: 100px;cursor: pointer;padding-top: 6px;padding-right: 0px;padding-left: 5px;padding-bottom: 7px;list-style-type: none;}
+.nTab .TabTitle .active{ background:url("../../Content/Images/tab_bg1.gif") left -25px no-repeat;border-left:1px  #C7C7CD solid;border-top:1px  #C7C7CD solid;border-bottom:1px #fff solid;}
+.nTab .TabTitle .normal{ display:none; background:url(/jscss/demoimg/200905/tab_bg1.gif);border-top:1px #C7C7CD solid;border-bottom:1px #C7C7CD solid;}
+.nTab .TabContent{width:auto;background:#fff;margin: 0px auto;padding:20px 0 20px 40px;border-right:1px #C7C7CD solid;border-left:1px #C7C7CD solid;}
+#foot{background: url("../../Content/Images/Bottom_Bg.gif") no-repeat scroll top transparent;color: #333333;line-height: 20px;margin-top: 10px;padding: 16px 0;text-align: center;}
+.inputtxtfocus{background-color:#FFFFE1;}
+.none {display:none;}
+.clear{clear:both;}
+
+</style>
+<script type="text/javascript" src="@Url.Content("../../Scripts/jquery-1.4.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/MyScript.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#userid1").val(getCookie("UserID"));
+        $("#pwd1").val(getCookie("Password"));
+        $(document).ajaxStop($.unblockUI);
+        if (getCookie("UserID") == "") {
+            $("#userid1").focus();
+        }
+        else {
+            $("#pwd1").focus();
+        }
+        $('#pwd1').bind('keypress', function (e) {
+            if ($.browser.msie) {
+                if (event.keyCode == 13) {
+                    Login1();
+                }
+            }
+            if ($.browser.mozilla) {
+                if (e.keyCode == 13) {
+                    Login1();
+                }
+            }
+        });
+        if ($.browser.msie) {
+            if ($.browser.version == 6.0 || $.browser.version == 7.0) {
+                $("#browen").text();
+                $("#browen").text("<p style=\"font-size:25px;color:red;margin-top:100px;margin-bottom:100px;\">请使用IE8、IE9、FireFox浏览器</p>");
+            }
+        }
+    });
+    function nTabs(thisObj, Num) {
+        if (thisObj.className == "active") return;
+        var tabObj = thisObj.parentNode.id;
+        var tabList = document.getElementById(tabObj).getElementsByTagName("li");
+        for (i = 0; i < tabList.length; i++) {
+            if (i == Num) {
+                thisObj.className = "active";
+                document.getElementById(tabObj + "_Content" + i).style.display = "block";
+            } else {
+                tabList[i].className = "normal";
+                document.getElementById(tabObj + "_Content" + i).style.display = "none";
+            }
+        }
+    }
+    function check_num(oNum) {
+        if (!oNum) return false;
+        var strP = /^\d+(\.\d+)?$/;
+        if (!strP.test(oNum)) return false;
+        try {
+            if (parseFloat(oNum) != oNum) return false;
+        }
+        catch (ex) {
+            return false;
+        }
+        return true;
+    }
+    function selectOp() {
+
+    }
+</script>
+<script type="text/javascript">
+    function Login1() {
+        //$.blockUI({ message: '<h1><img src="../../Content/Images/busy.gif" /> 正在登陆.....</h1>' }); 
+        var userid = $("#userid1").val();
+        var pass = $("#pwd1").val();
+        var dmsname = "海之沃总店";
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxService.svc/CheckLogin")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"dmsname":"' + dmsname + '","userid":"' + userid + '","pass":"' + pass + '"}',
+            error: function () {
+                alert('发生错误');
+                $("#watsp").css("display", "none");
+                $("#longinsp").css("display", "inline");
+            },
+            success: function (msg) {
+                var a = eval('(' + msg + ')');
+                if (a.d != "") {
+                    var arrs = a.d.split(",");
+                    var url = "../Home/index/" + arrs[0] + "/" + arrs[1] + "/" + userid;
+                    setCookie("UserID", userid);
+                    if ($("#remember").attr("checked") == true) {
+                        setCookie("Password", pass);
+                    }
+                    window.location = url;
+                }
+                else {
+                    alert('用户名或密码错误!');
+                    $("#longinsp").css("display", "inline");
+                    $("#watsp").css("display", "none");
+                    $("#pwd1").val('');
+                }
+            },
+            beforeSend: function () {
+                $("#watsp").css("display", "inline");
+                $("#longinsp").css("display", "none");
+            },
+            complete: function () {
+            }
+        });
+        return false;
+    }
+    function Login2() {
+
+    }
+</script>
+</head>
+<body>
+<div style="height:50px;padding-left:24%; margin-top:30px; text-align:center">
+    <div style="border-bottom-style: solid; text-align:left; width:75%; border-bottom-width: 1px; border-bottom-color: #999999;">
+        <span style="font-family: 楷体; font-size: xx-large">@ViewBag.SoftName</span>
+    </div>
+</div>
+<div style="float:left; height:80%; width:48%; text-align:right;">
+    <img  style="width:330px; height:360px;" src='@Url.Content("../../Content/Images/PICad.jpg")' />
+</div>
+<div style="text-align:left;  float:left; font-size:120%; width:49%;margin-top: 20px">
+<!-- 选项卡开始 -->
+  <div class="nTab">
+    <!-- 标题开始 -->
+    <div class="TabTitle">
+      <ul id="myTab0">
+        <li class="active" onclick="nTabs(this,0);">用户登录</li>
+      </ul>
+    </div>
+    <!-- 内容开始 -->
+    <div class="TabContent">
+      <div id="myTab0_Content0"> 
+            <span>用　　户：</span>
+            <input class="inputtxt" id="userid1"  onmousemove="this.className='inputtxtfocus'" onmouseout="this.className=''"  type="text" />
+            <br />
+            <br />
+            <span>密　　码：</span>
+            <input class="inputtxt" id="pwd1" onmousemove="this.className='inputtxtfocus'" onmouseout="this.className=''" type="password" />
+            <br />
+            <br />
+            <span style="padding-left:70px;"><label for="remember"><input id="remember" name="remember"  type="checkbox" />记住密码</label></span>
+            <br />
+            <br />
+            <span id="longinsp" style="padding-left:70px;display:inline;"><img src='@Url.Content("../../Content/Images/login_button.gif")' style="cursor:hand" onclick="Login1()" /></span><br />
+            <span id="watsp" style="padding-left:8px; display:none; font-size:100%; color:#FFAA00">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp 正在验证用户登录... <br /><img src='@Url.Content("../../Content/Images/loading.gif")' /></span> 
+      </div>
+    </div>
+  </div>
+  <!-- 选项卡结束 -->
+  </div>
+  <div class="clear"></div>
+<div id="browen" style="text-align:center;"><p>建议你使用以下浏览器（IE8、Firefox）可以获得更好浏览效果！</p></div>
+<div style="text-align:center">
+<div id="foot">
+  @ViewBag.CopyRight<br />
+  Copyright&copy; 2010-2011 <a target="_blank" href="http://www.v198.net/">v198.net</a> &nbsp;京ICP备09080951号<br />
+</div>
+</div>
+ </body>
+</html>

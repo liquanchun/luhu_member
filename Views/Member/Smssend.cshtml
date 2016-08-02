@@ -1,0 +1,126 @@
+﻿@model IEnumerable<MvcMember.Models.Smssend>
+
+@{
+    ViewBag.Title = "智能短信服务";
+    var divstr = "<select id='sel' name='sel'>";
+    divstr += "<option value='消费短信'>消费短信</option>";
+    divstr += "<option value='提醒短信'>提醒短信</option>";
+    divstr += "<option value='节假日短信'>节假日短信</option>";
+    divstr += "</select>";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#Date1").datepicker();
+        $("#Date2").datepicker();
+    });
+</script>
+<h2>智能短信服务</h2>
+@Html.Partial("_LoadAuth")
+<p style="padding-left:10px;"><a href="javascript:void(0)" onclick="NewSms();">新建信息</a></p>
+@using (Ajax.BeginForm("Index", "Member", new AjaxOptions { UpdateTargetId = "grid" }))
+{
+    IDictionary<string, string> searchConditions = new Dictionary<string, string>();
+    if (TempData["SearchConditions"] != null)
+    {
+        searchConditions = TempData["SearchConditions"] as Dictionary<string, string>;
+    }
+    this.TempData["SearchConditions"] = searchConditions;
+    string date1 = searchConditions.Keys.Contains("Date1") ? searchConditions["Date1"] : string.Empty;
+    string date2 = searchConditions.Keys.Contains("Date2") ? searchConditions["Date2"] : string.Empty;
+    string name = searchConditions.Keys.Contains("Name") ? searchConditions["Name"] : string.Empty;
+    string mobile = searchConditions.Keys.Contains("Mobile") ? searchConditions["Mobile"] : string.Empty;
+    string carno = searchConditions.Keys.Contains("CarNo") ? searchConditions["CarNo"] : string.Empty;
+
+    var grid = new WebGrid(source: Model,
+        ajaxUpdateContainerId: "grid",
+        rowsPerPage: 12,
+        canPage: true,
+        pageFieldName: "paging",
+        sortFieldName: "sortField",
+        selectionFieldName: "SelectedRow");
+
+<div style="background-color:#dbeafd;margin-left:5px; margin-bottom:3px;" >
+    新增时间：@Html.TextBox("Date1", @date1, new { style = "width: 85px;" }) 到 @Html.TextBox("Date2", @date2, new { style = "width: 85px;" })
+    客户姓名：@Html.TextBox("Name", @name, new { style = "width: 60px;" })
+    电话号码：@Html.TextBox("Mobile", @mobile, new { style = "width: 90px;" })
+    <input type="submit" style="width:80px;" value="查 询"/>
+</div>    
+<div id="grid" style="padding-left:5px;">
+    @grid.GetHtml(
+    tableStyle: "grid",
+    headerStyle: "head",
+    selectedRowStyle: "alt",
+    alternatingRowStyle: "alt",
+    rowStyle: "webgrid-row-style",
+    nextText: "下一页",
+    previousText: "上一页",
+    numericLinksCount: 10,
+    columns: grid.Columns(
+                    grid.Column("Receiver", "接受人"),
+                grid.Column("Mobile", "手机号码"),
+                        grid.Column("SmsType", "短信类型"),
+                grid.Column("Details", "短信内容"),
+                    grid.Column("SendTime", "发送时间"),
+                    grid.Column("State", "状态"),
+                    grid.Column("BookTime", "定时发送"),
+                    grid.Column("CreateTime", "新建时间"),
+                    grid.Column("Creator", "发送人")
+
+              )
+          )
+</div>
+<p>　总记录数：@Html.Encode(grid.TotalRowCount)　总页数：@Html.Encode(grid.PageCount)</p>
+}
+<input type="hidden" id="userid" value="@ViewBag.UserID" />
+<input type="hidden" id="divstr" value="@divstr" />
+
+ <script type="text/javascript">
+     function NewSms() {
+         var txt = '<div style="background-color:#dbeafd;">新建信息</div>' +
+                    '<div class="field"><label for="userid">收件人:</label><input type="text" id="receiver" name="receiver" value="" /></div>' +
+                    '<div class="field"><label for="userid">手机号码:</label><input type="text" id="mobile" name="mobile" value="" /></div>' +
+                    '<div class="field"><label for="username">信息:</label><textarea rows= "2" cols= "20" id="smscontent" name="smscontent" value="" ></textarea></div>' +
+					'<div class="field"><label for="sel">信息类型:</label>' + $("#divstr").val() + '</div>';
+
+         $.prompt(txt, {
+             buttons: { 保存: true, 取消: false },
+             submit: function (v, m, f) {
+                 var flag = true;
+                 var mobile = f.mobile;
+                 if (mobile.substring(0, 1) != "1" || mobile.length != 11) {
+                     alert("电话号码错误！");
+                     $("#mobile").focus();
+                     return false;
+                 }
+                 return flag;
+             },
+             callback: function (v, m, f) {
+                 if (v) {
+                     var userid = $("#userid").val();
+                     var receiver = f.receiver;
+                     var mobile = f.mobile;
+                     var smscontent = f.smscontent;
+                     var smstype = f.sel;
+                     $.ajax({
+                         type: 'post',
+                         url: '@Url.Content("../AjaxServiceSave.svc/NewSms")',
+                         contentType: 'application/json',
+                         dataType: 'text',
+                         data: '{"userid":"' + userid + '","receiver":"' + receiver + '","mobile":"' + mobile + '","smscontent":"' + smscontent + '","smstype":"' + smstype + '"}',
+                         success: function (msg) {
+                             var a = eval('(' + msg + ')');
+                             if (a.d == "1") {
+                                 alert("保存成功！");
+                                 location.reload();
+                             }
+                         },
+                         error: function () {
+                             alert("发生错误！");
+                         }
+                     });
+                 }
+                 else { }
+             }
+         });
+     }
+</script>

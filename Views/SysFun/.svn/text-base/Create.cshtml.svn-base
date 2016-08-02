@@ -1,0 +1,74 @@
+﻿@model MvcMember.Models.SysFun
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>SysFun</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.FunID)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.FunID)
+            @Html.ValidationMessageFor(model => model.FunID)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.FunName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.FunName)
+            @Html.ValidationMessageFor(model => model.FunName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ParentID)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ParentID)
+            @Html.ValidationMessageFor(model => model.ParentID)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ControlName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ControlName)
+            @Html.ValidationMessageFor(model => model.ControlName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ActionName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ActionName)
+            @Html.ValidationMessageFor(model => model.ActionName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Parameter)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Parameter)
+            @Html.ValidationMessageFor(model => model.Parameter)
+        </div>
+
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+

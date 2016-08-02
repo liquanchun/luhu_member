@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  For more information on how to configure your ASP.NET application, please visit
+  http://go.microsoft.com/fwlink/?LinkId=152368
+  -->
+<configuration>
+  <connectionStrings>
+    <add name="ApplicationServices" connectionString="data source=.\SQLEXPRESS;Integrated Security=SSPI;AttachDBFilename=|DataDirectory|aspnetdb.mdf;User Instance=true" providerName="System.Data.SqlClient" />
+
+    <add name="WebMemberDBContext" connectionString="Data Source=PC--20101225MFE;Initial Catalog=VolvoMember;Integrated Security=True" providerName="System.Data.SqlClient" />
+    <add name="WebMemberConn" connectionString="Data Source=PC--20101225MFE;Initial Catalog=VolvoMember;Integrated Security=True" />
+  </connectionStrings>
+  <appSettings>
+    <add key="ClientValidationEnabled" value="true" />
+    <add key="UnobtrusiveJavaScriptEnabled" value="true" />
+    <add key="SoftName" value="海之沃汽车会员管理" />
+    <add key="CopyRight" value="北京开天伟德信息技术有限公司" />
+    <add key="BranchName1" value="广州保时捷中心" />
+    <add key="FirstBillNo" value="No." />
+    <!--积分兑换消费结算金额比例-->
+    <add key="InteToMoneyRate" value="1:1" />
+    <!--积分兑换消费结算金额最大百分比-->
+    <add key="InteToMoneyMax" value="15" />
+    <!--报表分页-->
+    <add key="PageSize" value="2000" />
+    <add key="Auth" value="0" />
+    <add key="ActionName" value="Index,CardManger,Setting" />
+	  <add key="2E00286CF4A4C0288C50575A52C72C1B" value="dms1" />
+    <add key="licence" value="F2096E45B9CB8A669A4CAEB861FC1870E76F0501F5E49D4C"/>
+    
+  </appSettings>
+  <system.web>
+    <!--<customErrors mode="On" defaultRedirect="Error"></customErrors>-->
+    <customErrors mode="Off"></customErrors>
+    <compilation debug="true" targetFramework="4.0">
+      <assemblies>
+        <add assembly="System.Web.Abstractions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35" />
+        <add assembly="System.Web.Helpers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35" />
+        <add assembly="System.Web.Routing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35" />
+        <add assembly="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35" />
+        <add assembly="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35" />
+        <add assembly="System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+      </assemblies>
+    </compilation>
+    <authentication mode="Forms">
+      <forms loginUrl="~/Account/Login" timeout="2880" />
+    </authentication>
+    <membership>
+      <providers>
+        <clear />
+        <add name="AspNetSqlMembershipProvider" type="System.Web.Security.SqlMembershipProvider" connectionStringName="ApplicationServices" enablePasswordRetrieval="false" enablePasswordReset="true" requiresQuestionAndAnswer="false" requiresUniqueEmail="false" maxInvalidPasswordAttempts="5" minRequiredPasswordLength="6" minRequiredNonalphanumericCharacters="0" passwordAttemptWindow="10" applicationName="/" />
+      </providers>
+    </membership>
+    <profile>
+      <providers>
+        <clear />
+        <add name="AspNetSqlProfileProvider" type="System.Web.Profile.SqlProfileProvider" connectionStringName="ApplicationServices" applicationName="/" />
+      </providers>
+    </profile>
+    <roleManager enabled="false">
+      <providers>
+        <clear />
+        <add name="AspNetSqlRoleProvider" type="System.Web.Security.SqlRoleProvider" connectionStringName="ApplicationServices" applicationName="/" />
+        <add name="AspNetWindowsTokenRoleProvider" type="System.Web.Security.WindowsTokenRoleProvider" applicationName="/" />
+      </providers>
+    </roleManager>
+    <pages>
+      <namespaces>
+        <add namespace="System.Web.Helpers" />
+        <add namespace="System.Web.Mvc" />
+        <add namespace="System.Web.Mvc.Ajax" />
+        <add namespace="System.Web.Mvc.Html" />
+        <add namespace="System.Web.Routing" />
+        <add namespace="System.Web.WebPages" />
+      </namespaces>
+    </pages>
+    <sessionState mode="InProc" cookieless="false" timeout="300"></sessionState>
+  </system.web>
+  <system.webServer>
+    <validation validateIntegratedModeConfiguration="false" />
+    <modules runAllManagedModulesForAllRequests="true" />
+  </system.webServer>
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly>
+        <assemblyIdentity name="System.Web.Mvc" publicKeyToken="31bf3856ad364e35" />
+        <bindingRedirect oldVersion="1.0.0.0-2.0.0.0" newVersion="3.0.0.0" />
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+  <system.serviceModel>
+    <services>
+      <service name="MvcMember.AjaxService">
+        <endpoint address="" behaviorConfiguration="MvcMember.AjaxServiceAspNetAjaxBehavior"
+          binding="webHttpBinding" contract="MvcMember.AjaxService" />
+      </service>
+      <service name="MvcMember.AjaxServiceSave">
+        <endpoint address="" behaviorConfiguration="MvcMember.AjaxServiceSaveAspNetAjaxBehavior"
+          binding="webHttpBinding" contract="MvcMember.AjaxServiceSave" />
+      </service>
+    </services>
+    <behaviors>
+      <endpointBehaviors>
+        <behavior name="MvcMember.AjaxServiceAspNetAjaxBehavior">
+          <enableWebScript />
+        </behavior>
+        <behavior name="MvcMember.AjaxServiceSaveAspNetAjaxBehavior">
+          <enableWebScript />
+        </behavior>
+      </endpointBehaviors>
+      <serviceBehaviors>
+        <behavior name="">
+          <serviceMetadata httpGetEnabled="true" />
+          <serviceDebug includeExceptionDetailInFaults="false" />
+        </behavior>
+      </serviceBehaviors>
+    </behaviors>
+    <serviceHostingEnvironment aspNetCompatibilityEnabled="true"
+      multipleSiteBindingsEnabled="true" />
+  </system.serviceModel>
+</configuration>

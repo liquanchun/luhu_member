@@ -1,0 +1,263 @@
+yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 09:34:51,591 [10] INFO  CommonCls [(null)] - 用户登录成功！。/Home/index/E39A9F61F30A9DD3/admin。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 09:40:55,522 [16] ERROR MvcMember.AjaxServiceSave [(null)] -    在 System.Data.Entity.Internal.InternalContext.SaveChanges()
+   在 System.Data.Entity.Internal.LazyInternalContext.SaveChanges()
+   在 System.Data.Entity.DbContext.SaveChanges()
+   在 MvcMember.AjaxServiceSave.SaveCardInfo(String memberid, String cardno, String typeid, String iniintegral, String saleman, String cometype, String startdate, String enddate, String creator) 位置 e:\我的项目\宁夏路虎\MvcMember\AjaxServiceSave.svc.cs:行号 230An error occurred while updating the entries. See the inner exception for details.
+
+System.Data.Entity.Infrastructure.DbUpdateException: An error occurred while updating the entries. See the inner exception for details. ---> System.Data.Entity.Core.UpdateException: An error occurred while updating the entries. See the inner exception for details. ---> System.Data.SqlClient.SqlException: 不能将值 NULL 插入列 'DmsID'，表 'VolvoMember.dbo.Member'；列不允许有 Null 值。UPDATE 失败。
+语句已终止。
+   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   在 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   在 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, SqlDataReader ds)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.<>c__DisplayClassb.<Reader>b__8()
+   在 System.Data.Entity.Infrastructure.Interception.InternalDispatcher`1.Dispatch[TInterceptionContext,TResult](Func`1 operation, TInterceptionContext interceptionContext, Action`1 executing, Action`1 executed)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.Reader(DbCommand command, DbCommandInterceptionContext interceptionContext)
+   在 System.Data.Entity.Internal.InterceptableDbCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Core.Mapping.Update.Internal.DynamicUpdateCommand.Execute(Dictionary`2 identifierValues, List`1 generatedValues)
+   在 System.Data.Entity.Core.Mapping.Update.Internal.UpdateTranslator.Update()
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Data.Entity.Core.Mapping.Update.Internal.UpdateTranslator.Update()
+   在 System.Data.Entity.Core.EntityClient.Internal.EntityAdapter.<Update>b__2(UpdateTranslator ut)
+   在 System.Data.Entity.Core.EntityClient.Internal.EntityAdapter.Update[T](T noChangesResult, Func`2 updateFunction, Boolean throwOnClosedConnection)
+   在 System.Data.Entity.Core.EntityClient.Internal.EntityAdapter.Update(Boolean throwOnClosedConnection)
+   在 System.Data.Entity.Core.Objects.ObjectContext.<SaveChangesToStore>b__b()
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteInTransaction[T](Func`1 func, IDbExecutionStrategy executionStrategy, Boolean startLocalTransaction, Boolean releaseConnectionOnSuccess)
+   在 System.Data.Entity.Core.Objects.ObjectContext.SaveChangesToStore(SaveOptions options, IDbExecutionStrategy executionStrategy)
+   在 System.Data.Entity.Core.Objects.ObjectContext.<>c__DisplayClass9.<SaveChanges>b__6()
+   在 System.Data.Entity.SqlServer.DefaultSqlExecutionStrategy.Execute[TResult](Func`1 operation)
+   在 System.Data.Entity.Core.Objects.ObjectContext.SaveChanges(SaveOptions options)
+   在 System.Data.Entity.Internal.InternalContext.SaveChanges()
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Data.Entity.Internal.InternalContext.SaveChanges()
+   在 System.Data.Entity.Internal.LazyInternalContext.SaveChanges()
+   在 System.Data.Entity.DbContext.SaveChanges()
+   在 MvcMember.AjaxServiceSave.SaveCardInfo(String memberid, String cardno, String typeid, String iniintegral, String saleman, String cometype, String startdate, String enddate, String creator) 位置 e:\我的项目\宁夏路虎\MvcMember\AjaxServiceSave.svc.cs:行号 230
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 09:48:53,970 [28] ERROR MvcMember.AjaxServiceSave [(null)] -    在 System.Data.Entity.Internal.InternalContext.SaveChanges()
+   在 System.Data.Entity.Internal.LazyInternalContext.SaveChanges()
+   在 System.Data.Entity.DbContext.SaveChanges()
+   在 MvcMember.AjaxServiceSave.SaveCardInfo(String memberid, String cardno, String typeid, String iniintegral, String saleman, String cometype, String startdate, String enddate, String creator) 位置 e:\我的项目\宁夏路虎\MvcMember\AjaxServiceSave.svc.cs:行号 230An error occurred while updating the entries. See the inner exception for details.
+
+System.Data.Entity.Infrastructure.DbUpdateException: An error occurred while updating the entries. See the inner exception for details. ---> System.Data.Entity.Core.UpdateException: An error occurred while updating the entries. See the inner exception for details. ---> System.Data.SqlClient.SqlException: 不能将值 NULL 插入列 'DmsID'，表 'VolvoMember.dbo.Member'；列不允许有 Null 值。UPDATE 失败。
+语句已终止。
+   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   在 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   在 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, SqlDataReader ds)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.<>c__DisplayClassb.<Reader>b__8()
+   在 System.Data.Entity.Infrastructure.Interception.InternalDispatcher`1.Dispatch[TInterceptionContext,TResult](Func`1 operation, TInterceptionContext interceptionContext, Action`1 executing, Action`1 executed)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.Reader(DbCommand command, DbCommandInterceptionContext interceptionContext)
+   在 System.Data.Entity.Internal.InterceptableDbCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Core.Mapping.Update.Internal.DynamicUpdateCommand.Execute(Dictionary`2 identifierValues, List`1 generatedValues)
+   在 System.Data.Entity.Core.Mapping.Update.Internal.UpdateTranslator.Update()
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Data.Entity.Core.Mapping.Update.Internal.UpdateTranslator.Update()
+   在 System.Data.Entity.Core.EntityClient.Internal.EntityAdapter.<Update>b__2(UpdateTranslator ut)
+   在 System.Data.Entity.Core.EntityClient.Internal.EntityAdapter.Update[T](T noChangesResult, Func`2 updateFunction, Boolean throwOnClosedConnection)
+   在 System.Data.Entity.Core.EntityClient.Internal.EntityAdapter.Update(Boolean throwOnClosedConnection)
+   在 System.Data.Entity.Core.Objects.ObjectContext.<SaveChangesToStore>b__b()
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteInTransaction[T](Func`1 func, IDbExecutionStrategy executionStrategy, Boolean startLocalTransaction, Boolean releaseConnectionOnSuccess)
+   在 System.Data.Entity.Core.Objects.ObjectContext.SaveChangesToStore(SaveOptions options, IDbExecutionStrategy executionStrategy)
+   在 System.Data.Entity.Core.Objects.ObjectContext.<>c__DisplayClass9.<SaveChanges>b__6()
+   在 System.Data.Entity.SqlServer.DefaultSqlExecutionStrategy.Execute[TResult](Func`1 operation)
+   在 System.Data.Entity.Core.Objects.ObjectContext.SaveChanges(SaveOptions options)
+   在 System.Data.Entity.Internal.InternalContext.SaveChanges()
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Data.Entity.Internal.InternalContext.SaveChanges()
+   在 System.Data.Entity.Internal.LazyInternalContext.SaveChanges()
+   在 System.Data.Entity.DbContext.SaveChanges()
+   在 MvcMember.AjaxServiceSave.SaveCardInfo(String memberid, String cardno, String typeid, String iniintegral, String saleman, String cometype, String startdate, String enddate, String creator) 位置 e:\我的项目\宁夏路虎\MvcMember\AjaxServiceSave.svc.cs:行号 230
+yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 10:13:44,635 [9] INFO  CommonCls [(null)] - 用户登录成功！。/Home/index/E39A9F61F30A9DD3/admin。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 10:21:28,772 [16] INFO  CommonCls [(null)] - 查看卡级别定义。/CardType。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 10:27:20,006 [27] INFO  CommonCls [(null)] - 查看服务项目。/ServiceItem。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 10:28:57,030 [30] INFO  CommonCls [(null)] - 查看服务项目。/ServiceItem。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 10:43:56,251 [14] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140111001','178449',800000,0,14,0,700,'2014/1/11 10:43:56','admin',0,0)。。
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 11:03:13,962 [28] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140111002','178449',800000,14,100,0,10000,'2014/1/11 11:03:13','admin',0,0)。。
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 11:24:49,859 [34] INFO  CommonCls [(null)] - 用户登录成功！。/Home/index/E39A9F61F30A9DD3/admin。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 11:25:09,562 [49] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140111003','178449',800000,114,5,0,500,'2014/1/11 11:25:09','admin',0,0)。。
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 11:47:06,778 [10] INFO  CommonCls [(null)] - 用户登录成功！。/Home/index/E39A9F61F30A9DD3/admin。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 11:50:15,120 [10] ERROR MvcMember.AjaxServiceSave [(null)] -    在 System.Data.Entity.Internal.InternalContext.SaveChanges()
+   在 System.Data.Entity.Internal.LazyInternalContext.SaveChanges()
+   在 System.Data.Entity.DbContext.SaveChanges()
+   在 MvcMember.AjaxServiceSave.SaveRecharge(String memberid, String cardno, String balance, String giveinte, String inmoney, String intype, String remark, String selitemid, String times, String givemoney, String userid, String dmsid) 位置 e:\我的项目\宁夏路虎\MvcMember\AjaxServiceSave.svc.cs:行号 71An error occurred while updating the entries. See the inner exception for details.
+
+System.Data.Entity.Infrastructure.DbUpdateException: An error occurred while updating the entries. See the inner exception for details. ---> System.Data.Entity.Core.UpdateException: An error occurred while updating the entries. See the inner exception for details. ---> System.Data.SqlClient.SqlException: 列名 'DmsID' 无效。
+   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   在 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   在 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, SqlDataReader ds)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.<>c__DisplayClassb.<Reader>b__8()
+   在 System.Data.Entity.Infrastructure.Interception.InternalDispatcher`1.Dispatch[TInterceptionContext,TResult](Func`1 operation, TInterceptionContext interceptionContext, Action`1 executing, Action`1 executed)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.Reader(DbCommand command, DbCommandInterceptionContext interceptionContext)
+   在 System.Data.Entity.Internal.InterceptableDbCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Core.Mapping.Update.Internal.DynamicUpdateCommand.Execute(Dictionary`2 identifierValues, List`1 generatedValues)
+   在 System.Data.Entity.Core.Mapping.Update.Internal.UpdateTranslator.Update()
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Data.Entity.Core.Mapping.Update.Internal.UpdateTranslator.Update()
+   在 System.Data.Entity.Core.EntityClient.Internal.EntityAdapter.<Update>b__2(UpdateTranslator ut)
+   在 System.Data.Entity.Core.EntityClient.Internal.EntityAdapter.Update[T](T noChangesResult, Func`2 updateFunction, Boolean throwOnClosedConnection)
+   在 System.Data.Entity.Core.EntityClient.Internal.EntityAdapter.Update(Boolean throwOnClosedConnection)
+   在 System.Data.Entity.Core.Objects.ObjectContext.<SaveChangesToStore>b__b()
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteInTransaction[T](Func`1 func, IDbExecutionStrategy executionStrategy, Boolean startLocalTransaction, Boolean releaseConnectionOnSuccess)
+   在 System.Data.Entity.Core.Objects.ObjectContext.SaveChangesToStore(SaveOptions options, IDbExecutionStrategy executionStrategy)
+   在 System.Data.Entity.Core.Objects.ObjectContext.<>c__DisplayClass9.<SaveChanges>b__6()
+   在 System.Data.Entity.SqlServer.DefaultSqlExecutionStrategy.Execute[TResult](Func`1 operation)
+   在 System.Data.Entity.Core.Objects.ObjectContext.SaveChanges(SaveOptions options)
+   在 System.Data.Entity.Internal.InternalContext.SaveChanges()
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Data.Entity.Internal.InternalContext.SaveChanges()
+   在 System.Data.Entity.Internal.LazyInternalContext.SaveChanges()
+   在 System.Data.Entity.DbContext.SaveChanges()
+   在 MvcMember.AjaxServiceSave.SaveRecharge(String memberid, String cardno, String balance, String giveinte, String inmoney, String intype, String remark, String selitemid, String times, String givemoney, String userid, String dmsid) 位置 e:\我的项目\宁夏路虎\MvcMember\AjaxServiceSave.svc.cs:行号 71
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 11:53:56,907 [10] ERROR MvcMember.AjaxServiceSave [(null)] -    在 System.Data.Entity.Internal.InternalContext.SaveChanges()
+   在 System.Data.Entity.Internal.LazyInternalContext.SaveChanges()
+   在 System.Data.Entity.DbContext.SaveChanges()
+   在 MvcMember.AjaxServiceSave.SaveRecharge(String memberid, String cardno, String balance, String giveinte, String inmoney, String intype, String remark, String selitemid, String times, String givemoney, String userid, String dmsid) 位置 e:\我的项目\宁夏路虎\MvcMember\AjaxServiceSave.svc.cs:行号 71An error occurred while updating the entries. See the inner exception for details.
+
+System.Data.Entity.Infrastructure.DbUpdateException: An error occurred while updating the entries. See the inner exception for details. ---> System.Data.Entity.Core.UpdateException: An error occurred while updating the entries. See the inner exception for details. ---> System.Data.SqlClient.SqlException: 列名 'DmsID' 无效。
+   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   在 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   在 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, SqlDataReader ds)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.<>c__DisplayClassb.<Reader>b__8()
+   在 System.Data.Entity.Infrastructure.Interception.InternalDispatcher`1.Dispatch[TInterceptionContext,TResult](Func`1 operation, TInterceptionContext interceptionContext, Action`1 executing, Action`1 executed)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.Reader(DbCommand command, DbCommandInterceptionContext interceptionContext)
+   在 System.Data.Entity.Internal.InterceptableDbCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Core.Mapping.Update.Internal.DynamicUpdateCommand.Execute(Dictionary`2 identifierValues, List`1 generatedValues)
+   在 System.Data.Entity.Core.Mapping.Update.Internal.UpdateTranslator.Update()
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Data.Entity.Core.Mapping.Update.Internal.UpdateTranslator.Update()
+   在 System.Data.Entity.Core.EntityClient.Internal.EntityAdapter.<Update>b__2(UpdateTranslator ut)
+   在 System.Data.Entity.Core.EntityClient.Internal.EntityAdapter.Update[T](T noChangesResult, Func`2 updateFunction, Boolean throwOnClosedConnection)
+   在 System.Data.Entity.Core.EntityClient.Internal.EntityAdapter.Update(Boolean throwOnClosedConnection)
+   在 System.Data.Entity.Core.Objects.ObjectContext.<SaveChangesToStore>b__b()
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteInTransaction[T](Func`1 func, IDbExecutionStrategy executionStrategy, Boolean startLocalTransaction, Boolean releaseConnectionOnSuccess)
+   在 System.Data.Entity.Core.Objects.ObjectContext.SaveChangesToStore(SaveOptions options, IDbExecutionStrategy executionStrategy)
+   在 System.Data.Entity.Core.Objects.ObjectContext.<>c__DisplayClass9.<SaveChanges>b__6()
+   在 System.Data.Entity.SqlServer.DefaultSqlExecutionStrategy.Execute[TResult](Func`1 operation)
+   在 System.Data.Entity.Core.Objects.ObjectContext.SaveChanges(SaveOptions options)
+   在 System.Data.Entity.Internal.InternalContext.SaveChanges()
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Data.Entity.Internal.InternalContext.SaveChanges()
+   在 System.Data.Entity.Internal.LazyInternalContext.SaveChanges()
+   在 System.Data.Entity.DbContext.SaveChanges()
+   在 MvcMember.AjaxServiceSave.SaveRecharge(String memberid, String cardno, String balance, String giveinte, String inmoney, String intype, String remark, String selitemid, String times, String givemoney, String userid, String dmsid) 位置 e:\我的项目\宁夏路虎\MvcMember\AjaxServiceSave.svc.cs:行号 71
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 12:10:44,922 [33] INFO  MvcMember.AjaxService [(null)] - admin更改了卡号800000会员积分500,客户编号:178449
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 12:16:02,399 [25] INFO  CommonCls [(null)] - 查看卡级别定义。/CardType。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 12:16:20,601 [27] INFO  CommonCls [(null)] - 查看服务项目。/ServiceItem。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 12:16:44,653 [31] INFO  CommonCls [(null)] - 查看服务项目。/ServiceItem。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 12:17:07,642 [31] INFO  CommonCls [(null)] - 查看员工资料。/Employee。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 12:17:28,485 [31] INFO  CommonCls [(null)] - 查看员工资料。/Employee。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 12:43:05,393 [29] INFO  CommonCls [(null)] - 用户登录成功！。/Home/index/E39A9F61F30A9DD3/admin。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 12:49:31,848 [15] INFO  CommonCls [(null)] - 查看客户回访。/Activity/CallBack。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 14:30:37,956 [10] INFO  CommonCls [(null)] - 用户登录成功！。/Home/index/F984B5713E363917/admin。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 14:31:38,154 [5] INFO  CommonCls [(null)] - 用户登录成功！。/Home/index/F984B5713E363917/admin。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 17:17:01,627 [52] INFO  CommonCls [(null)] - 用户登录成功！。/Home/index/F984B5713E363917/admin。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 17:18:22,498 [55] INFO  CommonCls [(null)] - 用户登录成功！。/Home/index/F984B5713E363917/admin。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 18:00:52,302 [11] INFO  CommonCls [(null)] - 用户登录成功！。/Home/index/F984B5713E363917/admin。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 18:11:53,287 [56] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140111004','178449',800000,569,2,3100,200,'2014/1/11 18:11:53','admin',0,0)。。
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 18:19:19,986 [32] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140111005','178449',800000,571,0,2900,0,'2014/1/11 18:19:19','admin',0,0)。。
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-11 18:20:01,070 [33] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140111006','178449',800000,571,0,2900,150,'2014/1/11 18:20:01','admin',0,0)。。
+
+ -----------------------日志记录结束--------------

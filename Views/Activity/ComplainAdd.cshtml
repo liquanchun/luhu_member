@@ -1,0 +1,224 @@
+﻿@model MvcMember.Models.Complain
+@{
+    ViewBag.Title = "新增客户意见投诉";
+}
+<h2>新增客户意见投诉</h2>
+
+<form id="complainAdd" action="">
+    <div id="contentdiv">
+        <div class="formdiv">
+            <input type="hidden" value="@ViewBag.DmsID" id="dmsid" />
+            <input type="hidden" value="@ViewBag.UserID" id="userid" />
+            <div class="headp" style="margin-bottom: 8px;">填写客户意见投诉信息</div>
+            <table>
+                <tr>
+                    <td class="labtd">*车牌号码:</td>
+                    <td>
+                        <input type="text" id="CarNO" name="CarNO" datatype="s" nullmsg="请输入车牌号码！" errormsg="请输入车牌号码！" /></td>
+                    <td>
+                        <div class="Validform_checktip"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="labtd">*客户名称:</td>
+                    <td>
+                        <input type="text" id="Customer" name="Customer" datatype="s" nullmsg="请输入客户名称！" errormsg="请输入客户名称！" /></td>
+                    <td>
+                        <div class="Validform_checktip"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="labtd">*联系电话:</td>
+                    <td>
+                        <input type="text" id="Mobile" name="Mobile" datatype="n" nullmsg="请输入联系电话！" errormsg="请输入联系电话！" /></td>
+                    <td>
+                        <div class="Validform_checktip"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="labtd">*投诉方式:</td>
+                    <td>
+                        <input type="radio" datatype="radio" class="pr1" id="tsfs1" name="tsfs" checked="checked" value="1" /><label for="male">打电话</label>
+                        <input type="radio" class="pr1" id="tsfs2" name="tsfs" value="2" /><label for="female">来店</label></td>
+                    <td>
+                        <div class="Validform_checktip"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="labtd">*时间:</td>
+                    <td>
+                        <input type="text" id="CTime" name="CTime" /></td>
+                    <td>
+                        <div class="Validform_checktip"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="labtd">*事发地点:</td>
+                    <td>
+                        <input type="text" id="Site" name="Site" /></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="labtd">投诉对象:</td>
+                    <td>
+                        <input type="text" id="Person" name="Person" /></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="labtd">*投诉内容:</td>
+                    <td>
+                        <textarea cols="40" rows="2" id="Event" style="font-size: 90%;" name="Event"></textarea></td>
+
+                    <td>
+                        <div class="Validform_checktip"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="labtd">*投诉类型:</td>
+                    <td>
+                        <input type="radio" datatype="radio" class="pr1" id="tslx1" name="tslx" checked="checked" value="1" /><label for="tslx1">抱怨</label>
+                        <input type="radio" class="pr1" id="tslx2" name="tslx" value="2" /><label for="tslx2">意见</label>
+                        <input type="radio" class="pr1" id="tslx3" name="tslx" value="3" /><label for="tslx3">建议</label>
+                    </td>
+                    <td>
+                        <div class="Validform_checktip"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="labtd">投诉性质:</td>
+                    <td>@Html.DropDownList("EventType", new SelectList(ViewBag.EventType as System.Collections.IEnumerable,
+                 "ItemName", "ItemName", null)) </td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td class="labtd"></td>
+                    <td class="baidubtn"><a href="javascript:void(0)" style="margin-left: 0px; float: left;" onclick="Commit()">保 存</a></td>
+                    <td class="baidubtn"></td>
+                </tr>
+
+            </table>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+</form>
+<div style="padding-bottom: 10px; padding-left: 5px;">
+    @Html.ActionLink("返回列表", "ComplainList")
+</div>
+<script src="@Url.Content("~/Scripts/jquery.ui.autocomplete.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.ui.position.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#Mobile").numeral();
+        $("#CTime").datepicker();
+        $('#complainAdd').bind('keypress', function (e) {
+            return e.keyCode !== 13;
+        });
+        //输入框鼠标样式
+        $(".formdiv input[type='text']").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv select").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv input[type='text']").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+        $(".formdiv select").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../../AjaxServiceSave.svc/GetCarNoAll")',
+             contentType: 'application/json',
+             dataType: 'text',
+             success: function (msg) {
+             }
+         });
+
+         $("#complainAdd").Validform({
+             tiptype: 2,
+             postonce: true,
+             ajaxPost: true,
+             callback: function (data) {
+                 if (data.status == "y") {
+                     setTimeout(function () {
+                         $.Hidemsg(); //公用方法关闭信息提示框;
+                     }, 2000);
+                 }
+             }
+         });
+     });
+     //自动完成
+     $(function () {
+         $.ajax({
+             url: '@Url.Content("../../carnolistall.xml")',
+            dataType: "xml",
+            success: function (xmlResponse) {
+                var data = $("Member", xmlResponse).map(function () {
+                    return {
+                        value: $("carno", this).text(),
+                        carno: $("carno", this).text(),
+                        name: $("name", this).text(),
+                        mobile: $("mobile", this).text()
+                    };
+                }).get();
+                $("#CarNO").autocomplete({
+                    source: data,
+                    minLength: 0,
+                    select: function (event, ui) {
+                        $("#CarNO").val(ui.item.carno);
+                        $("#Customer").val(ui.item.name);
+                        $("#Mobile").val(ui.item.mobile);
+                    }
+                });
+            }
+        });
+    });
+    function Commit() {
+        if ($("#Customer").val() == "" || $("#CarNO").val() == "" || $("#Mobile").val() == "") {
+            return false;
+        }
+        var cometype = '打电话';
+        if ($("#tsfs2").attr("checked") == true) {
+            cometype = "来店";
+        }
+        var Type = '抱怨';
+        if ($("#tslx2").attr("checked") == true) {
+            Type = "意见";
+        }
+        if ($("#tslx3").attr("checked") == true) {
+            Type = "建议";
+        }
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxServiceSave.svc/SaveComplain")',
+             contentType: 'application/json',
+             dataType: 'text',
+             data: '{"customer":"' + $("#Customer").val() + '","carno":"' + $("#CarNO").val() + '","mobile":"' + $("#Mobile").val() + '","cometype":"' + cometype + '","ctime":"' + $("#CTime").val() + '","site":"' + $("#Site").val() + '","person":"' + $("#Person").val() + '","events":"' + $("#Event").val() + '","type":"' + Type + '","eventtype":"' + $("#EventType").val() + '","userid":"' + $("#userid").val() + '","dmsid":"' + $("#dmsid").val() + '"}',
+             success: function (msg) {
+                 var a = eval('(' + msg + ')');
+                 if (a.d == 1) {
+                     alert("保存成功！");
+                     $("input[type='text']").val('');
+                 }
+                 else {
+                     alert("保存失败！");
+                 }
+             },
+             error: function () {
+                 alert("发生错误！");
+             },
+             beforeSend: function () {
+                 $(".baidubtn a:first").text("正在保存...");
+             },
+             complete: function () {
+                 $(".baidubtn a:first").text("保 存");
+             }
+         });
+     }
+     function Print() {
+
+     }
+</script>
+

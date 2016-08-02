@@ -1,0 +1,238 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Configuration;
+using System.Web;
+using System.Web.Mvc;
+using System.Data;
+using System.Data.SqlClient;
+using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions.Edm.Db;
+using System.Data.Entity.ModelConfiguration;
+using MvcMember.Models;
+using Webdiyer.WebControls.Mvc;
+namespace MvcMember.Controllers
+{
+    public class CardInfoController : Controller
+    {
+        WebMemberDBContext DBContext = new WebMemberDBContext();
+        ClsSys clssys = new ClsSys();
+        //
+        // GET: /CardInfo/
+        [CheckLogin]
+        public ActionResult Index()
+        {
+            IDictionary<string, string> searchConditions = new Dictionary<string, string>();
+            if (this.Request.Form.AllKeys.Length > 0)
+            {
+                searchConditions.Add("Date1", Request["Date1"]);
+                searchConditions.Add("Date2", Request["Date2"]);
+                searchConditions.Add("Name", Request["Name"]);
+                searchConditions.Add("Mobile", Request["Mobile"]);
+                searchConditions.Add("CarNo", Request["CarNo"]);
+                searchConditions.Add("CardNo", Request["CardNo"]);
+            }
+            else
+            {
+                object values = null;
+                if (this.TempData.TryGetValue("SearchConditions", out values))
+                {
+                    searchConditions = values as Dictionary<string, string>;
+                }
+            }
+            this.TempData["SearchConditions"] = searchConditions;
+            string Date1 = GetSearchConditionValue(searchConditions, "Date1");
+            string Date2 = GetSearchConditionValue(searchConditions, "Date2");
+            string Name = GetSearchConditionValue(searchConditions, "Name");
+            string Mobile = GetSearchConditionValue(searchConditions, "Mobile");
+            string CarNo = GetSearchConditionValue(searchConditions, "CarNo");
+            string VinNo = GetSearchConditionValue(searchConditions, "CardNo");
+            DateTime dt1 = string.IsNullOrEmpty(Date1) ? DateTime.Today : DateTime.Parse(Date1);
+            DateTime dt2 = string.IsNullOrEmpty(Date2) ? DateTime.Today.AddDays(1) : DateTime.Parse(Date2).AddDays(1);
+            if (string.IsNullOrEmpty(Name) && string.IsNullOrEmpty(Mobile) && string.IsNullOrEmpty(CarNo) && string.IsNullOrEmpty(VinNo) && string.IsNullOrEmpty(Date1))
+            {
+                dt1 = DateTime.Today;
+            }
+            else
+            {
+                dt1 = DateTime.Today.AddYears(-10);
+            }
+            var dmsid = Session["DmsID"].ToString();
+            var result = (from c in DBContext.V_CardInfoDb
+                          where c.DmsID == dmsid && (string.IsNullOrEmpty(Name.Trim()) || c.Name.StartsWith(Name.Trim()))
+                          && (string.IsNullOrEmpty(Mobile.Trim()) || c.Mobile.StartsWith(Mobile.Trim()))
+                          && (string.IsNullOrEmpty(CarNo.Trim()) || c.CarNO.Trim().EndsWith(CarNo.Trim()))
+                          && (string.IsNullOrEmpty(VinNo.Trim()) || c.CardNo.StartsWith(VinNo.Trim()))
+                          && c.StartDate.CompareTo(dt1) >= 0 && c.StartDate.CompareTo(dt2) < 0
+                          select c).ToList().OrderByDescending(o => o.CreateDate);
+            this.ViewData.Model = result;
+            ViewBag.UserID = Session["UserID"].ToString();
+            clssys.AddSysLog("查看会员资料", Request.RawUrl, this.Session["UserName"].ToString());
+            return View();
+        }
+        private static string GetSearchConditionValue(IDictionary<string, string> searchConditions, string key)
+        {
+            string tempValue = string.Empty;
+            if (searchConditions != null && searchConditions.Count > 0)
+            {
+                searchConditions.TryGetValue(key, out tempValue);
+            }
+            return tempValue;
+        }
+        //
+        // GET: /CardInfo/Details/5
+        [CheckLogin]
+        public ActionResult Details(int id)
+        {
+            string  cardno = Request.Url.Segments[3].ToString();
+            var v_cardinfo = DBContext.V_CardInfoDb.First(f => f.CardNo == cardno);
+            return View(v_cardinfo);
+        }
+        //
+        // GET: /CardInfo/Create
+        [CheckLogin]
+        public ActionResult Create()
+        {
+            SetValue();
+            var v_cardinfo = new V_CardInfo();
+            v_cardinfo.StartDate = DateTime.Today;
+            v_cardinfo.EndDate = DateTime.Today.AddYears(3);
+            if (Request.Url.Segments.Count()==4)  //从车主资料列表连接过来
+            {
+                int memid = int.Parse(Request.Url.Segments[3].ToString());
+                V_Member v_mb = DBContext.V_MemberDb.FirstOrDefault(f => f.MemberID == memid);
+                v_cardinfo.MemberID = v_mb.MemberID;
+                v_cardinfo.Mobile = v_mb.Mobile;
+                v_cardinfo.Name = v_mb.Name;
+                v_cardinfo.CarNO = v_mb.CarNO;
+                v_cardinfo.VinNO = v_mb.VinNO;
+                v_cardinfo.DmsID = Session["DmsID"].ToString();
+                AjaxService ajaxser = new AjaxService();
+                v_cardinfo.CardNo = ajaxser.NewCardNo();
+                ViewBag.Name = v_mb.Name;
+                ViewBag.CardNo = v_cardinfo.CardNo;
+                ViewBag.Mobile = v_cardinfo.Mobile;
+                ViewBag.CarNo = v_cardinfo.CarNO;
+                ViewBag.VinNO = v_cardinfo.VinNO;
+            }
+            ViewBag.hdxx = DBContext.ActivityDb.OrderByDescending(A => A.StartTime).Take(1).Single().Name;
+            ViewBag.UserName = this.Session["UserName"].ToString();
+            
+            return View(v_cardinfo);
+        }
+        [CheckLogin]
+        public ActionResult Setting()
+        {
+            //var SysSetList = DBContext.SysSettingDb.ToList();
+
+            //IDictionary<string, string> searchConditions = new Dictionary<string, string>();
+            //foreach(var sysset in SysSetList)
+            //{
+            //    searchConditions.Add(sysset.keyword, sysset.Val1 + "," + sysset.Val2);
+            //}
+            //this.TempData["SearchConditions"] = searchConditions;
+
+            int parentid = DBContext.ItemListDb.Where(w => w.ItemName == "客户类型").First().ID;
+            ViewBag.khlxList = DBContext.ItemListDb.Where(w => w.ItemParent == parentid).ToList();
+            ViewBag.InteToMoneyRate = ConfigurationManager.AppSettings["InteToMoneyRate"].ToString();
+            ViewBag.InteToMoneyMax = ConfigurationManager.AppSettings["InteToMoneyMax"].ToString();
+            var serviceinte = DBContext.ServiceInteDb.ToList();
+            return View(serviceinte);
+        }
+
+        [CheckLogin]
+        public ActionResult CardManger()
+        {
+            ViewBag.hdxx = DBContext.ActivityDb.OrderByDescending(A => A.StartTime).Take(1).Single().Name;
+            ViewBag.TypeList = DBContext.CardTypeDb.ToList();
+            //ViewBag.AdjustInte = DBContext.AdjustInteDb.OrderByDescending(A => A.createdate).ToList();
+            return View();
+        }
+        //
+        // POST: /CardInfo/Create
+
+        [HttpPost]
+        public ActionResult Create(V_CardInfo v_cardinfo)
+        {
+            try
+            {
+                // TODO: Add insert logic here
+                if (v_cardinfo.MemberID == 0)
+                {
+                    Member membermd = new Member();
+                    membermd.Name = v_cardinfo.Name;
+                    membermd.Mobile = v_cardinfo.Mobile;
+                    membermd.CreateDate = DateTime.Today;
+                    var dmsid = Session["DmsID"].ToString();
+                    membermd.DmsID = dmsid;
+                    membermd.LastComeDate = DateTime.Parse("1900-01-01");
+                    membermd.Creator = Session["UserName"] != null ? Session["UserName"].ToString() : string.Empty;
+                    DBContext.MemberDb.Add(membermd);
+                    DBContext.SaveChanges();
+
+                    int maxid = DBContext.MemberDb.Max(m => m.MemberID);
+                    Member2 member2md = new Member2();
+                    member2md.MemberID = maxid;
+                    member2md.CarNO = v_cardinfo.CarNO;
+                    member2md.VinNO = v_cardinfo.VinNO;
+                    DBContext.Member2Db.Add(member2md);
+                    DBContext.SaveChanges();
+
+                    v_cardinfo.MemberID = maxid;
+                }
+                CardInfo cardinfo = new CardInfo();
+                cardinfo.MemberID = v_cardinfo.MemberID;
+                //检查该客户是否已经发卡
+                if (DBContext.CardInfoDb.Where(f => f.MemberID == v_cardinfo.MemberID).Select(f => f).Count() > 0)
+                {
+                    SetValue();
+                    return View();
+                }
+                cardinfo.CardNo = v_cardinfo.CardNo;
+                cardinfo.InitialIntegral = v_cardinfo.InitialIntegral;
+                cardinfo.SaleMan = v_cardinfo.SaleMan;
+                cardinfo.StartDate = v_cardinfo.StartDate;
+                cardinfo.TypeID = v_cardinfo.TypeID;
+                cardinfo.SumGiveIntegral = v_cardinfo.InitialIntegral;
+                cardinfo.BalanceIntegral = v_cardinfo.InitialIntegral;
+                cardinfo.EndDate = v_cardinfo.EndDate;
+                cardinfo.ComeType = v_cardinfo.ComeType;
+                cardinfo.State = "正常";
+                cardinfo.CreateDate = DateTime.Now;
+                if (Session["UserName"] != null)
+                {
+                    cardinfo.Creator = Session["UserName"].ToString();
+                }
+                DBContext.CardInfoDb.Add(cardinfo);
+                DBContext.SaveChanges();
+                clssys.AddSysLog("新增会员资料，会员卡号："+ v_cardinfo.CardNo, Request.RawUrl, this.Session["UserName"].ToString());
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                SetValue();
+                return View();
+            }
+        }
+        private void SetValue()
+        {
+            int parentid = DBContext.ItemListDb.Where(w => w.ItemName == "入会方式").First().ID;
+            ViewBag.ComeTypeList = DBContext.ItemListDb.Where(w => w.ItemParent == parentid).ToList();
+
+            parentid = DBContext.ItemListDb.Where(w => w.ItemName == "卡类型").First().ID;
+            ViewBag.CardSortList = DBContext.ItemListDb.Where(w => w.ItemParent == parentid).ToList();
+
+            ViewBag.TypeList = DBContext.CardTypeDb.ToList();
+            ViewBag.EmpList = DBContext.EmployeeDb.ToList();
+
+            ViewBag.Today = DateTime.Today.ToString();
+        }
+        [HttpGet]
+        public ActionResult CheckCardNoExists(string cardNo)
+        {
+            bool exists = DBContext.CardInfoDb.Where(w => w.CardNo == cardNo).Count() > 0 ? true : false;
+            exists = HttpContext.Request.UrlReferrer.AbsoluteUri.Contains("Edit") == true ? false : exists;
+            return Json(!exists, JsonRequestBehavior.AllowGet);
+        }
+    }
+}

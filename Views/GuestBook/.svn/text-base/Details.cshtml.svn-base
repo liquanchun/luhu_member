@@ -1,0 +1,41 @@
+﻿@model MvcMember.Models.GuestBook
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Details</title>
+</head>
+<body>
+    <fieldset>
+        <legend>GuestBook</legend>
+    
+        <div class="display-label">LTime</div>
+        <div class="display-field">@String.Format("{0:g}", Model.LTime)</div>
+    
+        <div class="display-label">LUser</div>
+        <div class="display-field">@Model.LUser</div>
+    
+        <div class="display-label">LContent</div>
+        <div class="display-field">@Model.LContent</div>
+    
+        <div class="display-label">ContactWay</div>
+        <div class="display-field">@Model.ContactWay</div>
+    
+        <div class="display-label">Reply</div>
+        <div class="display-field">@Model.Reply</div>
+    
+        <div class="display-label">ReplyMan</div>
+        <div class="display-field">@Model.ReplyMan</div>
+    </fieldset>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id=Model.ID }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</body>
+</html>
+

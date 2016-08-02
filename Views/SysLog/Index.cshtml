@@ -1,0 +1,63 @@
+﻿@model IEnumerable<MvcMember.Models.SysLog>
+
+@{
+    ViewBag.Title = "操作日志";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#Date1").datepicker();
+        $("#Date2").datepicker();
+    });
+    
+</script>
+<h2>查询操作日志</h2>
+
+@using (Ajax.BeginForm("Index", "SysLog", new AjaxOptions { UpdateTargetId = "grid" })) 
+{
+    IDictionary<string, string> searchConditions = new Dictionary<string, string>();
+    if(TempData["SearchConditions"]!=null)
+    {
+        searchConditions = TempData["SearchConditions"] as  Dictionary<string, string>;
+    }
+    this.TempData["SearchConditions"]=searchConditions;
+    string date1 = searchConditions.Keys.Contains("Date1")?searchConditions["Date1"]:string.Empty;
+    string date2 = searchConditions.Keys.Contains("Date2")?searchConditions["Date2"]:string.Empty;
+    string keyword = searchConditions.Keys.Contains("keyword") ? searchConditions["keyword"] : string.Empty;
+    string Creator = searchConditions.Keys.Contains("Creator") ? searchConditions["Creator"] : string.Empty;
+    
+    var grid = new WebGrid(source: Model,
+        ajaxUpdateContainerId: "grid",
+        rowsPerPage: 12,
+        canPage: true,
+        pageFieldName: "paging",
+        sortFieldName: "sortField",
+        selectionFieldName:"SelectedRow");
+
+<div style="background-color:#dbeafd;margin-left:5px; margin-bottom:3px;" >
+    操作时间：@Html.TextBox("Date1", @date1, new {style = "width: 85px;"}) 到 @Html.TextBox("Date2", @date2, new { style = "width: 85px;" })
+    关键字：@Html.TextBox("Name", @keyword, new { style = "width: 60px;" })
+    操作人：@Html.TextBox("Mobile", @Creator, new { style = "width: 90px;" })
+    <input type="submit" style="width:80px;" value="查 询"/>
+</div>    
+<div id="grid" style="padding-left:5px;">
+    @grid.GetHtml(
+    tableStyle: "grid table80",
+    headerStyle: "head",
+    selectedRowStyle: "alt",
+    alternatingRowStyle: "alt",
+    nextText: "下一页",
+    previousText: "上一页",
+    numericLinksCount: 10,
+    columns: grid.Columns(
+                grid.Column("ID", "序号"),
+                    grid.Column("CreateDate", "操作时间"),
+                    grid.Column("Creator", "操作人"),
+                grid.Column("Message", "操作信息"),
+                grid.Column("FunName", "操作URL")
+                
+                            )
+      )
+</div>
+<p>　总记录数：@Html.Encode(grid.TotalRowCount)　总页数：@Html.Encode(grid.PageCount)</p>
+    }
+

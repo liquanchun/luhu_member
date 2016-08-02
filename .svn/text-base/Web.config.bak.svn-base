@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  For more information on how to configure your ASP.NET application, please visit
+  http://go.microsoft.com/fwlink/?LinkId=152368
+  -->
+<configuration>
+  <connectionStrings>
+    <add name="ApplicationServices" connectionString="data source=.\SQLEXPRESS;Integrated Security=SSPI;AttachDBFilename=|DataDirectory|aspnetdb.mdf;User Instance=true" providerName="System.Data.SqlClient" />
+<<<<<<< .mine
+    <add name="WebMemberDbEntities" connectionString="Data Source=PC--20101225MFE\MSSQL2005;Initial Catalog=WebMember;Integrated Security=True" providerName="System.Data.SqlClient" />
+    <add name="WebMemberConn" connectionString="Data Source=PC--20101225MFE\MSSQL2005;Initial Catalog=WebMember;Integrated Security=True" /><add name="AdminUserDb" connectionString="metadata=res://*/Models.AdminUser.csdl|res://*/Models.AdminUser.ssdl|res://*/Models.AdminUser.msl;provider=System.Data.SqlClient;provider connection string=&quot;Data Source=PC--20101225MFE\MSSQL2005;Initial Catalog=WebMember;Integrated Security=True;MultipleActiveResultSets=True&quot;" providerName="System.Data.EntityClient" /><add name="CardInfoDb" connectionString="metadata=res://*/Models.CardInfo.csdl|res://*/Models.CardInfo.ssdl|res://*/Models.CardInfo.msl;provider=System.Data.SqlClient;provider connection string=&quot;Data Source=PC--20101225MFE\MSSQL2005;Initial Catalog=WebMember;Integrated Security=True;MultipleActiveResultSets=True&quot;" providerName="System.Data.EntityClient" /><add name="CardTypeDb" connectionString="metadata=res://*/Models.CardType.csdl|res://*/Models.CardType.ssdl|res://*/Models.CardType.msl;provider=System.Data.SqlClient;provider connection string=&quot;Data Source=PC--20101225MFE\MSSQL2005;Initial Catalog=WebMember;Integrated Security=True;MultipleActiveResultSets=True&quot;" providerName="System.Data.EntityClient" /><add name="ConsumeDb" connectionString="metadata=res://*/Models.Consume.csdl|res://*/Models.Consume.ssdl|res://*/Models.Consume.msl;provider=System.Data.SqlClient;provider connection string=&quot;Data Source=PC--20101225MFE\MSSQL2005;Initial Catalog=WebMember;Integrated Security=True;MultipleActiveResultSets=True&quot;" providerName="System.Data.EntityClient" /><add name="ItemListDb" connectionString="metadata=res://*/Models.ItemList.csdl|res://*/Models.ItemList.ssdl|res://*/Models.ItemList.msl;provider=System.Data.SqlClient;provider connection string=&quot;Data Source=PC--20101225MFE\MSSQL2005;Initial Catalog=WebMember;Integrated Security=True;MultipleActiveResultSets=True&quot;" providerName="System.Data.EntityClient" /><add name="MemberDb" connectionString="metadata=res://*/Models.Member.csdl|res://*/Models.Member.ssdl|res://*/Models.Member.msl;provider=System.Data.SqlClient;provider connection string=&quot;Data Source=PC--20101225MFE\MSSQL2005;Initial Catalog=WebMember;Integrated Security=True;MultipleActiveResultSets=True&quot;" providerName="System.Data.EntityClient" /><add name="Member2Db" connectionString="metadata=res://*/Models.Member2.csdl|res://*/Models.Member2.ssdl|res://*/Models.Member2.msl;provider=System.Data.SqlClient;provider connection string=&quot;Data Source=PC--20101225MFE\MSSQL2005;Initial Catalog=WebMember;Integrated Security=True;MultipleActiveResultSets=True&quot;" providerName="System.Data.EntityClient" /><add name="EmployeeDb" connectionString="metadata=res://*/Models.Employee.csdl|res://*/Models.Employee.ssdl|res://*/Models.Employee.msl;provider=System.Data.SqlClient;provider connection string=&quot;Data Source=PC--20101225MFE\MSSQL2005;Initial Catalog=WebMember;Integrated Security=True;MultipleActiveResultSets=True&quot;" providerName="System.Data.EntityClient" /><add name="BranchDb" connectionString="metadata=res://*/Models.Branch.csdl|res://*/Models.Branch.ssdl|res://*/Models.Branch.msl;provider=System.Data.SqlClient;provider connection string=&quot;Data Source=PC--20101225MFE\MSSQL2005;Initial Catalog=WebMember;Integrated Security=True;MultipleActiveResultSets=True&quot;" providerName="System.Data.EntityClient" /><add name="SysSettingDb" connectionString="metadata=res://*/Models.SysSetting.csdl|res://*/Models.SysSetting.ssdl|res://*/Models.SysSetting.msl;provider=System.Data.SqlClient;provider connection string=&quot;Data Source=PC--20101225MFE\MSSQL2005;Initial Catalog=WebMember;Integrated Security=True;MultipleActiveResultSets=True&quot;" providerName="System.Data.EntityClient" /><add name="RechargeDb" connectionString="metadata=res://*/Models.Recharge.csdl|res://*/Models.Recharge.ssdl|res://*/Models.Recharge.msl;provider=System.Data.SqlClient;provider connection string=&quot;Data Source=PC--20101225MFE\MSSQL2005;Initial Catalog=WebMember;Integrated Security=True;MultipleActiveResultSets=True&quot;" providerName="System.Data.EntityClient" /><add name="SysLogDb" connectionString="metadata=res://*/Models.SysLog.csdl|res://*/Models.SysLog.ssdl|res://*/Models.SysLog.msl;provider=System.Data.SqlClient;provider connection string=&quot;Data Source=PC--20101225MFE\MSSQL2005;Initial Catalog=WebMember;Integrated Security=True;MultipleActiveResultSets=True&quot;" providerName="System.Data.EntityClient" /><add name="GuestBookDb" connectionString="metadata=res://*/Models.GuestBook.csdl|res://*/Models.GuestBook.ssdl|res://*/Models.GuestBook.msl;provider=System.Data.SqlClient;provider connection string=&quot;Data Source=PC--20101225MFE\MSSQL2005;Initial Catalog=WebMember;Integrated Security=True;MultipleActiveResultSets=True&quot;" providerName="System.Data.EntityClient" /></connectionStrings>
+=======
+    <add name="WebMemberDBContext" connectionString="Data Source=YX01243;Initial Catalog=WebMember;Integrated Security=True" providerName="System.Data.SqlClient" />
+    <add name="WebMemberConn" connectionString="Data Source=YX01243;Initial Catalog=WebMember;Integrated Security=True" />
+  </connectionStrings>
+>>>>>>> .r25
+  <appSettings>
+    <add key="ClientValidationEnabled" value="true" />
+    <add key="UnobtrusiveJavaScriptEnabled" value="true" />
+    <add key="SoftName" value="在线汽车会员管理系统（测试版）" />
+    <add key="CopyRight" value="北京开天伟德信息技术有限公司" />
+    <add key="BranchName1" value="海之沃总店" />
+  </appSettings>
+  <system.web>
+    <!--<customErrors mode="On" defaultRedirect="Error"></customErrors>-->
+    <customErrors mode="Off"></customErrors>
+    <compilation debug="true" targetFramework="4.0">
+      <assemblies>
+        <add assembly="System.Web.Abstractions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35" />
+        <add assembly="System.Web.Helpers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35" />
+        <add assembly="System.Web.Routing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35" />
+        <add assembly="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35" />
+        <add assembly="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35" />
+        <add assembly="System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+      </assemblies>
+    </compilation>
+    <authentication mode="Forms">
+      <forms loginUrl="~/Account/Login" timeout="2880" />
+    </authentication>
+    <membership>
+      <providers>
+        <clear />
+        <add name="AspNetSqlMembershipProvider" type="System.Web.Security.SqlMembershipProvider" connectionStringName="ApplicationServices" enablePasswordRetrieval="false" enablePasswordReset="true" requiresQuestionAndAnswer="false" requiresUniqueEmail="false" maxInvalidPasswordAttempts="5" minRequiredPasswordLength="6" minRequiredNonalphanumericCharacters="0" passwordAttemptWindow="10" applicationName="/" />
+      </providers>
+    </membership>
+    <profile>
+      <providers>
+        <clear />
+        <add name="AspNetSqlProfileProvider" type="System.Web.Profile.SqlProfileProvider" connectionStringName="ApplicationServices" applicationName="/" />
+      </providers>
+    </profile>
+    <roleManager enabled="false">
+      <providers>
+        <clear />
+        <add name="AspNetSqlRoleProvider" type="System.Web.Security.SqlRoleProvider" connectionStringName="ApplicationServices" applicationName="/" />
+        <add name="AspNetWindowsTokenRoleProvider" type="System.Web.Security.WindowsTokenRoleProvider" applicationName="/" />
+      </providers>
+    </roleManager>
+    <pages>
+      <namespaces>
+        <add namespace="System.Web.Helpers" />
+        <add namespace="System.Web.Mvc" />
+        <add namespace="System.Web.Mvc.Ajax" />
+        <add namespace="System.Web.Mvc.Html" />
+        <add namespace="System.Web.Routing" />
+        <add namespace="System.Web.WebPages" />
+      </namespaces>
+    </pages>
+    <sessionState mode="InProc" cookieless="false" timeout="30"></sessionState>
+  </system.web>
+  <system.webServer>
+    <validation validateIntegratedModeConfiguration="false" />
+    <modules runAllManagedModulesForAllRequests="true" />
+  </system.webServer>
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly>
+        <assemblyIdentity name="System.Web.Mvc" publicKeyToken="31bf3856ad364e35" />
+        <bindingRedirect oldVersion="1.0.0.0-2.0.0.0" newVersion="3.0.0.0" />
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+  <system.serviceModel>
+    <services>
+      <service name="MvcMember.AjaxService">
+        <endpoint address="" behaviorConfiguration="MvcMember.AjaxServiceAspNetAjaxBehavior" binding="webHttpBinding" contract="MvcMember.AjaxService" />
+      </service>
+    </services>
+    <behaviors>
+      <endpointBehaviors>
+        <behavior name="MvcMember.AjaxServiceAspNetAjaxBehavior">
+          <enableWebScript />
+        </behavior>
+      </endpointBehaviors>
+      <serviceBehaviors>
+        <behavior name="">
+          <serviceMetadata httpGetEnabled="true" />
+          <serviceDebug includeExceptionDetailInFaults="false" />
+        </behavior>
+      </serviceBehaviors>
+    </behaviors>
+    <serviceHostingEnvironment aspNetCompatibilityEnabled="true" multipleSiteBindingsEnabled="true" />
+  </system.serviceModel>
+</configuration>

@@ -1,0 +1,145 @@
+yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 00:07:03,790 [31] INFO  CommonCls [(null)] - 用户登录成功！。/Home/index/F984B5713E363917/admin。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 00:08:38,876 [35] INFO  CommonCls [(null)] - 用户登录成功！。/Home/index/F984B5713E363917/admin。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 10:16:07,997 [9] INFO  CommonCls [(null)] - 用户登录成功！。/Home/index/F984B5713E363917/admin。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 10:16:48,082 [17] INFO  CommonCls [(null)] - 查看客户资料。/Member。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 10:17:51,021 [37] INFO  CommonCls [(null)] - 查看客户资料。/Member。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 10:18:33,897 [9] INFO  CommonCls [(null)] - 查看客户资料。/Member。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 10:22:54,837 [17] INFO  CommonCls [(null)] - 查看客户资料。/Member。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 10:23:44,673 [38] INFO  CommonCls [(null)] - 查看客户资料。/Member。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 10:41:02,837 [38] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140119001','178452',800001,0,40,0,2000,'2014/1/19 10:41:02','admin',0,0)。。
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 10:43:41,077 [9] INFO  CommonCls [(null)] - 用户登录成功！。/Home/index/F984B5713E363917/admin。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 10:45:44,813 [16] INFO  CommonCls [(null)] - 用户登录成功！。/Home/index/F984B5713E363917/admin。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 10:46:13,841 [9] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140119002','178452',800001,40,8,0,400,'2014/1/19 10:46:13','admin',0,0)。。
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 10:52:04,847 [14] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140119003','178452',800001,48,6,0,300,'2014/1/19 10:52:04','admin',0,0)。。
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 10:53:59,846 [30] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140119004','178452',800001,54,4,0,200,'2014/1/19 10:53:59','admin',0,0)。。
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 10:57:31,557 [10] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140119005','178452',800001,58,6,0,300,'2014/1/19 10:57:31','admin',0,0)。。
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 11:00:05,870 [33] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140119006','178452',800001,64,6,0,300,'2014/1/19 11:00:05','admin',0,0)。。
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 11:02:12,301 [35] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140119007','178452',800001,70,6,0,300,'2014/1/19 11:02:12','admin',0,0)。。
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 11:05:02,165 [29] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140119008','178452',800001,76,6,0,300,'2014/1/19 11:05:02','admin',0,0)。。
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 11:06:36,179 [17] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140119009','178452',800001,82,2,0,100,'2014/1/19 11:06:36','admin',0,0)。。
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 11:07:38,397 [6] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140119010','178452',800001,84,4,0,200,'2014/1/19 11:07:38','admin',0,0)。。
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 11:08:48,230 [21] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140119011','178452',800001,88,8,0,400,'2014/1/19 11:08:48','admin',0,0)。。
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 11:25:58,741 [24] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140119012','178452',800001,96,8,0,400,'2014/1/19 11:25:58','admin',0,0)。。
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 11:28:15,684 [16] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140119013','178452',800001,104,10,0,500,'2014/1/19 11:28:15','admin',0,0)。。
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 13:54:42,856 [31] INFO  CommonCls [(null)] - 用户登录成功！。/Home/index/F984B5713E363917/admin。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 13:56:28,406 [63] INFO  CommonCls [(null)] - 用户登录成功！。/Home/index/F984B5713E363917/admin。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 13:56:51,331 [74] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140119014','178452',800001,114,4,0,200,'2014/1/19 13:56:51','admin',0,0)。。
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 15:07:16,661 [71] INFO  CommonCls [(null)] - 挂失了卡号800001。。admin
+
+yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 15:39:35,503 [5] INFO  CommonCls [(null)] - 用户登录成功！。/Home/index/F984B5713E363917/admin。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 15:40:09,610 [6] INFO  CommonCls [(null)] - 用户登录成功！。/Home/index/F984B5713E363917/admin。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 16:02:10,842 [16] INFO  CommonCls [(null)] - 用户登录成功！。/Home/index/F984B5713E363917/admin。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 16:47:11,610 [12] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140119015','178452',800001,68,2,4630,200,'2014/1/19 16:47:11','admin',0,0)。。
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 16:57:30,883 [5] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140119016','178452',800001,70,30,4630,3000,'2014/1/19 16:57:30','admin',0,0)。。
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 16:58:30,146 [12] INFO  CommonCls [(null)] - 用户登录成功！。/Home/index/F984B5713E363917/admin。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 17:02:42,458 [27] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140119017','178452',800001,100,30,4630,3000,'2014/1/19 17:02:42','admin',0,0)。。
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 17:09:10,019 [20] INFO  CommonCls [(null)] - 用户登录成功！。/Home/index/F984B5713E363917/admin。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 17:09:39,440 [14] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140119018','178452',800001,130,10,4630,0,'2014/1/19 17:09:39','admin',0,0)。。
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 17:10:37,217 [19] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140119019','178452',800001,140,10,4630,0,'2014/1/19 17:10:37','admin',0,0)。。
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 17:11:55,057 [19] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140119020','178452',800001,150,10,4630,0,'2014/1/19 17:11:55','admin',0,0)。。
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 17:22:08,739 [42] INFO  CommonCls [(null)] - 保存结算积分信息,SQL:Insert into Consume(DmsID,BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,
+                                                    SumFee,CreateDate,Creator,InteToMoney,DeductInte) values('dms1','No.20140119021','178452',800001,160,0,4630,0,'2014/1/19 17:22:08','admin',0,0)。。
+
+yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 22:32:08,613 [5] INFO  CommonCls [(null)] - 用户登录成功！。/Home/index/F984B5713E363917/admin。admin
+
+ -----------------------日志记录结束--------------yyyy-MM-dd --------------------------日志记录开始------------
+2014-01-19 22:38:42,714 [5] INFO  CommonCls [(null)] - 用户登录成功！。/Home/index/F984B5713E363917/admin。admin
+
+ -----------------------日志记录结束--------------

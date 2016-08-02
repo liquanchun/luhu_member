@@ -1,0 +1,451 @@
+﻿@model MvcMember.Models.V_Consume
+
+@{
+    ViewBag.Title = "计次项目消费";
+}
+<h2>计次项目消费</h2>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#firstform').bind('keypress', function (e) {
+            return e.keyCode !== 13;
+        });
+        $("#CardNo").keypress(function (e) {
+            var code = (e.keyCode ? e.keyCode : e.which);
+            if (code == 13) {
+                SelectMemberByCardNo();
+            }
+        });
+        //输入框鼠标样式
+        $(".formdiv input[type='text']").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv select").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv input[type='text']").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+        $(".formdiv select").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+        $("#CardNo").numeral();
+        $("#amount").numeral();
+        $("#points").numeral();
+        $("#firstform").Validform({
+            tiptype: 2,
+            postonce: true,
+            ajaxPost: true,
+            callback: function (data) {
+                if (data.status == "y") {
+                    setTimeout(function () {
+                        $.Hidemsg(); //公用方法关闭信息提示框;
+                    }, 2000);
+                }
+            }
+        });
+        $("#Birthday").css("color", "");
+        $("#Birthday").removeAttr("title");
+        $("#CardNo").focus();
+    });
+
+    function SelectMemberByCardNo() {
+        if ($("#CardNo").val() == "") {
+            alert("请输入会员卡号！");
+            return;
+        }
+        var cardno = $("#CardNo").val();
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxService.svc/SelectMemberByCardNo")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"dmsid":"' + $("#DmsID").val() + '","cardno":"' + cardno + '"}',
+            success: function (data) {
+                var a = eval('(' + data + ')');
+                if (a.d.length > 1) {
+                    var arrs = a.d.split(",");
+                    $("#MemberID").val(arrs[0]);
+                    $("#CarNo").val(arrs[2]);
+                    $("#Name").val(arrs[3]);
+                    $("#KhType").val(arrs[4]);
+                    $("#CurBIntegral").val(arrs[5]);
+                    $("#Balance").val(arrs[6]);
+                    $("#CardLevel").val(arrs[7]);
+                    $("#Birthday").val(arrs[16]);
+
+                    $("#ServiceItem").val("-1");
+                    $("#amount").val('');
+                    $("#points").val('');
+                    ServiceTimes();
+                    //判断今天是否过生日
+                    if ($("#Birthday").val() != "") {
+                        var d1 = $("#Birthday").val().split("-");
+                        var d2 = new Date();
+                        if (parseInt(d1[1]) == d2.getMonth() + 1 && parseInt(d1[2]) == d2.getDate()) {
+                            $("#Birthday").css("color", "red");
+                            $("#Birthday").attr("title", "今天生日");
+                        }
+                    }
+                }
+                else {
+                    alert("未找到该卡号相关资料，请确认是否发卡！");
+                }
+            },
+            error: function () {
+                alert("发生错误！");
+            }
+        });
+    };
+    function ReadCard() {
+        if (typeof (callbackObj) == "undefined") {
+            return false;
+        };
+        alert("请将卡插入机器！");
+        var para = callbackObj.getPrinterPara();
+        var com = para.split(',')[0];
+        var address = para.split(',')[1];
+        if (com != "" && address != "") {
+            try {
+                if (callbackObj.getStatus() == "1") {
+                    callbackObj.cardIn();
+                }
+                else {
+                    callbackObj.openCom(parseInt(com));
+                    callbackObj.cardIn();
+                }
+                var cardno = callbackObj.readCard(address);
+                if (cardno != "") {
+                    $("#CardNo").val(cardno);
+                    $("#CardNo").blur();
+                    $("#printcard").attr("checked", "checked");
+                    SelectMemberByCardNo();
+                    callbackObj.clearCard2();
+                }
+            }
+            catch (err) {
+                alert(err);
+            }
+        }
+        else {
+            alert("串口未设置");
+        }
+    };
+    function ConsumePrintCard() {
+        try {
+            var para = callbackObj.getPrinterPara();
+            var left = para.split(',')[2];
+            var top = para.split(',')[3];
+
+            var czye = $("#Balance").val();
+            if ($("#paytype").find("option:selected").text() == "储值卡" && $("#amount").val() != "") {
+                czye = parseInt(czye) - parseInt($("#amount").val());
+            };
+            var printtext = [];
+            printtext.push("");
+            printtext.push("会员卡号:" + $("#CardNo").val());
+            printtext.push("客户姓名:" + $("#Name").val());
+            printtext.push("车牌号码:" + $("#CarNo").val());
+
+            var syjf = $("#CurBIntegral").val();
+            if ($("#points").val() != "") {
+                printtext.push("本次积分:" + $("#points").val());
+                syjf = parseInt(syjf) + parseInt($("#points").val());
+            };
+            printtext.push("剩余积分:" + syjf);
+
+            printtext.push("储值余额:" + czye);
+
+            var printdata = printtext.join('\n');
+            //打印卡
+            callbackObj.printCard(1, parseInt(left), parseInt(top), printdata);
+            location.reload();
+        }
+        catch (err) {
+            alert("打印卡面发生错误。", err.description);
+        }
+    };
+        //结算2
+        function Commit() {
+            if ($("#MemberID").val() == "" || $("#CardNo").val() == "") {
+                alert("请确认会员信息！");
+                return false;
+            }
+            var PayWay = $("#paytype").find("option:selected").text();
+            PayTypeSel();
+            if (PayWay == "剩余计次服务") {
+                if(SubServiceItem($("#MemberID").val(), $("#ServiceItem").find("option:selected").val()) == false) {
+                    return false;
+                }
+            }
+            var conf = confirm("请确认会员卡号" + $("#CardNo").val() + "消费项目" + $("#ServiceItem").find("option:selected").text() + "，积分" + $("#points").val());
+            var billno = "";
+            var createdate = "";
+            var sumtomoney = 0;
+            var sumuseinte = 0;
+            //单信息
+            var billinfo = $("#DmsID").val() + "," + billno + "," + $("#MemberID").val() + "," + $("#CardNo").val() + "," + $("#CurBIntegral").val() + "," + $("#points").val() + "," + $("#Balance").val() + ",";
+            billinfo += $("#amount").val() + "," + createdate + "," + $("#userid").val() + "," + sumtomoney + "," + sumuseinte;
+            //BillNo, ServiceType, HoursFee, PartsFee, OtherFee,SumFee, ToFee, UseInte, FactFee, Integral
+            var servicetype = $("#ServiceItem").find("option:selected").text();
+            $("#serviceitem").val(servicetype);
+            var HoursFee = 0;
+            var PartsFee = 0;
+            var OtherFee = $("#amount").val();
+            var SumFee = OtherFee;
+            var ToFee = 0;
+            var UseInte = 0;
+            var FactFee = SumFee;
+            var Integral = $("#points").val();
+            $("#serviceitempoint").val(Integral);
+            //消费项目信息
+            var serviceitem = billno + "," + servicetype + "," + HoursFee + "," + PartsFee + "," + OtherFee + "," + SumFee + "," + ToFee + "," + UseInte + "," + FactFee + "," + Integral;
+            //收款明细
+            //BillNo,PayWay,PayMoney,PayTime
+            var PayMoney = $("#amount").val();
+            var PayTime = "";
+            var sklist = billno + "," + PayWay + "," + PayMoney + "," + PayTime;
+            if (conf) {
+                $.ajax({
+                    type: 'post',
+                    url: '@Url.Content("../AjaxService.svc/SaveConsume")',
+                    contentType: 'application/json',
+                    dataType: 'text',
+                    data: '{"billinfo":"' + billinfo + '","serviceitem":"' + serviceitem + '","sklist":"' + sklist + '"}',
+                    success: function (data) {
+                        var a = eval('(' + data + ')');
+                        if (a.d.length > 0) {
+                            alert("保存成功！");
+                            if ($("#printcard").attr("checked") == true) {
+                                ConsumePrintCard();
+                            };
+                            $("input[type='text']").val('');
+                            $("#ServiceItem").val("-1");
+                        }
+                        else {
+                            alert("保存失败！");
+                        }
+                    },
+                    error: function () {
+                        alert("发生错误！");
+                    },
+                    beforeSend: function () {
+                        $(".baidubtn a:first").text("正在提交...");
+                    },
+                    complete: function () {
+                        $(".baidubtn a:first").text("提 交");
+                    }
+                });
+            }
+        }
+        //扣减购买的服务项目次数
+        function SubServiceItem(memberid,itemid) {
+            $.ajax({
+                type: 'post',
+                url: '@Url.Content("../AjaxServiceSave.svc/SubServiceItem")',
+                contentType: 'application/json',
+                dataType: 'text',
+                data: '{"memberid":"' + memberid + '","itemid":"' + itemid + '"}',
+                success: function (data) {
+                    var a = eval('(' + data + ')');
+                    if (a.d == "1") {
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                },
+                error: function () {
+                    return false;
+                }
+            });
+        }
+        //选择服务项目
+        function SelectItem() {
+            var price = $("#ServiceItem").find("option:selected").attr("title");
+            $("#xfje").show();
+            if ($("#ServiceItem").val() == "-1") {
+                $("#amount").val('');
+                $("#points").val('');
+            }
+            else {
+                if (price != "") {
+                    $("#amount").val(price.split('/')[0]);
+
+                    var thispoints = parseInt(price.split('/')[1]);
+                    if ($("#Birthday").attr("title") != "") {
+                        var birinte = $("#birthdayinte").val();
+                        if (birinte != "") {
+                            thispoints = thispoints * parseInt(birinte) / 100;
+                        }
+                    }
+                    $("#points").val(thispoints);
+                }
+                var itemname = $("#ServiceItem").find("option:selected").text();
+                $("#paytype").attr("value", '1');
+                $("#itemtiems td").each(function (i) {
+                    if ($(this).text() == itemname) {
+                        $("#paytype").attr("value", '0');
+                        $("#amount").attr("title", "将从剩余服务项目次数中扣除");
+                        $("#amount").val('0')
+                        $("#xfje").hide();
+                    }
+                });
+            }
+        }
+        //查询对应card购买计次服务
+        function ServiceTimes() {
+            $.ajax({
+                type: 'post',
+                url: '@Url.Content("../AjaxServiceSave.svc/GetServiceItemTimes")',
+                contentType: 'application/json',
+                dataType: 'text',
+                data: '{"memberid":"' + $("#MemberID").val() + '"}',
+                success: function (data) {
+                    var tml = "";
+                    var tt = "<table><tr><th style='display:none;'></th><th>项目名称</th><th>总次数</th><th>剩余次数</th></tr>";
+                    var dl = eval('(' + data + ')');
+                    var dld = eval('(' + dl.d + ')');
+                    $.each(dld, function (k, v) {
+                        $.each(v, function (kk, vv) {
+                            tt += "<tr>";
+                            tt += "<td style='display:none;'>" + vv.itemid + "</td><td>" + vv.itemname + "</td><td>" + vv.times + "</td><td>" + vv.subtimes + "</td>";
+                            tt += "</tr>";
+                            tml = 1;
+                        });
+                    });
+                    tt += "</table>";
+                    if (tml == "") {
+                        $("#itemtiems").text("暂无购买计次服务项目！");
+                        $("#itemtiems").css("color","red");
+                    }
+                    else {
+                        $("#itemtiems").html(tt);
+                        $("#itemtiems").css("color", "");
+                    }
+                },
+                error: function () {
+                    alert("发生错误！");
+                }
+            });
+        }
+        //选择支付方式
+        function PayTypeSel() {
+            var paytype = $("#paytype").find("option:selected").val()
+            if (paytype == "3") {
+                var balance = $("#Balance").val();
+                var amount = $("#amount").val();
+                if (balance == "" || parseInt(balance) < parseInt(amount)) {
+                    alert("储值卡余额不足！");
+                    $("#paytype2").attr("value", '1');
+                }
+            }
+            //计次卡
+            if (paytype == "0") {
+                var itemname = $("#ServiceItem").find("option:selected").text();
+                var tag = 0;
+                $("#itemtiems td").each(function (i) {
+                    if ($(this).text() == itemname) {
+                        tag = 1;
+                    }
+                });
+                if( tag == 0) {
+                    alert("未购买计次服务！");
+                    $("#paytype").attr("value", '1');
+                }
+            }
+        }
+</script>
+<form id="firstform" action="">
+    <div id="contentdiv">
+       <div class="formdiv">
+       <input type="hidden" name="MemberID" id="MemberID" />
+       <input type="hidden" value="@Session["UserName"].ToString()" id="userid" />
+       <input type="hidden" value="@Session["DmsID"].ToString()" id="DmsID" />
+       <input type="hidden" value="@ViewBag.birthdayinte" id="birthdayinte" />
+       <input type="hidden" value="" id="qtf" />
+
+       <input type="hidden" id="serviceitem" />
+       <input type="hidden" id="serviceitempoint" />
+        <div class="headp" style="width: 100%;">　填写服务项目消费积分信息 <span style="margin-left:128px;"></span></div>
+
+        <div>
+            <table>
+        <tr>
+        <td class="labtd">会员卡号：</td><td>
+<input type="text" name="CardNo" id="CardNo" datatype="n" nullmsg="请输入会员卡号！"  errormsg="请输入会员卡号！" title="请输入6位数字卡号按回车键，或用读卡器刷卡" class="vtip" />
+<input type="button" style="width: 60px;" value="读卡" onclick="ReadCard()" /></td>
+            </td>
+            <td><div class="Validform_checktip"></div></td>
+        </tr>
+        <tr>
+            <td class="labtd">剩余服务次数：</td>
+            <td id="itemtiems">
+            </td>
+            <td><a class="quanxian" qx="查看购买服务次数详情" href="/CardInfo/CardSerItemIndex">查看购买服务次数详情</a></td>
+        </tr>
+        <tr>
+            <td class="labtd">本次消费项目：</td>
+            <td>
+                <select id="ServiceItem" name="ServiceItem" onchange="SelectItem()">
+                <option value="-1" selected="selected">--请选择--</option>
+                @foreach (var si in ViewBag.ServiceItem)
+                { 
+                    <option title="@si.Price/@si.Integral" class="@si.ItemType" value="@si.ItemID">@si.ItemName</option>
+                }
+            </select>
+            </td>
+            <td><a class="quanxian" qx="查看服务项目定义" href="/Service/ServiceItemIndex">查看服务项目定义</a></td>
+        </tr>
+        <tr id="xfje">
+            <td class="labtd">消费金额：</td>
+            <td><input type="text" name="amount" id="amount" datatype="n" nullmsg="请输入消费金额！"  errormsg="充值金额数字！" class="vtip" title="" /></td>
+            <td><div class="Validform_checktip"></div></td>
+        </tr>
+         <tr>
+            <td class="labtd">本次积分：</td><td><input type="text" name="points" id="points" title="根据选择的业务分类积分规则和消费金额计算！" class="vtip" /></td><td></td>
+         </tr>
+         <tr id="fkfs">
+            <td class="labtd">付款方式：</td>
+           <td><select id="paytype" name="paytype" onchange="PayTypeSel()">
+                <option value="0" selected="selected" >剩余计次服务</option>
+                <option value="1">现金</option>
+                <option value="2">储值卡</option>
+            </select></td>
+            <td></td>
+         </tr>
+         <tr>
+            　<td class="labtd">备注：</td><td><input type="text" name="Remark" id="Remark" /></td><td></td>
+         </tr>
+         </table>
+            <input type="checkbox" style="width:60px; margin-left:100px; margin-top:15px;" id="printcard" /><span>打印卡面　　　</span><br />
+            <p class="baidubtn">
+                <a href="javascript:void(0)" style=" float:left;" onclick="Commit()">提 交</a>
+            </p>
+         </div>
+
+        </div>
+        <div class="infodiv">
+            <p class="headp">　客户信息确认</p>
+            <ul class="sidebar_box">
+			<li>客户类型<input type="text" class="infoinput" readonly="readonly" name="KhType" id="KhType" /></li>
+
+			<li>客户姓名<input type="text" class="infoinput" readonly="readonly" name="Name" id="Name" /></li>
+			
+			<li>车牌号码<input type="text" class="infoinput" readonly="readonly" name="CarNo" id="CarNo" /></li>
+            <li>客户生日<input type="text" class="infoinput vtip" readonly="readonly" name="Birthday" id="Birthday" /></li>
+			
+			<li>当前余额<input type="text" class="infoinput" readonly="readonly" name="Balance" id="Balance" /></li>
+			
+			<li>会员级别<input type="text" class="infoinput" readonly="readonly" name="CardLevel" id="CardLevel" /></li>
+
+            <li>剩余积分<input type="text" class="infoinput" readonly="readonly" name="CurBIntegral" id="CurBIntegral" /></li>
+		    </ul>
+            <div class="sidebar_box_bottom"></div>
+        </div>
+    </div>
+</form>
+<div style="clear:both;"></div>
+<div id="backdiv">
+    @Html.ActionLink("返回列表", "Index")
+</div>
+

@@ -1,0 +1,218 @@
+﻿@model MvcMember.Models.V_CardServiceItem
+
+@{
+    ViewBag.Title = "购买计次服务";
+}
+
+<h2>购买计次服务项目</h2>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#firstform').bind('keypress', function (e) {
+            return e.keyCode !== 13;
+        });
+        $("#CardNo").keypress(function (e) {
+            var code = (e.keyCode ? e.keyCode : e.which);
+            if (code == 13) {
+                SelectMemberByCardNo();
+            }
+        });
+        //输入框鼠标样式
+        $(".formdiv input[type='text']").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv select").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv input[type='text']").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+        $(".formdiv select").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+        $("#ServiceItem").bind("change", function () {
+            $("#Fee").val('');
+            $("#times").val('');
+            $("#times").focus();
+        });
+        $("#times").bind("keyup", function () {
+            SumFee();
+        });
+        $("#times").css("width", "30px");
+        $("#times").numeral();
+        $("#CardNo").numeral();
+        $("#Fee").numeral();
+        $("#CardNo").focus();
+
+        $("#firstform").Validform({
+            tiptype: 2,
+            postonce: true,
+            ajaxPost: true,
+            callback: function (data) {
+                if (data.status == "y") {
+                    setTimeout(function () {
+                        $.Hidemsg(); //公用方法关闭信息提示框;
+                    }, 2000);
+                }
+            }
+        });
+        $("#Fee").css("border-left-style","none");
+        $("#Fee").css("border-right-style","none");
+        $("#Fee").css("border-top-style","none");
+    });
+    function SumFee() {
+        var ts = $("#times").val();
+        if (ts == "") ts = 0;
+        var pri = $("#ServiceItem").find("option:selected").attr("title");
+        if (!isNaN(pri) && pri > 0) {
+            $("#Fee").val(parseInt(ts) * parseInt(pri));
+        }
+        else {
+            $("#Fee").val('');
+        }
+    }
+    function SelectMemberByCardNo() {
+        if ($("#CardNo").val() == "") {
+            alert("请输入会员卡号！");
+            return;
+        }
+        var cardno = $("#CardNo").val();
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxService.svc/SelectMemberByCardNo")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"cardno":"' + cardno + '"}',
+            success: function (msg) {
+                var a = eval('(' + msg + ')');
+                if (a.d.length > 1) {
+                    var arrs = a.d.split(",");
+                    $("#MemberID").val(arrs[0]);
+                    $("#CarNo").val(arrs[2]);
+                    $("#Name").val(arrs[3]);
+                    $("#CurBIntegral").val(arrs[5]);
+                    $("#Balance").val(arrs[6]);
+                    $("#CardLevel").val(arrs[7]);
+                }
+                else {
+                    alert("未找到该卡号相关资料，请确认是否发卡！");
+                }
+            }
+        });
+    }
+    function Commit() {
+        if ($("#InType").find("option:selected").val() == -1 || $("#Fee").val() == "") {
+            return false;
+        }
+        if ($("#MemberID").val() == "") {
+            alert("请确认会员信息！");
+            return false;
+        }
+        if ($(".ts").css("visibility") == "visible") {
+            if ($("#times").val() == "") {
+                alert("请输入购买项目次数！");
+                return false;
+            }
+        }
+        var conf = confirm("请确认会员卡号" + $("#CardNo").val() + "购买" + $("#ServiceItem").find("option:selected").text() + $("#times").val() + "次");
+        //string memberid, string cardno, string serviceitemid,string servicetype, string times, string fee, string paytype, string remark, string creator
+        if (conf) {
+            $.ajax({
+                type: 'post',
+                url: '@Url.Content("../AjaxServiceSave.svc/SaveCardServiceItem")',
+                contentType: 'application/json',
+                dataType: 'text',
+                data: '{"memberid":"' + $("#MemberID").val() + '","cardno":"' + $("#CardNo").val() + '","serviceitemid":"' + $("#ServiceItem").find("option:selected").val() + '","servicetype":"单次服务","times":"' + $("#times").val() + '","fee":"' + $("#Fee").val() + '","paytype":"' + $("#PayType").find("option:selected").text() + '","remark":"' + $("#Remark").val() + '","creator":"' + $("#userid").val() + '"}',
+                success: function (msg) {
+                    var a = eval('(' + msg + ')');
+                    if (a.d == 1) {
+                        alert("操作成功！");
+                        $("input[type='text']").val('');
+                    }
+                    else {
+                        alert("提交失败！");
+                    }
+                },
+                error: function () {
+                    alert("发生错误！");
+                },
+                beforeSend: function () {
+                    $(".baidubtn a").text("正在提交...");
+                },
+                complete: function () {
+                    $(".baidubtn a").text("提 交");
+                }
+            });
+        }
+    }
+</script>
+<form id="firstform">
+    <div id="contentdiv">
+       <div class="formdiv">
+       <input type="hidden" name="selitemid" id="selitemid" />
+       <input type="hidden" name="MemberID" id="MemberID" />
+       <input type="hidden" value="@ViewBag.username" id="userid" />
+        <div class="headp">　填写购买计次服务项目信息</div>
+        <table>
+        <tr>
+        <td class="labtd">会员卡号：</td><td><input type="text" name="CardNo" id="CardNo" datatype="n" nullmsg="请输入会员卡号！"  errormsg="请输入会员卡号！" title="请输入6位数字卡号按回车键，或直接点击读卡按钮" class="vtip" />
+            <input type="button" style=" width:60px;" value="读卡" onclick="SelectMemberByCardNo()" /></td>
+            <td><div class="Validform_checktip"></div></td>
+        </tr>
+
+        <tr>
+            <td class="labtd">购买服务项目：</td>
+            <td><select id="ServiceItem" name="ServiceItem">
+                <option value="-1">--请选择--</option>
+                @foreach (var si in ViewBag.ServiceItem)
+                { 
+                    <option title="@si.Price" class="@si.ItemType" value="@si.ItemID">@si.ItemName</option>
+                }
+            </select>
+            <span class="ts">次数</span>
+            <input class="ts" style="width:30px;" type="text" id="times" name="times" datatype="n" nullmsg="请输入购买次数！"  errormsg="请输入购买次数！" />
+            </td>
+            <td><div class="Validform_checktip"></div><a href="/ServiceItem/Index">没有服务项目？</a></td>
+         </tr>
+
+        <tr>
+            <td class="labtd">应付金额：</td><td><input type="text" name="Fee" id="Fee" readonly="readonly" class="noborderinput vtip" title="根据选择项目价格和购买次数计算"/></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="labtd">付款方式：</td>
+           <td> @Html.DropDownList("PayType", new SelectList(ViewBag.RechargeType as System.Collections.IEnumerable,
+         "ItemName", "ItemName", Model.PayType))</td>
+            <td></td>
+         </tr>
+         <tr>
+            　<td class="labtd">备注：</td><td><input type="text" name="Remark" id="Remark" /></td><td></td>
+         </tr>
+         </table>
+        <p class="baidubtn">
+            <a href="javascript:void(0)" onclick="Commit()">提 交</a>
+        </p>
+        </div>
+        <div class="infodiv">
+            <p class="headp">　客户信息确认</p>
+            <ul class="sidebar_box">
+			
+			<li>客户姓名<input type="text" class="infoinput" readonly="readonly" name="Name" id="Name" /></li>
+			
+			<li>车牌号码<input type="text" class="infoinput" readonly="readonly" name="CarNo" id="CarNo" /></li>
+			
+			<li>当前余额<input type="text" class="infoinput" readonly="readonly" name="Balance" id="Balance" /></li>
+			
+			<li>会员级别<input type="text" class="infoinput" readonly="readonly" name="CardLevel" id="CardLevel" /></li>
+
+            <li>剩余积分<input type="text" class="infoinput" readonly="readonly" name="CurBIntegral" id="CurBIntegral" /></li>
+		    </ul>
+            <div class="sidebar_box_bottom"></div>
+        </div>
+    </div>
+</form>
+<div style="clear:both;"></div>
+<div id="backdiv">
+    @Html.ActionLink("返回列表", "Index")
+</div>
+

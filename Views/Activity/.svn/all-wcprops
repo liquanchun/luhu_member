@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/WebMember1/!svn/ver/192/MvcMember/Views/Activity
+END
+Index.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/WebMember1/!svn/ver/192/MvcMember/Views/Activity/Index.cshtml
+END
+ComplainEdit.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/WebMember1/!svn/ver/342/MvcMember/Views/Activity/ComplainEdit.cshtml
+END
+ComplainAdd.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/WebMember1/!svn/ver/342/MvcMember/Views/Activity/ComplainAdd.cshtml
+END
+CallBack.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/WebMember1/!svn/ver/342/MvcMember/Views/Activity/CallBack.cshtml
+END
+ComplainList.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/WebMember1/!svn/ver/342/MvcMember/Views/Activity/ComplainList.cshtml
+END
+ExchangeList.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/WebMember1/!svn/ver/342/MvcMember/Views/Activity/ExchangeList.cshtml
+END
+Exchange.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/WebMember1/!svn/ver/342/MvcMember/Views/Activity/Exchange.cshtml
+END
+Create.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/WebMember1/!svn/ver/339/MvcMember/Views/Activity/Create.cshtml
+END

@@ -1,0 +1,136 @@
+﻿@model MvcMember.Models.V_CardInfo
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('form').bind('keypress', function (e) {
+            e = e || event;
+            return (e.keyCode || event.which || event.charCode || 0) !== 13;
+        });
+    });
+</script>
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>V_CardInfo</legend>
+
+        @Html.HiddenFor(model => model.MemberID)
+
+        @Html.HiddenFor(model => model.Name)
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Mobile)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Mobile)
+            @Html.ValidationMessageFor(model => model.Mobile)
+        </div>
+
+        @Html.HiddenFor(model => model.BranchID)
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.CarNO)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.CarNO)
+            @Html.ValidationMessageFor(model => model.CarNO)
+        </div>
+
+        @Html.HiddenFor(model => model.CardNo)
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.StartDate)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.StartDate)
+            @Html.ValidationMessageFor(model => model.StartDate)
+        </div>
+
+        @Html.HiddenFor(model => model.SumConsumeIntegral)
+
+        @Html.HiddenFor(model => model.SumGiveIntegral)
+
+        @Html.HiddenFor(model => model.BalanceIntegral)
+
+        @Html.HiddenFor(model => model.CardLevel)
+
+        @Html.HiddenFor(model => model.State)
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ComeType)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ComeType)
+            @Html.ValidationMessageFor(model => model.ComeType)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.EndDate)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.EndDate)
+            @Html.ValidationMessageFor(model => model.EndDate)
+        </div>
+
+        @Html.HiddenFor(model => model.InitialIntegral)
+
+        @Html.HiddenFor(model => model.SumConsumeMoney)
+
+        @Html.HiddenFor(model => model.SumRecharge)
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.SaleMan)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.SaleMan)
+            @Html.ValidationMessageFor(model => model.SaleMan)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Creator)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Creator)
+            @Html.ValidationMessageFor(model => model.Creator)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.CreateDate)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.CreateDate)
+            @Html.ValidationMessageFor(model => model.CreateDate)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.CardSort)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.CardSort)
+            @Html.ValidationMessageFor(model => model.CardSort)
+        </div>
+
+        @Html.HiddenFor(model => model.CardYears)
+
+        @Html.HiddenFor(model => model.HourDiscount)
+
+        @Html.HiddenFor(model => model.PartDiscount)
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+

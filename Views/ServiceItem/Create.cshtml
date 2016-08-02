@@ -1,0 +1,133 @@
+﻿@model MvcMember.Models.ServiceItem
+
+@{
+    ViewBag.Title = "新增服务项目";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#ItemType").bind("change", function () {
+            DivDis();
+        });
+        DivDis();
+    });
+    function DivDis() {
+        var itemname = $("#ItemType").find("option:selected").text();
+        if (itemname == "套餐服务") {
+            $("#taocan").css("display", "block");
+        }
+        else {
+            $("#taocan").css("display", "none");
+        }
+    }
+    function Sel() {
+        var itemvalue = $("#ChildItemID").find("option:selected").val();
+        var itemname = $("#ChildItemID").find("option:selected").text();
+        var trstr = "<tr><td>" + itemvalue + "</td><td>" + itemname + "</td><td>" + $("#times").val() + "</td></tr>";
+        $("table").append(trstr);
+        var remark = $("#Remark").val();
+        if (remark == "") {
+            $("#Remark").val($("#times").val() + "次" + itemname);
+        }
+        else {
+            $("#Remark").val(remark + "," + $("#times").val() + "次" + itemname);
+        }
+    }
+    function Set() {
+        $("td").empty();
+        $("#Remark").val("");
+    }
+    function SaveTaocan() {
+        var itemname = $("#ItemType").find("option:selected").text();
+        if (itemname == "套餐服务") {
+            var serviceitem = "";
+            $(".table30").find("tr").each(function () {
+                var tempstr = "";
+                $(this).find("td").each(function () {
+                    tempstr += "," + $(this).text();
+                });
+                if (tempstr != "") {
+                    if (serviceitem == "") {
+                        serviceitem = tempstr.substr(1);
+                    }
+                    else {
+                        serviceitem += "|" + tempstr.substr(1);
+                    }
+                }
+            });
+            $("#taocanstr").val(serviceitem);
+        }
+    }
+</script>
+<h2>新增服务项目</h2>
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <input type="hidden" value="" id="taocanstr" name="taocanstr" />
+    <fieldset>
+        <legend>服务项目</legend>
+
+        <p>
+            编号
+            @Html.EditorFor(model => model.ItemID)
+            @Html.ValidationMessageFor(model => model.ItemID)
+        </p>
+
+        <p>
+            名称
+            @Html.EditorFor(model => model.ItemName)
+            @Html.ValidationMessageFor(model => model.ItemName)
+        </p>
+
+        <p>
+            类型
+            @Html.DropDownList("ItemType",
+                        new SelectList(ViewBag.ItemList as System.Collections.IEnumerable, "ItemName", "ItemName", Model.ItemType))
+        </p>
+        <div id="taocan" style="margin-left: 50px; padding: 8px; border-style: solid; border-width: 1px; border-top-color: #dbeafd; border-right-color: #dbeafd; border-bottom-color: #dbeafd; border-left-color: #dbeafd;">
+            选择套餐包含的服务项目和次数
+            <br />
+            @Html.DropDownList("ChildItemID",
+                     new SelectList(ViewBag.SerLst as System.Collections.IEnumerable, "ItemID", "ItemName", null))
+            <label>次数</label><input type="text" style="width: 50px;" id="times" />
+            <input type="button" value="确定" onclick="Sel()" /><input type="button" value="重选" onclick="    Set()" />
+            <table class="table30">
+                <tr>
+                    <th>编号</th>
+                    <th>名称</th>
+                    <th>次数</th>
+                </tr>
+            </table>
+        </div>
+        <p>
+            价格
+            @Html.EditorFor(model => model.Price)
+            @Html.ValidationMessageFor(model => model.Price)
+        </p>
+        <p>
+            积分
+            @Html.EditorFor(model => model.Integral)
+            @Html.ValidationMessageFor(model => model.Integral)
+        </p>
+
+        <p>
+            数量
+            @Html.EditorFor(model => model.Number)
+            @Html.ValidationMessageFor(model => model.Number)
+        </p>
+
+        <p>
+            备注
+            @Html.EditorFor(model => model.Remark)
+            @Html.ValidationMessageFor(model => model.Remark)
+        </p>
+
+        <p>
+            <input type="submit" value="保 存" onclick="SaveTaocan()" style="margin-left: 55px;" />
+        </p>
+    </fieldset>
+}
+
+
+<div style="padding-bottom: 10px; padding-left: 5px;">
+    @Html.ActionLink("返回列表", "Index")
+</div>

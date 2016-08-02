@@ -1,0 +1,318 @@
+﻿@model MvcMember.Models.V_Member
+
+@{
+    ViewBag.Title = "会员详情信息";
+}
+<h2>会员详情信息</h2>
+
+    <div style="border-bottom:1px solid #333333; margin-bottom:8px; padding-bottom:8px; padding-left:5px;">
+        <label for="querycardno">会员卡号：</label><input type="text" value="@ViewBag.cardno" id="querycardno" class="vtip" title="输入6位卡号按回车键" />
+        <input type="hidden" id="memberid"/>
+    </div>
+    <div class="detail">
+        <div class="infodiv">
+            <p class="headp">　车辆信息</p>
+            <ul class="sidebar_box">
+            	<li>客户类型<input type="text" class="infoinput" readonly="readonly" name="CardLevel" id="ClientType" /></li>
+                <li>客户名称<input type="text" class="infoinput" readonly="readonly" name="CurBIntegral" id="Name" /></li>
+                <li>车主姓名<input type="text" class="infoinput" readonly="readonly" name="CardLevel" id="CarOwner" /></li>
+                <li>　　性别<input type="text" class="infoinput" readonly="readonly" name="CurBIntegral" id="Sex" /></li>
+			    <li>联系电话<input type="text" class="infoinput" readonly="readonly" name="CarNo" id="Mobile" /></li>
+			    <li>　　生日<input type="text" class="infoinput" readonly="readonly" name="Name" id="Birthday" /></li>
+			    <li>联系地址<input type="text" class="infoinput" readonly="readonly" name="Balance" id="Address" /></li>
+                <li>最近来店<input type="text" class="infoinput" readonly="readonly" name="Balance" id="LastComeDate" /></li>
+		    </ul>
+            <div class="sidebar_box_bottom"></div>
+        </div>
+
+        <div class="infodiv">
+            <p class="headp">　车辆信息</p>
+            <ul class="sidebar_box">
+            	<li>车牌号码<input type="text" class="infoinput" readonly="readonly" name="CarNo" id="CarNO" /></li>
+			    <li>　车架号<input type="text" class="infoinput" readonly="readonly" name="Name" id="VinNO" /></li>
+			    <li>　　车型<input type="text" class="infoinput" readonly="readonly" name="Balance" id="CarType" /></li>
+            	<li>下次保养里程<input type="text" class="infoinputmin" readonly="readonly" name="CardLevel" id="NextMaintainKM" /></li>
+                <li>下次保养日期<input type="text" class="infoinputmin" readonly="readonly" name="CurBIntegral" id="NextMaintainDate" /></li>
+			    <li>驾照到期日期<input type="text" class="infoinputmin" readonly="readonly" name="CarNo" id="LicenseExpire" /></li>
+			    <li>保险到期日期<input type="text" class="infoinputmin" readonly="readonly" name="Name" id="InsureExpire" /></li>
+			    <li>年审到期日期<input type="text" class="infoinputmin" readonly="readonly" name="Balance" id="YearCheckDate" /></li>
+		    </ul>
+            <div class="sidebar_box_bottom"></div>
+        </div>
+        <div class="infodiv">
+            <p class="headp">　会员信息</p>
+            <ul class="sidebar_box">
+            	<li>　　会员卡号<input type="text" class="infoinputmin" readonly="readonly" name="CardLevel" id="CardNo" /></li>
+                <li>　　会员级别<input type="text" class="infoinputmin" readonly="readonly" name="CurBIntegral" id="CardLevel" /></li>
+			    <li>　　会员状态<input type="text" class="infoinputmin" readonly="readonly" name="CarNo" id="State" /></li>
+			    <li>　　入会日期<input type="text" class="infoinputmin" readonly="readonly" name="Name" id="StartDate" /></li>
+			    <li>　　入会方式<input type="text" class="infoinputmin" readonly="readonly" name="Balance" id="ComeType" /></li>
+                <li>累计储值金额<input type="text" class="infoinputmin" readonly="readonly" name="CardLevel" id="SumRecharge" /></li>
+                <li>累计赠送金额<input type="text" class="infoinputmin" readonly="readonly" name="CurBIntegral" id="SumGiveMoney" /></li>
+			    <li>　　当前余额<input type="text" class="infoinputmin" readonly="readonly" name="Name" id="Balance" /></li>
+		    </ul>
+            <div class="sidebar_box_bottom"></div>
+        </div>
+        <div class="infodiv">
+            <p class="headp">　积分信息</p>
+            <ul class="sidebar_box">
+            	<li>初始赠送积分<input type="text" class="infoinputmin" readonly="readonly" name="CardLevel" id="InitialIntegral" /></li>
+                <li>累计消费积分<input type="text" class="infoinputmin" readonly="readonly" name="CurBIntegral" id="SumConsumeIntegral" /></li>
+			    <li>累计赠送积分<input type="text" class="infoinputmin" readonly="readonly" name="CarNo" id="SumGiveIntegral" /></li>
+			    <li>累计兑换积分<input type="text" class="infoinputmin" readonly="readonly" name="Name" id="SumExchange" /></li>
+			    <li>剩余可以积分<input type="text" class="infoinputmin" readonly="readonly" name="Balance" id="BalanceIntegral" /></li>
+		    </ul>
+            <div class="sidebar_box_bottom"></div>
+        </div>
+    </div>
+    <div style="clear:both;"></div>
+
+    <div id="tabs">
+	<ul>
+		<li><a href="#tabs-0" class="tabsa">消费记录</a></li>
+		<li><a href="#tabs-1" class="tabsa">储值记录</a></li>
+		<li><a href="#tabs-2" class="tabsa">购买计次服务</a></li>
+        <li><a href="#tabs-3" class="tabsa">调整积分记录</a></li>
+        <li><a href="#tabs-4" class="tabsa">兑换礼品记录</a></li>
+        <li><a href="#tabs-5" class="tabsa">投诉意见记录</a></li>
+        <li><a href="#tabs-6" class="tabsa">保养回访记录</a></li>
+        <li><a href="#tabs-7" class="tabsa">发生短信记录</a></li>
+        <li><a href="#tabs-8" class="tabsa">积分对账单</a></li>
+	</ul>
+	<div id="tabs-0">
+		<table class="detailtb table80">
+            <tr><th>日期</th><th>单号</th><th>期初积分</th><th>期初余额</th><th>消费金额</th><th>积分抵用金额</th><th>扣除积分</th><th>本次积分</th><th>操作员</th></tr>
+        </table>
+	</div>
+	<div id="tabs-1">
+        <table class="detailtb table80">
+            <tr><th>日期</th><th>期初余额</th><th>储值金额</th><th>赠送金额</th><th>赠送积分</th><th>赠送服务项目</th><th>付款方式</th><th>操作员</th><th>备注</th></tr>
+        </table>
+	</div>
+	<div id="tabs-2">
+	    <table class="detailtb table80">
+            <tr><th>日期</th><th>服务项目</th><th>购买次数</th><th>剩余次数</th><th>购买金额</th><th>付款方式</th><th>操作人</th><th>备注</th></tr>
+        </table>
+	</div>
+    <div id="tabs-3">
+		<table class="detailtb table80">
+            <tr><th>日期</th><th>期初积分</th><th>调整积分</th><th>调整原因</th><th>操作员</th></tr>
+        </table>
+	</div>
+    <div id="tabs-4">
+		<table class="detailtb table80">
+            <tr><th>日期</th><th>期初积分</th><th>礼品名称</th><th>兑换积分</th><th>兑换数量</th><th>使用积分</th><th>操作员</th><th>备注</th></tr>
+        </table>
+	</div>
+    <div id="tabs-5">
+		<table class="detailtb table80">
+            <tr><th>日期</th><th>投诉类别</th><th>投诉方式</th><th>投诉对象</th><th>投诉性质</th><th>处理结果</th><th>处理人</th><th>处理时间</th><th>操作员</th></tr>
+        </table>
+	</div>
+    <div id="tabs-6">
+		<table class="detailtb table80">
+            <tr><th>日期</th><th>单号</th><th>完成情况</th><th>回访结果</th><th>内容</th><th>操作员</th><th>备注</th></tr>
+        </table>
+	</div>
+    <div id="tabs-7">
+		<table class="detailtb">
+            <tr><th>日期</th><th>短信类型</th><th>短信内容</th><th>状态</th><th>发送时间</th><th>操作员</th></tr>
+        </table>
+	</div>
+    <div id="tabs-8" style="height:200px; overflow-y:scroll;">
+		<table class="detailtb table70">
+            <tr><th>日期</th><th>积分类型</th><th>期初积分</th><th>积分</th><th>备注</th><th>操作员</th></tr>
+        </table>
+	</div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#firstform').bind('keypress', function (e) {
+            return e.keyCode !== 13;
+        });
+        $("#tabs").tabs();
+        $('#tabs').bind('tabsselect', function (event, ui) {
+            tabsselectfun(ui.index);
+        });
+        $("#querycardno").keypress(function (e) {
+            var code = (e.keyCode ? e.keyCode : e.which);
+            if (code == 13) {
+                SelectMemberByCardNo();
+            }
+        });
+        //输入框鼠标样式
+        $(".formdiv input[type='text']").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv select").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv input[type='text']").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+        $(".formdiv select").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+        $("#querycardno").focus();
+        if ($("#querycardno").val() != "") {
+            SelectMemberByCardNo();
+        }
+    });
+
+    function SelectMemberByCardNo() {
+        if ($("#querycardno").val() == "") {
+            alert("请输入会员卡号！");
+            return;
+        }
+        //Select MemberID,Mobile,CarNO,Name,ClientType,BalanceIntegral,Balance,CardLevel,PartDiscount,HourDiscount,State,VinNO,SumConsumeMoney,LastComeDate,
+        //CardNo,SumGiveMoney from V_CardInfo
+        var cardno = $("#querycardno").val();
+        if (cardno == "") return;
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../../AjaxService.svc/SelectMemberByCardNo")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"cardno":"' + cardno + '"}',
+            success: function (msg) {
+                var a = eval('(' + msg + ')');
+                if (a.d.length > 1) {
+                    var arrs = a.d.split(",");
+                    $("#memberid").val(arrs[0]);
+
+                    $("#Mobile").val(arrs[1]);
+                    $("#CarNO").val(arrs[2]);
+                    $("#Name").val(arrs[3]);
+                    $("#ClientType").val(arrs[4]);
+                    $("#BalanceIntegral").val(arrs[5]);
+
+                    $("#Balance").val(arrs[6]);
+                    $("#CardLevel").val(arrs[7]);
+                    $("#State").val(arrs[10]);
+                    $("#VinNO").val(arrs[11]);
+
+                    $("#CardNo").val(arrs[14]);
+                    $("#SumGiveMoney").val(arrs[15]);
+                }
+                else {
+                    alert("未找到该卡号相关资料，请确认是否发卡！");
+                }
+            },
+            complete: function () {
+                SelectMember();
+            }
+        });
+    }
+    function SelectMember()
+    {
+        var memberid = $("#memberid").val();
+        if (memberid == "") return;
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../../AjaxService.svc/SelectQueryMember")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"memberid":"' + memberid + '"}',
+            success: function (msg) {
+                var a = eval('(' + msg + ')');
+                if (a.d.length > 1) {
+                    var arrs = a.d.split(",");
+                    $("#InitialIntegral").val(arrs[0]);
+                    $("#SumGiveIntegral").val(arrs[1]);
+                    $("#SumExchange").val(arrs[2]);
+                    $("#SumRecharge").val(arrs[3]);
+                    $("#StartDate").val(arrs[4]);
+
+                    $("#CarOwner").val(arrs[5]);
+                    $("#ComeType").val(arrs[6]);
+                    $("#Sex").val(arrs[7]);
+                    $("#Address").val(arrs[8]);
+                    $("#Birthday").val(arrs[9]);
+
+                    $("#NextMaintainKM").val(arrs[10]);
+                    $("#NextMaintainDate").val(arrs[11].indexOf("1900") > -1 ? "" : arrs[11]);
+                    $("#LicenseExpire").val(arrs[12].indexOf("1900") > -1 ? "" : arrs[12]);
+                    $("#InsureExpire").val(arrs[13].indexOf("1900") > -1 ? "" : arrs[13]);
+                    $("#YearCheckDate").val(arrs[14].indexOf("1900") > -1 ? "" : arrs[14]);
+
+                    $("#CarType").val(arrs[15]);
+                    $("#SumConsumeIntegral").val(arrs[16]);
+                    $("#LastComeDate").val(arrs[17]);
+                    $("#querycardno").val(arrs[18]);
+                }
+            },
+            complete: function () {
+                tabsselectfun(0);
+            }
+        });
+    }
+    
+    function tabsselectfun(tabindex) {
+        var memberid = $("#memberid").val();
+        if (memberid == "") return;
+        var sqlstring="";
+        switch (tabindex) {
+            case 0:
+                sqlstring = "select createdate,billno,curbintegral,balancemoney,sumfee,intetomoney,deductinte,integral,creator from consume where memberid="+ memberid +" order by createdate desc";
+                break;
+            case 1:
+                sqlstring = "select A.createdate,balance,inmoney,givemoney,giveinte,itemname,intype,A.creator,A.remark from recharge A left join serviceitem B on A.giveserviceid = B.itemid where memberid=" + memberid + " order by A.createdate";
+                break;
+            case 2:
+                sqlstring = "select a.createdate,itemname,times,subtimes,fee,paytype,a.creator,a.remark from cardserviceitem a inner join serviceitem b on a.serviceitemid=b.itemid where memberid=" + memberid + " order by a.createdate desc";
+                break;
+            case 3:
+                sqlstring = "select createdate,blanceintegral,integral,reason,creator from adjustinte where memberid=" + memberid + " order by createdate desc";
+                break;
+            case 4:
+                sqlstring = "select a.createdate,cblanceintegral,giftname,a.integral,sendnum,changeintegral,creator,a.remark from giftsendrecord a inner join giftinfo b on a.giftno = b.giftno where memberid=" + memberid + " order by createdate desc";
+                break;
+            case 5:
+                sqlstring = "select createtime,type,cometype,person,eventtype,handle,handleman,handletime,creator from complain a inner join member2 b on a.carNO=b.CarNO where b.memberid=" + memberid + " order by createtime desc";
+                break;
+            case 6:
+                sqlstring = "select a.createdate,rno,wancheng,jieguo,neirong,creator,remark from callback a inner join member2 b on a.carNO=b.CarNO where b.memberid=" + memberid + " order by a.createdate desc";
+                break;
+            case 7:
+                sqlstring = "select createtime,smstype,details,state,sendtime,a.creator from smssend a inner join member b on a.mobile=b.mobile where b.memberid=" + memberid + " order by createtime desc";
+                break;
+            case 8:
+                sqlstring = memberid;
+                break;
+        }
+        var ajaxurl = "../../AjaxServiceSave.svc/QueryMember";
+        if (tabindex == 8) {
+            ajaxurl = "../../AjaxServiceSave.svc/QueryPointList";
+        }
+        try {
+            $.ajax({
+                type: 'post',
+                url: ajaxurl,
+                contentType: 'application/json',
+                dataType: 'text',
+                data: '{"sqlstring":"' + sqlstring + '"}',
+                success: function (data) {
+                    var a = eval('(' + data + ')');
+                    if (a.d.length > 1) {
+                        var arrs = a.d.split("|");
+                        var htmlstr = "";
+                        for (var i = 0; i < arrs.length; i++) {
+                            htmlstr += "<tr>";
+                            var valarrs = arrs[i].split(",");
+                            for (var j = 0; j < valarrs.length; j++) {
+                                htmlstr += "<td>" + valarrs[j] + "</td>";
+                            }
+                            htmlstr += "</tr>";
+                        }
+                        $("#tabs-" + tabindex + " table tr:gt(0)").remove();
+                        $("#tabs-"+ tabindex + " table").append(htmlstr);
+                    }
+                }
+            });
+        }
+        catch (err) {
+            alert(err.Description);
+        }
+    }
+</script>

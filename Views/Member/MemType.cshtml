@@ -1,0 +1,110 @@
+﻿@model MvcMember.Models.V_Member
+
+@{
+    ViewBag.Title = "客户分类统计表";
+    var years = DateTime.Today.Year;
+}
+<script src="../../Scripts/jgcharts.js" type="text/javascript"></script>
+<script type="text/javascript" src="../../Scripts/CheckActivX.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var api = new jGCharts.Api();
+        jQuery('<img>')
+        .attr('src', api.make({
+            data: [[153, 60], [113, 70], [120, 80], [163, 60], [103, 50], [111, 88], [123, 68], [118, 90], [124, 40], [153, 70], [93, 75], [100, 90]],
+            legend: ['个人客户', '集团客户'],
+            axis_labels: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+            size: '800x250',
+            bar_width: 15,
+            chbg_width: 20
+        }))
+        .appendTo("#bar1");
+        AjaxClient();
+    });
+    function AjaxClient() {
+        var years = 2011;
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxService.svc/MemberDistrict")',
+                contentType: 'application/json',
+                dataType: 'text',
+                data: '{"years":' + years + '}',
+                success: function (msg) {
+                    var a = eval('(' + msg + ')');
+                    var strs = a.d.split("|");
+                    var api = new jGCharts.Api();
+                    jQuery('<img>').attr('src', api.make({
+                        data: eval(strs[1]),
+                        axis_labels: eval(strs[0]),
+                        size: '800x250',
+                        bar_width: 25,
+                        bar_spacing: 30
+
+                    }))
+                    .appendTo("#bar2");
+                }
+            });
+        }
+</script>
+<h2>客户分类统计表</h2>
+<p>
+    <input type="button" onclick="AjaxClient();" value="加载" /></p>
+<object id="LODOP" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" style="display: none; width: 0; height: 0">
+</object>
+<script type="text/javascript">
+    var LODOP = document.getElementById("LODOP"); //这行语句是为了符合DTD规范
+    CheckLodop();
+</script>
+
+<p style="text-align: center; font-size: large; background-color: #dbeafd;">
+    <span id="title1">@years 年新增客户类型统计表</span>
+
+    <input type="button" onclick="prn1_print1()" style="display: inline-block; float: right;" value="直接打印" />
+    <input type="button" onclick="prn1_preview1()" style="display: inline-block; float: right;" value="打印预览" />
+</p>
+<div id="bar1" style="padding-left: 20px;"></div>
+
+<p style="text-align: center; font-size: large; background-color: #dbeafd;">
+    <span id="title2">@years 年新增客户分布区域统计表</span>
+
+    <input type="button" onclick="prn1_print2()" style="display: inline-block; float: right;" value="直接打印" />
+    <input type="button" onclick="prn1_preview2()" style="display: inline-block; float: right;" value="打印预览" />
+</p>
+<div id="bar2" style="padding-left: 20px;"></div>
+
+<script language="javascript" type="text/javascript">
+    function prn1_preview1() {
+        CreateOneFormPage1();
+        LODOP.PREVIEW();
+    };
+    function prn1_print1() {
+        CreateOneFormPage1();
+        LODOP.PRINT();
+    };
+    function CreateOneFormPage1() {
+        LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
+        LODOP.SET_PRINT_STYLE("FontSize", 18);
+        LODOP.SET_PRINT_STYLE("Bold", 1);
+        LODOP.ADD_PRINT_TEXT(50, 160, 460, 39, document.getElementById("title1").innerHTML);
+        LODOP.ADD_PRINT_HTM(88, 20, 650, 600, document.getElementById("bar1").innerHTML);
+    };
+
+    function prn1_preview2() {
+        CreateOneFormPage2();
+        LODOP.PREVIEW();
+    };
+    function prn1_print2() {
+        CreateOneFormPage2();
+        LODOP.PRINT();
+    };
+    function CreateOneFormPage2() {
+        LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
+        LODOP.SET_PRINT_STYLE("FontSize", 18);
+        LODOP.SET_PRINT_STYLE("Bold", 1);
+        LODOP.ADD_PRINT_TEXT(50, 160, 460, 39, document.getElementById("title2").innerHTML);
+        LODOP.ADD_PRINT_HTM(88, 120, 650, 600, document.getElementById("bar2").innerHTML);
+    };
+</script>
+
+

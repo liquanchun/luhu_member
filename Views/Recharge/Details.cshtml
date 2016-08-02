@@ -1,0 +1,57 @@
+﻿@model MvcMember.Models.V_Recharge
+
+@{
+    ViewBag.Title = "充值记录详情";
+}
+
+<h2>充值记录详情</h2>
+
+<fieldset>
+    <legend>@Model.Name 的充值记录详情</legend>
+    <table id="mbtable" style="border: 0;">
+        <tr>
+            <td>会员姓名</td>
+            <td>@Model.Name</td>
+        </tr>
+        <tr>
+            <td>会员卡号</td>
+            <td>@Model.CardNo</td>
+        </tr>
+        <tr>
+            <td>当前余额</td>
+            <td>@Model.Balance</td>
+        </tr>
+        <tr>
+            <td>充值余额</td>
+            <td>@Model.InMoney</td>
+        </tr>
+        <tr>
+            <td>付款方式</td>
+            <td>@Model.InType</td>
+        </tr>
+        <tr>
+            <td>赠送金额</td>
+            <td>@Model.GiveMoney</td>
+        </tr>
+        <tr>
+            <td>赠送积分</td>
+            <td>@Model.GiveInte</td>
+        </tr>
+        <tr>
+            <td>充值时间</td>
+            <td>@Model.CreateDate</td>
+        </tr>
+        <tr>
+            <td>经办人</td>
+            <td>@Model.Creator</td>
+        </tr>
+        <tr>
+            <td>备注</td>
+            <td>@Model.Remark</td>
+        </tr>
+    </table>
+</fieldset>
+<p style="padding-left: 5px;">
+    @Html.ActionLink("返回充值列表", "Index")
+</p>
+

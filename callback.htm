@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+
+     <div class="wancheng">
+         <div id="xzwc">
+            <input type="radio" id="rd1" name="wancheng" value="1" checked="checked" />完成
+            <input type="radio" id="rd2" name="wancheng" value="2" />未完成 
+         </div>
+         <div id="wc">
+             <input type="checkbox" class="wc_ck" id="ck1" /><label for="ck1">满意</label> 
+             <input type="checkbox" class="wc_ck" id="ck2" /><label for="ck2">一般</label> 
+             <input type="checkbox" class="wc_ck" id="ck3" /><label for="ck3">不满意</label> 
+             <div id="bmy" style=" display:none;" >
+                <input type="checkbox" class="bmy_ck" id="bmy_ck1" /><label for="bmy_ck1">服务态度</label> 
+                <input type="checkbox" class="bmy_ck" id="bmy_ck2" /><label for="bmy_ck2">维修质量</label> 
+                <input type="checkbox" class="bmy_ck" id="bmy_ck3" /><label for="bmy_ck3">配件价格</label> 
+             </div>
+         </div>
+         <div id="wwc" style=" display:none;" >
+             <input type="checkbox" class="wwc_ck" id="ck4" /><label for="ck4">电话号码错误</label> 
+             <input type="checkbox" class="wwc_ck" id="ck5" /><label for="ck5">无人接听</label> 
+             <input type="checkbox" class="wwc_ck" id="ck6" /><label for="ck6">关机</label> 
+         </div>
+         <div class="baidubtn">
+             <input type="button" value="提 交" style="width:80px;" onclick="Commit()" />
+         </div>
+     </div>
+
+    <script type="text/javascript">
+        $(".wancheng div").css("margin-top", "12px");
+        $(".wancheng input[type='checkbox']").addClass("checkbox");
+        $(".wancheng input[type='radio']").bind("change", function () {
+            if ($(this).val() == 1) {
+                $("#wc").show();
+                $("#wwc").hide();
+            }
+            else {
+                $("#wwc").show();
+                $("#wc").hide();
+            }
+        });
+        $("#ck3").bind("change", function () {
+            if ($(this).attr("checked")) {
+                $("#bmy").show();
+                $(".baidubtn input:last").show();
+            }
+            else {
+                $("#bmy").hide();
+                $(".baidubtn input:last").hide();
+            }
+        });
+     </script>
+</body>
+</html>

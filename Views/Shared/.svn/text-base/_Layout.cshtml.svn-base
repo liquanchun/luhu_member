@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    @Html.Action("PartialJsCache", "Home", null)
+    <script src="@Url.Content("~/Scripts/MyScript.js")" type="text/javascript"></script>
+</head>
+<body>
+    <div id='loading'>正在加载</div>
+    <div class="page">   
+        <div id="header">
+              <div id="logindisplay">
+                @Html.Action("PartialLogOnCache", "Home", null)
+            </div>
+              <div id="menucontainer">
+                <div class="divtitle"><span style="font-family:华文行楷; display:inline-block; font-size:28px;">汽车会员管理系统</span></div>
+                <div class="divmenu">
+                <ul id="menu" class="sf-menu">
+                    <li>@Html.ActionLink("系统参数设置", "Index", "SysSetting")</li>
+                    <li>@Html.ActionLink("卡打印机设置", "Printer", "SysSetting")</li>
+                    <li>@Html.ActionLink("用户管理", "Index", "AdminUser")
+                    	<ul>
+					        <li>
+						        @Html.ActionLink("修改密码", "UpdatePwd", "AdminUser")
+					        </li>
+                            <li>
+                                @Html.ActionLink("设置权限", "Index", "SysFun")
+					        </li>
+				        </ul>
+                    </li>
+                    <li>@Html.ActionLink("操作日志", "Index", "SysLog")</li>
+                </ul>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div id="main">
+            @Html.Action("PartialMenuCache", "Home", null)
+            <script type="text/javascript">
+             $("#navaccord").accordion({ collapsible: true });
+            </script>
+            <div id="divBlank" class="ui-accordion-header ui-helper-reset ui-state-active ui-corner-top" style="border-bottom-style:none; background-color:#5C87B2; background:url("images/ui-bg_glass_65_ffffff_1x400.png") repeat-x scroll 50% 50% #FFFFFF"></div>
+            <div id="content" class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="UserID" value="@Session["UserID"].ToString()" />
+    <div style="clear:both;"></div>
+    <script type="text/javascript">$('#loading').hide()</script>
+</body>
+</html>
+<script type="text/javascript">
+    $(function () {
+        $('ul.sf-menu').superfish({
+            maxWidth: 27, 
+            delay: 200,                         
+            animation: { opacity: 'show', height: 'show' },
+            speed: 'fast',         
+            autoArrows: false,     
+            dropShadows: false
+        });
+    });
+    $(document).ready(function () {
+        var act = getCookie("active");
+        if (!isNaN(act)) {
+            $('#navaccord').accordion('option', 'active', parseInt(act));
+        }
+        else {
+            $("#navaccord").accordion('option', 'active', parseInt(0));
+        }
+        $("#navaccord").bind("accordionchange", function (event, ui) {
+            delCookie("active");
+            if (ui.options.active == false) {
+                setCookie("active", 0);
+            }
+            else {
+                setCookie("active", ui.options.active);
+            }
+        });
+    });
+</script>
+

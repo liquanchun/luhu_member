@@ -1,0 +1,200 @@
+﻿@model IEnumerable<MvcMember.Models.V_AdminUser>
+
+@{
+    ViewBag.Title = "用户管理";
+    var divstr = "<select id='sel' name='sel'>";
+    foreach (var it in ViewBag.ItemList)
+    {
+        divstr += "<option value='" + it.ItemName + "'>" + it.ItemName + "</option>";
+    }
+    divstr += "</select>";
+}
+
+<h2>用户管理</h2>
+@Html.Partial("_LoadAuth")
+@{
+    var grid = new WebGrid(source: Model, ajaxUpdateContainerId: "grid", defaultSort: "UserID", rowsPerPage: 10, selectionFieldName: "SelectedRow");
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        //输入框鼠标样式
+        $(".formdiv input[type='text']").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv select").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv input[type='text']").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+        $(".formdiv select").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+
+        $("#firstform").Validform({
+            btnSubmit: "btnSubmit",
+            tiptype: 2,
+            postonce: true,
+            ajaxPost: true,
+            callback: function (data) {
+                if (data.status == "y") {
+                    setTimeout(function () {
+                        $.Hidemsg(); //公用方法关闭信息提示框;
+                    }, 2000);
+                }
+            }
+        });
+    });
+    function DeleteItem(userid) {
+        if (userid.toLowerCase() == "admin") {
+            alert("不能删除admin用户！");
+            return;
+        }
+        var opuserid = $("#updateuserid").val();
+        if (confirm("你确定要删除" + userid + "吗？")) {
+            $.ajax({
+                type: 'post',
+                url: '@Url.Content("../AjaxService.svc/DelUser")',
+                contentType: 'application/json',
+                dataType: 'text',
+                data: '{"userid":"' + userid + '","opuserid":"' + opuserid + '"}',
+                success: function (msg) {
+                    var a = eval('(' + msg + ')');
+                    if (a.d == "1") {
+                        location.reload();
+                    }
+                }
+            });
+        }
+    }
+    function Commit() {
+        if ($(".Validform_wrong").text() != "") return;
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxServiceSave.svc/SaveAdminUser")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"dmsid":"dms1","userid":"' + $("#UserID").val() + '","username":"' + $("#UserName").val() + '","password":"' + $("#Password").val() + '","rolename":"' + $("#RoleName").find("option:selected").text() + '"}',
+            success: function (msg) {
+                var a = eval('(' + msg + ')');
+                if (a.d == 1) {
+                    alert("操作成功！刷新页面可以在列表中看到。");
+                    $("input[type='text']").val('');
+                }
+                else if (a.d == 2) {
+                    alert("用户名或用户ID已经存在！");
+                }
+                else {
+                    alert("操作失败！");
+                }
+            },
+            error: function () {
+                alert("发生错误！");
+            },
+            beforeSend: function () {
+                $(".baidubtn a").text("正在提交...");
+            },
+            complete: function () {
+                $(".baidubtn a").text("提 交");
+            }
+        });
+    }
+</script>
+
+<div id="grid" style="padding-left:5px; float:left; width:565px;">
+    @grid.GetHtml(
+    tableStyle: "grid",
+    headerStyle: "head",
+    selectedRowStyle: "alt",
+    alternatingRowStyle: "alt",
+    numericLinksCount: 10,
+    columns: grid.Columns(
+                grid.Column(format: @<text><a id="@item.UserID" onclick="DeleteItem('@item.UserID')"  title="删除" href="javascript:void(0);"><img src="../../Content/Images/del.png" /></a>&nbsp<a title="修改" href="javascript:void(0);" onclick="UpdateRole('@item.UserID','@item.UserName','@item.RoleName')"><img src="../../Content/Images/edit.png" /></a></text>),
+                grid.Column("UserID", "用户ID"),
+                grid.Column("UserName", "用户名"),
+                grid.Column("RoleName", "用户角色"),
+                grid.Column("LastLogin", "最近登录"),
+                grid.Column("LoginTimes", "登录次数")
+        )
+    )
+</div>
+<div class="formdiv" style=" float:left; width:350px;">
+    <form id="firstform">
+    <input type="hidden" value="@ViewBag.DmsId" id="dmsid" />
+    <div class="headp" style="border-radius: 5px 5px 0px 0px;">　新增用户信息</div>
+       <table style="border:1px solid #AACCD6;height: 200px;width: 315px;">
+        <td class="labtd">用户ID：</td><td><input type="text" name="UserID" id="UserID" datatype="s" nullmsg="请输入用户ID！"  errormsg="请输入用户ID！" />
+            </td>
+            <td><div class="Validform_checktip"></div></td>
+        </tr>
+        <tr>
+            <td class="labtd">用户名：</td><td><input type="text" name="UserName" id="UserName" datatype="s" nullmsg="请输入用户名！"  errormsg="请输入用户名！" /></td>
+            <td><div class="Validform_checktip"></div></td>
+        </tr>
+
+         <tr>
+            <td class="labtd">密码：</td><td><input type="text" name="Password" id="Password"/></td>
+            <td></div></td>
+         </tr>
+         <tr>
+            <td class="labtd">用户角色：</td>
+           <td>@Html.DropDownList("RoleName", new SelectList(ViewBag.ItemList as System.Collections.IEnumerable,
+            "ItemName", "ItemName", null))
+         </td>
+            <td></td>
+         </tr>
+         <tr><td></td><td class="baidubtn"> <a href="javascript:void(0)" id="btnSubmit" style="margin-left:0px;" onclick="Commit()">提 交</a></td><td></td>
+         </tr>
+         </table>
+      </form>
+</div>
+<input type="hidden" id="divstr" value="@divstr" />
+<script type="text/javascript">
+    function UpdateRole(userid, username, rolename) {
+        var txt = '<div style="background-color:#dbeafd;">修改用户</div>' +
+                    '<div class="field"><label for="userid">用户ID:</label><input type="text" readonly="readonly" id="userid" name="userid" value="' + userid + '" /></div>' +
+                    '<div class="field"><label for="username">用户名:</label><input type="text" id="username" name="username" value="' + username + '" /></div>' +
+                    '<div class="field"><label for="rolename">用户角色:</label><input type="text" id="rolename" readonly="readonly" name="rolename" value="' + rolename + '" /></div>' +
+					'<div class="field"><label for="sel">修改角色:</label>' + $("#divstr").val() + '</div>';
+
+        $.prompt(txt, {
+            buttons: { 保存: true, 取消: false },
+            submit: function (v, m, f) {
+                var flag = true;
+                return flag;
+            },
+
+            callback: function (v, m, f) {
+                if (v) {
+                    var userid = f.userid;
+                    var username = f.username;
+                    var rolename = f.sel;
+                    $.ajax({
+                        type: 'post',
+                        url: '@Url.Content("../AjaxService.svc/UpdateRole")',
+                        contentType: 'application/json',
+                        dataType: 'text',
+                        data: '{"userid":"' + userid + '","username":"' + username + '","rolename":"' + rolename + '"}',
+                        success: function (msg) {
+                            var a = eval('(' + msg + ')');
+                            if (a.d == "1") {
+                                alert("保存成功！");
+                                location.reload();
+                            }
+                        },
+                        error: function () {
+                            alert("发生错误！");
+                        },
+                        beforeSend: function () {
+                            $(".baidubtn a").text("正在提交...");
+                        },
+                        complete: function () {
+                            $(".baidubtn a").text("提 交");
+                        }
+                    });
+                }
+                else { }
+            }
+        });
+    }
+</script>

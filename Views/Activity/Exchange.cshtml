@@ -1,0 +1,355 @@
+﻿@model IEnumerable<MvcMember.Models.GiftInfo>
+
+@{
+    ViewBag.Title = "积分兑换礼品管理";
+}
+<h2>积分兑换礼品管理</h2>
+<div id="tabs">
+    <form id="firstform" action="">
+	<ul>
+		<li><a href="#tabs-1" style="padding: 0.3em 1em;color:#333333;">兑换积分</a></li>
+		<li><a href="#tabs-2" style="padding: 0.3em 1em;color:#333333;">礼品管理</a></li>
+	</ul>
+    <div id="tabs-1"> 
+        <div class="formdiv">
+           <input type="hidden" name="MemberID" id="MemberID" />
+           <input type="hidden" value="@ViewBag.UserID" id="userid" />
+            <div class="headp">　填写兑换信息</div>
+            <table>
+            <tr>
+            <td class="labtd">会员卡号：</td><td><input type="text" name="CardNo" id="CardNo" title="请输入6位数字卡号按回车键，或点击读卡" class="vtip" />
+                <input type="button" style=" width:60px;" value="读卡" onclick="ReadCard()" /></td>
+                <td><div class="Validform_checktip"></div></td>
+            </tr>
+            <tr>
+                <td class="labtd">剩余可用积分：</td><td><input type="text" readonly="readonly" name="DhPoint" id="DhPoint" /></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="labtd">选择礼品：</td>
+               <td><select id="gift" name="gift" style="width:200px;">
+                     <option value="-1">--请选择--</option>
+                    @foreach (var gf in ViewBag.GiftInfo)
+                    { 
+                        <option value="@gf.GiftNo">@gf.GiftName (@gf.Integral 分)</option>
+                    }
+                    </select>
+                    <input alt="#TB_inline?height=100&width=200&inlineId=myOnPageContent" title="输入兑换礼品数量" class="thickbox" style="width:80px;" type="button" value="确 定" /> 
+                    <input type="button" onclick="BtnReSel()" value="重 选" style="width:80px;" />
+                </td>
+                <td></td>
+             </tr>
+             <tr>
+                <td class="labtd">已选择礼品：</td>
+                    <td>
+                            <table id="tbgift">
+                                <tr><th class="displayno"></th><th>礼品名称</th><th>兑换积分</th><th>兑换数量</th><th>使用积分</th><th class='displayno'></th></tr>
+                            </table>
+                    </td>
+                <td></td>
+             </tr>
+             <tr>
+                <td class="labtd">本次使用积分：</td><td><input type="text" readonly="readonly" name="UserPoint" id="UserPoint"/></td><td></td>
+             </tr>
+             <tr>
+            　    <td class="labtd">备注：</td><td><input type="text" name="Remark" id="Remark" /></td><td></td>
+             </tr>
+             </table>
+             <div id="myOnPageContent" style=" display:none;">
+                    <br />
+                    <label for="txtnum"></label><input type="text" id="txtnum" style="width:80px;" value="1" /><br /><br />
+                    <input type="button" name="btnAdd" id="btnAdd" onclick="BtnSel()" style="width:80px;" value="确 定" />
+             </div>
+            <p><input type="checkbox" style="width:50px;margin-left: 110px;" id="printcard" /><span>打印卡面　　　</span></p>
+            <p class="baidubtn bt1">
+                <a href="javascript:void(0)" onclick="Commit()">提 交</a>
+            </p>
+       </div>
+        @Html.Partial("_ViewCustomerInfo")
+        <div style="clear:both;"></div>
+    </div>
+    <div id="tabs-2">
+        <p style="padding-left:5px;margin-bottom:8px;margin-top:3px;">
+            <a href="javascript:void(0)" onclick="AddItem()">新增礼品</a>
+        </p>
+       <div class="formdiv" style="display:none; float:none;">
+       <input type="hidden" value="@ViewBag.DmsID" id="dmsid" />
+        <div class="headp gift">　填写礼品信息</div>
+        <table>
+
+         <tr>
+            <td class="labtd">*礼品编号：</td>
+                <td><input type="text" name="ItemID" id="giftno" datatype="*" nullmsg="请输入礼品编号！"  errormsg="请输入礼品编号！" /></td>
+            <td><div class="Validform_checktip"></div></td>
+         </tr>
+        <tr>
+            <td class="labtd">*礼品名称：</td><td><input type="text" name="giftname" id="giftname" datatype="*" nullmsg="请输入礼品名称！"  errormsg="请输入礼品名称！" /></td>
+            <td><div class="Validform_checktip"></div></td>
+        </tr>
+        <tr>
+            <td class="labtd">单价：</td>
+                <td><input type="text" name="Price" id="price" datatype="n" nullmsg="请输入单价！"  errormsg="请输入单价！" /> </td>
+            <td></td>
+         </tr>
+         <tr>
+            <td class="labtd">*兑换积分：</td><td><input type="text" name="integral" id="integral" datatype="n" nullmsg="请输入积分！"  errormsg="请输入积分！" class="vtip" title="兑换时将扣除会员积分！" /></td>
+            <td></td>
+         </tr>
+         <tr>
+            <td class="labtd">是否可用:</td>
+            <td><input type="checkbox" class="pr1" id="isuse" name="isuse" checked="checked" /><label for="isuse">可用</label>
+            </td>
+            <td></td>
+        </tr>
+         <tr>
+            　<td class="labtd">备注：</td><td><input type="text" name="beizhu" id="beizhu" /></td><td></td>
+         </tr>
+         </table>
+        <p class="baidubtn bt2">
+            <a href="javascript:void(0)" onclick="Commit2()">提 交</a>
+        </p>
+        </div>
+
+        <div id="lstDiv">
+            <table class="table80">
+                <tr>
+                    <th style="width:50px;"></th>
+                    <th>礼品编号</th>
+                    <th>礼品名称</th>
+                    <th>单价</th>
+                    <th>兑换积分</th>
+                    <th>是否使用</th>
+                    <th>修改日期</th>
+                    <th>备注</th>
+                </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><a onclick="DeleteGift(@item.GiftNo)"  title="删除" href="javascript:void(0);"><img src="@Url.Content("../../Content/Images/del.png")" /></a>&nbsp<a id="@item.GiftNo" title="修改" href="javascript:void(0)" onclick="UpdateGift('@item.GiftNo')"><img src="@Url.Content("../../Content/Images/edit.png")" /></a></td>
+                    <td>@item.GiftNo</td>
+                    <td>@item.GiftName</td>
+                    <td>@item.Price</td>
+                    <td>@item.Integral</td>
+                    <td>@item.IsUse</td>
+                    <td>@String.Format("{0:g}", item.UpdateTime)</td>
+                    <td>@item.Remark</td>
+                </tr>
+            }
+
+            </table>
+        </div>
+    </div>
+     </form>
+</div>
+<div style="clear:both;"></div>
+@Html.Partial("_ViewReadCard")
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#tabs").tabs();
+        $('#firstform').bind('keypress', function (e) {
+            return e.keyCode !== 13;
+        });
+        $("#CardNo").keypress(function (e) {
+            var code = (e.keyCode ? e.keyCode : e.which);
+            if (code == 13) {
+                SelectMemberByCardNo();
+            }
+        });
+        //输入框鼠标样式
+        $(".formdiv input[type='text']").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv select").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv input[type='text']").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+        $(".formdiv select").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+        $("#tbgift th").css("padding-top", "2px");
+        $("#tbgift th").css("padding-bottom", "2px");
+        $("#CardNo").focus();
+    });
+    function AddItem() {
+        $(".formdiv").toggle("slow");
+        $("#giftno").attr("disabled", '');
+        $("#giftname").attr("disabled", '');
+        $(".gift input[type='text']").val('');
+    }
+    function UpdateGift(id) {
+        $(".formdiv").toggle("slow");
+        var seltd1 = $("#" + id).parent();
+        var seltd2 = $(seltd1).next();
+        $("#giftno").val($(seltd2).text());
+        $("#giftno").attr("disabled", "disabled");
+        var seltd3 = $(seltd2).next();
+        $("#giftname").attr("disabled", "disabled");
+        $("#giftname").val($(seltd3).text());
+        var seltd4 = $(seltd3).next();
+        $("#price").val($(seltd4).text());
+        var seltd5 = $(seltd4).next();
+        $("#integral").val($(seltd5).text());
+        var seltd6 = $(seltd5).next();
+        if ($(seltd6).text() == "1") {
+            $("#isuse").attr("checked", true);
+        }
+        else {
+            $("#isuse").attr("checked", '');
+        }
+        var seltd7 = $(seltd6).next().next();
+        $("#beizhu").val($(seltd7).text());
+        $(".gift").text($(".gift").text() + "--修改");
+    }
+    function BtnSel() {
+        var selectitem = $("#gift").find("option:selected").text();
+        var seletval = $("#gift").find("option:selected").val();
+        if (seletval != "-1") {
+            var giftname = selectitem.substring(0, selectitem.indexOf("("));
+            var pot = selectitem.substring(selectitem.indexOf("(") + 1, selectitem.indexOf("分"));
+            var num = $("#txtnum").val();
+            var sumuserpoint = parseInt($.trim(pot)) * parseInt(num);
+            if (sumuserpoint <= parseInt($("#DhPoint").val())) {
+                $("#tbgift").append("<tr><td class='displayno'>" + seletval + "</td><td>" + giftname + "</td><td>" + pot + "</td><td>" + num + "</td><td>" + sumuserpoint + "</td><td class='displayno'>" + $("#DhPoint").val() + "</td></tr>");
+                tb_remove();
+                if ($("#UserPoint").val() == "") {
+                    $("#UserPoint").val(sumuserpoint);
+                }
+                else {
+                    $("#UserPoint").val(parseInt(sumuserpoint) + parseInt($("#UserPoint").val()));
+                }
+                $("#DhPoint").val(parseInt($("#DhPoint").val()) - parseInt(sumuserpoint));
+            }
+            else {
+                alert("积分不够兑换！");
+            }
+        }
+    }
+    function BtnReSel() {
+        $("#tbgift td").remove();
+    }
+
+    function Commit() {
+        if ($("#UserPoint").val() == "") {
+            alert("请确认会员信息！");
+            return false;
+        }
+        var sendgift = "";
+        $("#tbgift").find("tr").each(function () {
+            var tempstr = "";
+            $(this).find("td").each(function () {
+                tempstr += "," + $(this).text();
+            });
+            if (tempstr != "") {
+                if (sendgift == "") {
+                    sendgift = tempstr.substr(1);
+                }
+                else {
+                    sendgift += "|" + tempstr.substr(1);
+                }
+            }
+        });
+        var conf = confirm("请确认会员卡号" + $("#CardNo").val() + "兑换积分" + $("#UserPoint").val() + "分");
+        if (conf) {
+            $.ajax({
+                type: 'post',
+                url: '@Url.Content("../AjaxServiceSave.svc/SaveGiftSend")',
+                contentType: 'application/json',
+                dataType: 'text',
+                data: '{"memberid":"' + $("#MemberID").val() + '","sendgift":"' + sendgift + '","remark":"' + $("#Remark").val() + '","userid":"' + $("#userid").val() + '"}',
+                success: function (msg) {
+                    var a = eval('(' + msg + ')');
+                    if (a.d == 1) {
+                        alert("操作成功！");
+                        if ($("#printcard").attr("checked") == true) {
+                            ExchangePrintCard();
+                        }
+                        $("input[type='text']").val('');
+                    }
+                    else if (a.d == 2) {
+                        alert("项目编号或项目名称已经存在！");
+                    }
+                    else {
+                        alert("提交失败！");
+                    }
+                },
+                error: function () {
+                    alert("发生错误！");
+                },
+                beforeSend: function () {
+                    $(".bt1 a").text("正在提交...");
+                },
+                complete: function () {
+                    $(".bt1 a").text("提 交");
+                }
+            });
+        }
+    };
+    function ExchangePrintCard() {
+        try {
+            var para = callbackObj.getPrinterPara();
+            var left = para.split(',')[2];
+            var top = para.split(',')[3];
+
+            var printtext = [];
+            printtext.push("");
+            printtext.push("会员卡号:" + $("#CardNo").val());
+            printtext.push("客户姓名:" + $("#Name").val());
+            printtext.push("车牌号码:" + $("#CarNo").val());
+            printtext.push("使用积分:" + $("#UserPoint").val());
+            
+            var syjf = $("#CurBIntegral").val();
+            if ($("#UserPoint").val() != "") {
+                syjf = parseInt(syjf) - parseInt($("#UserPoint").val());
+            };
+            printtext.push("剩余积分:" + syjf);
+            printtext.push("储值余额:" + $("#Balance").val());
+            var printdata = printtext.join('\n');
+            //打印卡
+            callbackObj.printCard(0, parseInt(left), parseInt(top), printdata);
+            location.reload();
+        }
+        catch (err) {
+            alert("打印卡面发生错误。", err.description);
+        }
+    };
+    function Commit2() {
+        if ($("#giftno").val() == "" || $("#giftname").val() == "") {
+            return;
+        }
+        var chk = $("#isuse").attr("checked") == true ? 1 : 0;
+        var op = $("#giftno").attr("disabled") == true ? 1 : 0;
+        var price = $("#price").val() == "" ? "0" : $("#price").val();
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxServiceSave.svc/SaveGiftInfo")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"op":"' + op + '","dmsid":"' + $("#dmsid").val() + '","giftno":"' + $("#giftno").val() + '","giftname":"' + $("#giftname").val() + '","integral":"' + $("#integral").val() + '","price":"' + price + '","isuse":"' + chk + '","beizhu":"' + $("#beizhu").val() + '"}',
+            success: function (msg) {
+                var a = eval('(' + msg + ')');
+                if (a.d == 1) {
+                    alert("操作成功！");
+                    $("input[type='text']").val('');
+                    window.location.reload();
+                }
+                else if (a.d == 2) {
+                    alert("礼品名称或编号已经存在！");
+                }
+                else {
+                    alert("提交失败！");
+                }
+            },
+            error: function () {
+                alert("发生错误！");
+            },
+            beforeSend: function () {
+                $(".bt2 a").text("正在提交...");
+            },
+            complete: function () {
+                $(".bt2 a").text("提 交");
+            }
+        });
+    }
+</script>

@@ -1,0 +1,84 @@
+﻿<div id="nav" class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active" style="background-color:#7ba4e4;">
+               <div class="ui-accordion-header ui-helper-reset ui-state-active ui-corner-top" style="border-bottom-style:none; height:2px;background-color:#7ba4e4; background:0;"></div>
+               <div class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active" style="border-top-style:none;background-color:#7ba4e4;">
+                   <div id="navaccord" style="background-color:#7ba4e4;">
+
+                          <h3><a href="#" class="forset1">会员管理</a></h3>
+                                <div class="forset1">
+		                            <ul>
+			                            <li>@Html.ActionLink("新增客户资料", "Create", "Member")</li>
+                                        <li>@Html.ActionLink("审核客户资料", "AudiMember", "Member")</li>
+                                        <li>@Html.ActionLink("新增会员资料", "Create", "CardInfo")</li>
+                                        <li>@Html.ActionLink("会员消费结算", "Create", "Consume")</li>
+                                        <li>@Html.ActionLink("快捷消费积分", "Create2", "Consume")</li>
+                                        <li>@Html.ActionLink("新增会员储值", "Create", "Recharge")</li>
+                                        <li>@Html.ActionLink("购买计次服务", "Create", "CardServiceItem")</li>
+		                            </ul>
+	                            </div>
+                           <h3><a href="#" class="forset2">会员营销</a></h3>
+                                <div class="forset2">
+		                            <ul>
+                                        <li>@Html.ActionLink("会员卡管理", "CardManger", "CardInfo")</li>
+                                        <li>@Html.ActionLink("会员积分营销", "Setting", "CardInfo")</li>
+                                        <li>@Html.ActionLink("会员储值营销", "RechargeGive", "Recharge")</li>
+                                        <li>@Html.ActionLink("会员级别定义", "Index", "CardType")</li>
+                                        <li>@Html.ActionLink("服务项目管理", "Index", "ServiceItem")</li>
+                                        <li>@Html.ActionLink("员工资料管理", "Index", "Employee")</li>
+		                            </ul>
+	                            </div>
+                            <h3><a href="#" class="forset3">会员服务</a></h3>
+                                <div class="forset3">
+		                            <ul>
+                                        <li>@Html.ActionLink("积分兑换礼品", "Exchange", "Activity")</li>
+                                        <li>@Html.ActionLink("客户意见投诉", "ComplainAdd", "Activity")</li>
+                                        <li>@Html.ActionLink("车主信息提醒", "Remind", "Member")</li>
+                                        <li>@Html.ActionLink("维修保养回访", "CallBack", "Activity")</li>
+                                        <li>@Html.ActionLink("智能短信服务", "Smssend", "Member")</li>
+                                        <li>@Html.ActionLink("会员活动管理", "Index", "Activity")</li>
+		                            </ul>
+	                            </div>
+                          <h3><a href="#" class="forset4">数据查询</a></h3>
+                                <div class="forset3">
+		                            <ul>
+                                        <li>@Html.ActionLink("会员详情资料", "AllDetail", "Member")</li>
+                                        <li>@Html.ActionLink("查询车主资料", "Index", "Member")</li>
+                                        <li>@Html.ActionLink("查询会员资料", "Index", "CardInfo")</li>
+                                        <li>@Html.ActionLink("查询消费记录", "Index", "Consume")</li>
+                                        <li>@Html.ActionLink("查询储值记录", "Index", "Recharge")</li>
+                                        <li>@Html.ActionLink("查询会员计次服务", "Index", "CardServiceItem")</li>
+                                        <li>@Html.ActionLink("查询客户投诉记录", "ComplainList", "Activity")</li>
+                                        <li>@Html.ActionLink("查询积分兑换记录", "ExchangeList", "Activity")</li>
+		                            </ul>
+	                            </div>
+                            <h3><a href="#" class="forset5">统计报表</a></h3>
+                                <div class="forset4">
+		                            <ul>
+                                        <li>@Html.ActionLink("消费结算明细表", "ConsumeList", "Report")</li>
+                                        <li>@Html.ActionLink("调整积分明细表", "AdjustInteList", "Report")</li>
+                                        <li>@Html.ActionLink("积分储值统计表", "CardInteStat", "Report")</li>
+                                        
+                                        <li>@Html.ActionLink("储值明细表", "RechargeList", "Report")</li>
+                                        <li>@Html.ActionLink("储值消费明细表", "RechargeConsumeList", "Report")</li>
+                                        <li>@Html.ActionLink("积分与余额统计表", "CardInteRechargeStat", "Report")</li>
+
+		                            </ul>
+	                            </div>
+                            <h3><a href="#">快速浏览</a></h3>
+                                <div>
+		                            <ul id="MyLi">
+                                        
+		                            </ul>
+	                            </div>
+                    </div>
+                </div>
+            </div>
+    <script type="text/javascript">
+        //加载快速浏览
+        var mylist = getCookie("MyList");
+        if (mylist != "" && mylist != undefined) {
+            var lsts = mylist.split("|")
+            for (var i = 0; i < lsts.length; i++) {
+                $("#MyLi").append("<li>" + lsts[i] + "</li>");
+            }
+        }
+</script>

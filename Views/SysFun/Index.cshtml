@@ -1,0 +1,82 @@
+﻿@model IEnumerable<MvcMember.Models.V_SysFunRole>
+@using MvcMember.Models
+@{
+    ViewBag.Title = "用户权限管理";
+}
+<script src="../../Scripts/jquery.checktree.js" type="text/javascript"></script>
+<h2>用户权限管理</h2>
+@using (Ajax.BeginForm("Index", "SysFun", new AjaxOptions { UpdateTargetId = "lstDiv" }))
+{
+<div>当前用户角色：<span id="rn">@Session["RoleName"].ToString()</span> <br /><br />选择用户角色：@Html.DropDownList("RoleName", new SelectList(ViewBag.ItemList as System.Collections.IEnumerable,
+"ItemName", "ItemName", ViewBag.rolename))
+</div>
+<input type="hidden" value="@ViewBag.rolename" id="viewrole" />
+    if (Session["UserID"].ToString() == "admin")
+    {
+        <div class="tdr table50">@Html.ActionLink("系统功能管理", "FunList")</div>
+    }
+<div id="lstDiv" style="background-color:#e0eaf1; width:430px; padding-left:90px;">
+<ul class="tree" style="margin-left: 15px;">
+    @foreach (var t1 in (from m in Model where m.ParentID == 0 select m).ToList() as IList<V_SysFunRole>)
+    {
+	<li>
+	    <label style="font-weight:normal;" title="@t1.IsUse" id="@t1.FunID">@t1.FunName</label>
+	    <ul>
+                @foreach (var t2 in (from n in Model where n.ParentID == t1.FunID select n).ToList() as IList<V_SysFunRole>)
+                {
+                     <li>
+	                    <label title="@t2.IsUse" style="font-weight:normal;" id="@t2.FunID">@t2.FunName</label>
+	                    <ul>
+                                @foreach (var t3 in (from p in Model where p.ParentID == t2.FunID select p).ToList() as IList<V_SysFunRole>)
+                                {
+                                    <li>
+	                                <label title="@t3.IsUse" style="font-weight:normal;"  id="@t3.FunID">@t3.FunName</label>
+                                    </li>
+                                }
+        		        </ul>
+	                </li>
+                }
+		</ul>
+	</li>
+    }
+</ul>
+</div>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        //遍历文档
+        $("ul.tree").checkTree({
+            onCheck: function (el) {
+                SaveList(el, 1);
+            },
+            onUnCheck: function (el) {
+                SaveList(el, 0);
+            }
+        });
+        $.each($(".tree label"), function (i, val) {
+            if (val.title == "1") {
+                $("#" + val.id).prev().addClass("checked");
+            }
+        });
+
+        $("#RoleName").bind("change", function () {
+            var rolename = $("#RoleName").find("option:selected").text();
+            document.forms[0].submit();
+        });
+    });
+    //保存选择的菜单
+    function SaveList(el, tag) {
+        var funid = el.find("label:first").attr("id");
+        var rolename = $("#RoleName").find("option:selected").text();
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxService.svc/UpdateAuth")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"rolename":"' + rolename + '","funid":' + funid + ',"isuse":' + tag + '}',
+            success: function (msg) {
+                var a = eval('(' + msg + ')');
+            }
+        });
+    }
+</script>

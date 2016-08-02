@@ -1,0 +1,153 @@
+10
+
+dir
+310
+https://125.91.216.4/svn/WebMember1/MvcMember/Views
+https://125.91.216.4/svn/WebMember1
+
+
+
+2011-08-01T10:06:33.267750Z
+309
+liquanchun
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+f27c25f3-296c-994c-a7ee-4778b874028f
+
+ServiceItem
+dir
+
+Employee
+dir
+
+Recharge
+dir
+
+_ViewStart.cshtml
+file
+
+
+
+
+2011-03-05T13:30:30.947154Z
+69e468f28dacc998525ae89a24bc9fa9
+2011-03-05T04:42:27.015625Z
+4
+liquanchun
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+55
+
+SysLog
+dir
+
+Web.config
+file
+
+
+
+
+2011-03-05T04:45:29.198120Z
+d00fa728c4ce128c9b3b6060bbb30440
+2011-03-05T04:42:27.015625Z
+4
+liquanchun
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2873
+
+CardInfo
+dir
+
+AdminUser
+dir
+
+SysFun
+dir
+
+Home
+dir
+
+ItemList
+dir
+
+Activity
+dir
+
+Account
+dir
+
+GuestBook
+dir
+
+Shared
+dir
+
+Member
+dir
+
+Consume
+dir
+
+CardServiceItem
+dir
+
+CardType
+dir
+
+Report
+dir
+
+SysSetting
+dir
+

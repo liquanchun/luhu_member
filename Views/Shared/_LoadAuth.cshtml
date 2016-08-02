@@ -1,0 +1,19 @@
+﻿@using MvcMember.Models
+@if(TempData["qx"] != null)
+{
+    foreach (var it in TempData["qx"] as IList<V_SysFunRole>)
+    {
+        <input type="hidden" id="@it.FunName" value="@it.IsUse" />
+    }
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#content a").each(function (i) {
+                if (this.title != "") {
+                    if ($("#" + this.title).val() == "0") {
+                        $(this).css("display", "none");
+                    }
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/WebMember1/!svn/ver/309/MvcMember/Views/Account
+END
+AddUser.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/WebMember1/!svn/ver/4/MvcMember/Views/Account/AddUser.cshtml
+END
+ChangePassword.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/WebMember1/!svn/ver/4/MvcMember/Views/Account/ChangePassword.cshtml
+END
+Login.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/WebMember1/!svn/ver/339/MvcMember/Views/Account/Login.cshtml
+END
+Login2.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/WebMember1/!svn/ver/304/MvcMember/Views/Account/Login2.cshtml
+END
+LogOn.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/WebMember1/!svn/ver/4/MvcMember/Views/Account/LogOn.cshtml
+END
+ChangePasswordSuccess.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/WebMember1/!svn/ver/4/MvcMember/Views/Account/ChangePasswordSuccess.cshtml
+END
+Register.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/WebMember1/!svn/ver/315/MvcMember/Views/Account/Register.cshtml
+END

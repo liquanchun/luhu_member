@@ -1,0 +1,900 @@
+﻿@model MvcMember.Models.V_Consume
+
+@{
+    ViewBag.Title = "消费结算积分";
+    var sksj = DateTime.Now.ToString("yyyy-MM-dd");
+}
+<h2 style="padding-bottom: 3px;">消费结算积分</h2>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <div id="consume" style="padding-left: 10px;">
+        <div style="background-color: #dbeafd; width: 80%">
+            会员卡号:@Html.EditorFor(model => model.CardNo)
+            <input type="button" value="读 卡" onclick="ReadCard2();" />
+            联系电话:
+            @Html.Editor("dianhua")
+            车牌号码:
+            @Html.Editor("chepai")
+            <input type="button" onclick="SelectMemberByCarNo()" value="会员查询" />
+        </div>
+        <div class="tt" style="background-color: #dbeafd; width: 80%">客户信息确认</div>
+        @Html.HiddenFor(model => model.MemberID)
+        <div>
+            积分单号:
+            @Html.LabelFor(model => model.BillNo)
+            客户名称:
+            @Html.LabelFor(model => model.Name)
+            车牌号码:
+            @Html.LabelFor(model => model.CarNO)
+            车架号码:
+            @Html.Label("Vinno")
+        </div>
+        <div>
+            客户电话:
+            @Html.LabelFor(model => model.Mobile)
+            客户类型:
+            @Html.LabelFor(model => model.ClientType)
+            最近消费日期:
+            @Html.Label("LastTime")
+            操作员:
+            <label id="username"></label>
+            <input type="hidden" value="@ViewBag.username" id="hiduser" />
+        </div>
+        <div class="tt" style="background-color: #dbeafd; width: 80%">会员卡信息</div>
+        <div>
+            会员级别:
+            @Html.LabelFor(model => model.CardLevel)
+            当前状态:
+            @Html.Label("state")
+            配件折扣:
+            @Html.LabelFor(model => model.PartDiscount)
+            工时折扣:
+            @Html.LabelFor(model => model.HourDiscount)
+        </div>
+        <div>
+            储值余额:
+            @Html.LabelFor(model => model.BalanceMoney)
+            赠送金额:
+            @Html.Label("SumGiveMoney")
+            累计积分:
+            @Html.Label("SumIntegral")
+            剩余可用积分:
+            @Html.LabelFor(model => model.CurBIntegral)
+        </div>
+        <div class="tt" style="background-color: #dbeafd; width: 80%">积分结算</div>
+        <div>
+            业务分类:<select id="ser" name="ser" onchange="SelectService()" style="width: 100px;">
+                @foreach (var sr in ViewBag.ServiceInte)
+                { 
+                    <option value="@sr.ClientType@sr.CardType">@sr.ServiceType</option>
+                }
+            </select>
+            <input type="checkbox" checked="checked" id="IsInte" /><span>积分　</span>
+            <span>积分规则:</span>工时费:<label for="gsf" id="gsf"></label>配件费:<label for="pjf" id="pjf"></label>其他费:<label for="qtf" id="qtf"></label>
+            @Html.ActionLink("查看积分规则", "Setting", "CardInfo")
+        </div>
+        <hr />
+        <div class="clear"></div>
+        <div>
+            工时费:@Html.Editor("Fee1")
+            @Html.ValidationMessageFor(model => model.SumFee)
+            配件费:@Html.Editor("Fee2")
+            @Html.ValidationMessageFor(model => model.SumFee)
+            其他费:@Html.Editor("Fee3")
+            @Html.ValidationMessageFor(model => model.SumFee)
+            合计金额:
+            @Html.Editor("hejije")
+        </div>
+        <div>
+            <span>积分抵用:</span><input type="text" id="InteToMoney" />
+            <input type="hidden" id="sumtomoney" />
+            <span>使用积分:</span><input type="text" id="userinte" style="border-top-style: none; border-left-style: none; border-right-style: none;" />
+            <input type="hidden" id="sumuseinte" />
+            <span>本项积分:</span><input type="text" id="iteminte" style="border-top-style: none; border-left-style: none; border-right-style: none;" />
+            <input type="button" onclick="AddList()" id="conf1" value="确 定" />
+            <input type="button" onclick="ReList()" id="reset1" value="重 填" />
+        </div>
+        <div>
+            <span>该会员最多使用换取金额:</span><label for="maxto" id="maxto"></label>
+            <span>本项换取金额不超过:</span><label for="maxtoover" id="maxtoover"></label>
+        </div>
+        <hr />
+        <div class="clear"></div>
+        <div>
+            <table id="jslist" class="table70">
+                <tr>
+                    <th>序号</th>
+                    <th>业务项目</th>
+                    <th>工时费</th>
+                    <th>配件费</th>
+                    <th>其他费</th>
+                    <th>小计</th>
+                    <th>抵用结算</th>
+                    <th>使用积分</th>
+                    <th>应收金额</th>
+                    <th>本次积分</th>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <span>本次应收合计:</span><label id="thissumfee"></label>
+            <span>本次积分合计:</span><label id="thissuminte"></label>
+            <span>累计积分:</span><label id="allsuminte"></label>
+        </div>
+        <div class="tt" style="background-color: #dbeafd; width: 80%">
+            <span>结账收款　　　</span>
+            <span>待结余额:</span>
+            <label id="djje"></label>
+        </div>
+        <div style="margin-bottom: 3px;">
+            <span>支付方式:</span>
+            <select id="paytype" name="paytype" style="width: 100px;">
+                <option value="现金">现金</option>
+                <option value="刷卡">刷卡</option>
+                <option value="储值卡">储值卡</option>
+                <option value="支票">支票</option>
+                <option value="代金券">代金券</option>
+            </select>
+            <span>收款金额:</span><input type="text" id="skje" />
+            <span>收款日期:</span><input type="text" id="sksj" />
+            <input type="hidden" value="@sksj" id="hidsksj" />
+            <input type="button" onclick="PayList()" id="conf2" value="确 定" />
+            <input type="button" onclick="RePayList()" id="reset2" value="重 填" />
+        </div>
+        <div>
+            <table id="sklist" class="table40">
+                <tr>
+                    <th>序号</th>
+                    <th>支付方式</th>
+                    <th>支付金额</th>
+                    <th>支付时间</th>
+                </tr>
+            </table>
+            <input type="hidden" id="cardtofee" value="" />
+        </div>
+        <hr />
+        <div class="clear"></div>
+        <div>
+            <input type="checkbox" id="printcard" /><span>打印卡面　　　</span>
+            <span>最新活动信息:</span><input type="text" id="hdmsg" />
+            <input type="hidden" value="@ViewBag.hdxx" id="hidmsg" />
+        </div>
+        <div>
+            <input type="button" value="收单打卡" id="sub" onclick="checkInput();" style="font-size: 16px; font-weight: normal; font-weight: bold; margin-left: 5px;" />
+            <input type="reset" value="重 填" id="reset" style="font-size: 16px; font-weight: normal; font-weight: bold; margin-left: 12px;" />
+            <input type="hidden" id="InteToMoneyRate" value="@ViewBag.InteToMoneyRate" />
+            <input type="hidden" id="InteToMoneyMax" value="" />
+            <input type="hidden" id="DmsID" value="@ViewBag.DmsID" />
+        </div>
+    </div>
+}
+<div style="padding-bottom: 10px; margin-top: 8px; padding-left: 5px;">
+    @Html.ActionLink("返回消费列表", "Index")
+</div>
+@Html.Partial("_ViewReadCard")
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('form').bind('keypress', function (e) {
+            return e.keyCode !== 13;
+        });
+        $("#CardNo").keypress(function (e) {
+            var code = (e.keyCode ? e.keyCode : e.which);
+            if (code == 13) {
+                SelectMemberByCardNo2();
+            }
+        });
+        $("#sksj").datepicker();
+        $("label").css("text-decoration", "underline");
+        $("label").css("color", "#6a5acd");
+        $("label").css("display", "inline-block");
+        $("label").css("width", "110px");
+        $(".tt").css("line-height", "1.5em");
+        $(".tt").css("font-size", "13px");
+        $(".tt").css("font-weight", "bold");
+        $("th").css("padding", "3px");
+        $("#CardNo").focus();
+        $("#sub").attr("disabled", "disabled");
+        $("#consume div").css("margin-bottom", "4px");
+
+        $("#gsf").css("width", "80px");
+        $("#pjf").css("width", "80px");
+        $("#qtf").css("width", "80px");
+
+        $("input[type='text']").css("width", "70px");
+        $("input[type='text']").css("height", "17px");
+        $("input[type='text']").val("");
+        $("label").text("");
+        $("#hdmsg").css("width", "200px");
+        $("#dianhua").css("width", "100px");
+        $("#sksj").css("width", "80px");
+        $("#hdmsg").val($("#hidmsg").val());
+        $("#username").text($("#hiduser").val());
+        $("#sksj").val($("#hidsksj").val());
+
+        $("#jslist td").css("padding-top", "2px");
+        $("#jslist td").css("padding-bottom", "2px");
+        $("#userinte").attr("readonly", "readonly");
+        $("#iteminte").attr("readonly", "readonly");
+        $("input[type='text'][id!='chepai'][id!='hdmsg']").numeral();
+
+        $("#conf1").attr("disabled", "disabled");
+        $("#reset1").attr("disabled", "disabled");
+        $("#conf2").attr("disabled", "disabled");
+        $("#reset2").attr("disabled", "disabled");
+        $("#skje").attr("disabled", "disabled");
+
+        $("#txtCom").val(getCookie("com"));
+        //输入抵用金额
+        $("#InteToMoney").keyup(function () {
+            var maxje1 = $("#maxto").text();
+            if ($("#maxto").text() == "") maxje1 = 0;
+            var maxje2 = $("#maxtoover").text();
+            if ($("#maxtoover").text() == "") maxje2 = 0;
+            var tomoney = $("#InteToMoney").val();
+            if (parseInt(tomoney) > parseInt(maxje1) || parseInt(tomoney) > parseInt(maxje2)) {
+                alert("积分抵用金额太大");
+                $("#InteToMoney").val("");
+                $("#userinte").val("");
+            }
+            else {
+                $("#userinte").val(parseInt($("#InteToMoney").val() * InteToMoneyRateArr[0] / InteToMoneyRateArr[1]));
+                $("#userinte").attr("title", $("#InteToMoney").val() + "×" + InteToMoneyRateArr[0] + "/" + InteToMoneyRateArr[1]);
+                //输入抵用金额之后本项积分
+                var jfb1 = 1;
+                if ($("#gsf").text() != "") jfb1 = $("#gsf").text().split(":")[0] / $("#gsf").text().split(":")[1];
+                var jifenje = parseInt($("#hejije").val()) - parseInt($("#InteToMoney").val());
+                $("#iteminte").val(parseInt(jifenje / jfb1));
+            }
+        });
+        $("#Fee1").bind("keyup", function () {
+            CheckSumFee();
+        });
+        $("#Fee2").bind("keyup", function () {
+            CheckSumFee();
+        });
+        $("#Fee3").bind("keyup", function () {
+            CheckSumFee();
+        });
+        //输入收款金额
+        $("#skje").keyup(function () {
+            var djje = $("#djje").text();
+            var skje = $("#skje").val();
+            if (parseInt(skje) > parseInt(djje)) {
+                alert("收款金额不能大于待结金额！");
+                $("#skje").val("");
+                return;
+            }
+            var checkText = $("#paytype").find("option:selected").text();
+            if (checkText == "储值卡") {
+                var balance = $("label[for='BalanceMoney']").text();
+                if (balance == "" || parseInt(balance) < parseInt($("#skje").val())) {
+                    alert("储值卡余额不足！");
+                    $("#skje").val("");
+                    return;
+                }
+            }
+            $("#conf2").removeAttr("disabled");
+            $("#reset2").removeAttr("disabled");
+        });
+        //选择付款类型
+        $("#paytype").change(function () {
+            $("#skje").val('');
+            $("#skje").focus();
+        });
+    });
+
+    //读卡
+    function ReadCard2() {
+        if (typeof (callbackObj) == "undefined") {
+            return false;
+        };
+        alert("请将卡插入机器！");
+        var para = callbackObj.getPrinterPara();
+        var com = para.split(',')[0];
+        var address = para.split(',')[1];
+        if (com != "" && address != "") {
+            try {
+                if (callbackObj.getStatus() == "1") {
+                    callbackObj.cardIn();
+                }
+                else {
+                    callbackObj.openCom(parseInt(com));
+                    callbackObj.cardIn();
+                }
+                var cardno = callbackObj.readCard(address);
+                if (cardno != "") {
+                    $("#CardNo").val(cardno);
+                    $("#CardNo").blur();
+                    $("#printcard").attr("checked", "checked");
+                    SelectMemberByCardNo2();
+                }
+            }
+            catch (err) {
+                alert(err);
+            }
+        }
+        else {
+            alert("串口未设置");
+        }
+    };
+
+    function SelectMemberByCardNo2() {
+        if ($("#CardNo").val() == "") {
+            alert("请输入会员卡号！");
+            return;
+        }
+        var cardno = $("#CardNo").val();
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxService.svc/SelectMemberByCardNo")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"dmsid":"dms1","cardno":"' + cardno + '"}',
+            success: function (data) {
+                var a = eval('(' + data + ')');
+                //MemberID,Name,Mobile,CarNo,VinNO
+                if (a.d.length > 1) {
+                    SetMemberInfo(a.d);
+                }
+                else {
+                    alert("未找到该卡号相关资料，请确认是否发卡！");
+                }
+            },
+            error: function () {
+                alert("发生错误！");
+            }
+        });
+    };
+
+    //显示信息
+    function SetMemberInfo(infoStr) {
+        var arrs = infoStr.split(",");
+        $("#MemberID").val(arrs[0]);
+        $("label[for='Mobile']").text(arrs[1]);
+        $("label[for='CarNO']").text(arrs[2]);
+        $("label[for='Name']").text(arrs[3]);
+        $("label[for='ClientType']").text(arrs[4]);
+
+        $("label[for='CurBIntegral']").text(arrs[5]);
+        $("label[for='BalanceMoney']").text(arrs[6]);
+        $("label[for='CardLevel']").text(arrs[7]);
+
+        $("label[for='state']").text(arrs[10]);
+
+        $("#CardNo").val(arrs[14]);
+        $("label[for='SumGiveMoney']").text(arrs[15]);
+        $("label[for='Birthday']").text(arrs[16]);
+        $("#selpass").val(arrs[17]);
+        //处理业务分类
+        if (arrs[10] == "正常") {
+            $("#sub").removeAttr("disabled");
+            GetSysSet();
+        }
+        else {
+            alert("该卡当前状态为" + arrs[10] + ",不能消费积分。");
+        }
+        //客户生日
+        if ($("label[for='Birthday']").text() != "") {
+            var d1 = $("label[for='Birthday']").text().split("-");
+            var d2 = new Date();
+            if (parseInt(d1[1]) == d2.getMonth() + 1) {
+                $("label[for='Birthday']").css("color", "red");
+                $("label[for='Birthday']").attr("title", "今天生日");
+            }
+        }
+    };
+    var dc1 = 10;
+    var dc2 = 10;
+    //计算合计金额
+    function CheckSumFee() {
+        var jfb1 = 1;
+        var jfb2 = 1;
+        var jfb3 = 1;
+        if ($("label[for='HourDiscount']").text() != "") dc1 = $("label[for='HourDiscount']").text();
+        if ($("label[for='PartDiscount']").text() != "") dc2 = $("label[for='PartDiscount']").text();
+
+        if ($("#gsf").text() != "") jfb1 = $("#gsf").text().split(":")[0] / $("#gsf").text().split(":")[1];
+        if ($("#pjf").text() != "") jfb2 = $("#pjf").text().split(":")[0] / $("#pjf").text().split(":")[1];
+        if ($("#qtf").text() != "") jfb3 = $("#qtf").text().split(":")[0] / $("#qtf").text().split(":")[1];
+        //小计金额
+        var f1 = $("#Fee1").val() * dc1 / 10;
+        if ($("#Fee1").val() == "") f1 = 0;
+        var f2 = $("#Fee2").val() * dc2 / 10;
+        if ($("#Fee2").val() == "") f2 = 0;
+        var f3 = $("#Fee3").val() * 1;
+        if ($("#Fee3").val() == "") f3 = 0;
+        $("#hejije").val(parseInt(f1) + parseInt(f2) + parseInt(f3));
+        //本项换取金额不超过
+        if (InteToMoneyMax != undefined) {
+            $("#maxtoover").text($("#hejije").val() * InteToMoneyMax / 100);
+            $("#maxtoover").attr("title", $("#hejije").val() + "×" + InteToMoneyMax + "%");
+        }
+        //本项积分
+        if ($("#IsInte").attr("checked") == true) {
+            var jf1 = f1 / jfb1;
+            var jf2 = f2 / jfb2;
+            var jf3 = f3 / jfb3;
+            $("#iteminte").val(parseInt(jf1) + parseInt(jf2) + parseInt(jf3));
+            $("#iteminte").attr("title", jf1 + "+" + jf2 + "+" + jf3);
+        }
+        $("#conf1").removeAttr("disabled");
+        $("#reset1").removeAttr("disabled");
+    };
+    //添加结算明细
+    var indexid = 0;
+    function AddList() {
+        if ($("#hejije").val() == "") {
+            alert("合计金额不能为空！")
+            return;
+        }
+        indexid++;
+        var appstr = "<tr class='conlst'>";
+        appstr += "<td>" + indexid + "</td>"; //序号
+        var checkText = $("#ser").find("option:selected").text();
+        appstr += "<td>" + checkText + "</td>"; //业务项目
+        var gsf = $("#Fee1").val();
+        if (gsf == "") gsf = 0;
+        appstr += "<td>" + parseInt(gsf * dc1 / 10) + "</td>"; //工时费
+        var pjf = $("#Fee2").val();
+        if (pjf == "") pjf = 0;
+        appstr += "<td>" + parseInt(pjf * dc2 / 10) + "</td>"; //配件费
+        var qtf = $("#Fee3").val();
+        if (qtf == "") qtf = 0;
+        appstr += "<td>" + qtf + "</td>"; //其他费
+
+        appstr += "<td>" + $("#hejije").val() + "</td>"; //小计
+        var tomoney = $("#InteToMoney").val();
+        var sumtomoney = $("#sumtomoney").val(); //累计抵用
+        if (tomoney == "") tomoney = 0;
+        if (sumtomoney == "") sumtomoney = 0;
+        $("#sumtomoney").val(parseInt(sumtomoney) + parseInt(tomoney));
+        appstr += "<td>" + tomoney + "</td>"; //抵用结算
+        var useinte = $("#userinte").val();
+        if (useinte == "") useinte = 0;
+        var sumuseinte = $("#sumuseinte").val(); //累计使用积分
+        if (sumuseinte == "") sumuseinte = 0;
+        $("#sumuseinte").val(parseInt(sumuseinte) + parseInt(useinte));
+        appstr += "<td>" + useinte + "</td>"; //使用积分  
+        var ysje = $("#hejije").val() - tomoney;
+        var thissumfee = $("#thissumfee").text();
+        if (thissumfee == "") {  //本次应收合计
+            $("#thissumfee").text(ysje);
+        }
+        else {
+            $("#thissumfee").text(parseInt(ysje) + parseInt(thissumfee));
+        }
+        $("#djje").text($("#thissumfee").text()); //待结余额
+
+        appstr += "<td>" + ysje + "</td>"; //应收金额
+        var bcjf = $("#iteminte").val();
+        if (bcjf == "") bcjf = 0;
+        var thissuminte = $("#thissuminte").text();
+        if (thissuminte == "") {  //本次积分合计
+            $("#thissuminte").text(bcjf);
+        }
+        else {
+            $("#thissuminte").text(parseInt(bcjf) + parseInt(thissuminte));
+        }
+        appstr += "<td>" + bcjf + "</td>"; //本次积分
+
+        //累计积分
+        var bchj = $("#thissuminte").text();
+        var syjf = $("label[for='CurBIntegral']").text();
+        if (bchj == "") bchj = 0;
+        if (syjf == "") syjf = 0;
+        var allsuminte;
+        if ($("#allsuminte").text() == "") {
+            allsuminte = parseInt(bchj) + parseInt(syjf) - parseInt(useinte); //累计积分= 本次积分合计 + 剩余积分 - 使用积分
+            $("#allsuminte").attr("title", bchj + "+" + syjf + "-" + useinte);
+        }
+        else {
+            var ss = $("#allsuminte").text();
+            allsuminte = parseInt(ss) + parseInt(bcjf) - parseInt(useinte);  //累计积分= 累计积分 + 本次积分 - 使用积分
+            $("#allsuminte").attr("title", ss + "+" + bcjf + "-" + useinte);
+        }
+        $("#allsuminte").text(allsuminte);
+        appstr += "</tr>";
+        $("#jslist").append(appstr);
+        $("#skje").removeAttr("disabled");
+        ClearInput1();
+    };
+    //清空输入框
+    function ClearInput1() {
+        $("#Fee1").val("");
+        $("#Fee2").val("");
+        $("#Fee3").val("");
+        $("#hejije").val("");
+        $("#InteToMoney").val("");
+        $("#userinte").val("");
+        $("#iteminte").val("");
+        $("#maxtoover").text("");
+    };
+    function ClearMemberInfo() {
+        $("#MemberID").val('');
+        $("label[for='BillNo']").text('');
+        $("label[for='Mobile']").text('');
+        $("label[for='CarNO']").text('');
+        $("label[for='Name']").text('');
+        $("label[for='ClientType']").text('');
+
+        $("label[for='CurBIntegral']").text('');
+        $("label[for='BalanceMoney']").text('');
+        $("label[for='CardLevel']").text('');
+        $("label[for='PartDiscount']").text('');
+        $("label[for='HourDiscount']").text('');
+
+        $("label[for='state']").text('');
+        $("label[for='Vinno']").text('');
+        $("label[for='SumIntegral']").text('');
+        $("label[for='LastTime']").text('');
+
+        $("#CardNo").val('');
+        $("label[for='SumGiveMoney']").text(''); 
+        $("label[for='maxto']").text(''); 
+        $("label[for='maxtoover']").text(''); 
+        $("label[for='gsf']").text('');
+        $("label[for='pjf']").text('');
+        $("label[for='qtf']").text('');
+    };
+    //消费项目重填
+    function ReList() {
+        $(".conlst").empty();
+        $("#thissumfee").text("");
+        $("#thissuminte").text("");
+        $("#allsuminte").text("");
+        $("#sumuseinte").val("");
+        $("#sumtomoney").val("");
+        $("#djje").text("");
+        RePayList();
+        indexid = 0;
+        $("#Fee1").focus();
+    };
+    //收款明细重填
+    function RePayList() {
+        $(".paylst").empty();
+        $("#djje").text($("#thissumfee").text()); //待结余额
+        indexpay = 0;
+        //$("#thissuminte").text(parseInt(thissuminte) + parseInt(skkcje));
+        $("#thissuminte").text('');
+        //累计积分
+        //$("#allsuminte").text(parseInt(thisallsuminte) + parseInt(skkcje));
+        $("#allsuminte").text('');
+        $("#skje").focus();
+    };
+    //添加收款明细
+    var skkcje = 0;
+    var indexpay = 0;
+    function PayList() {
+        if ($("#skje").val() == "") {
+            alert("收款金额不能为空！");
+            return;
+        }
+        indexpay++;
+        var appstr = "<tr class='paylst'>";
+        appstr += "<td>" + indexpay + "</td>"; //序号
+        var checkText = $("#paytype").find("option:selected").text();
+        //检查付款方式是否已经存在
+        $("#sklist tbody tr").each(function () {
+            if ($("td:eq(2)").text() == checkText) {
+                alert(checkText + "支付方式已经存在！");
+                return;
+            }
+        });
+
+        appstr += "<td>" + checkText + "</td>"; //支付方式
+        if (checkText == "储值卡") {
+            var ctf = $("#cardtofee").val();
+            if (ctf == "") ctf = 0;
+            $("#cardtofee").val(parseInt(ctf) + parseInt($("#skje").val()));
+            //如果有赠送金额,赠送金额不积分
+            if (parseInt($("label[for='SumGiveMoney']").text()) > 0) {
+                var jfbl = $("#gsf").text().split(":")[0] / $("#gsf").text().split(":")[1];
+                var skje = $("#skje").val();
+                //本次用 赠送金额付款
+                var zsjefk = parseInt($("label[for='SumGiveMoney']").text());
+                if (parseInt($("#skje").val()) < parseInt($("label[for='SumGiveMoney']").text())) {
+                    zsjefk = parseInt($("#skje").val());
+                }
+                //扣除用赠送金额付款部分的积分
+                var kcjf = zsjefk / jfbl;
+                var thissuminte = $("#thissuminte").text();
+                var thisallsuminte = $("#allsuminte").text();
+                skkcje = kcjf;
+                //本次积分合计
+                $("#thissuminte").text(parseInt(thissuminte) - parseInt(kcjf));
+                //累计积分
+                $("#allsuminte").text(parseInt(thisallsuminte) - parseInt(kcjf));
+            }
+        }
+        appstr += "<td>" + $("#skje").val() + "</td>"; //支付金额
+        appstr += "<td>" + $("#sksj").val() + "</td>"; //支付时间
+        appstr += "</tr>";
+        $("#sklist").append(appstr);
+        var djje = $("#djje").text();
+        $("#djje").text(parseInt(djje) - parseInt($("#skje").val()));
+        if ($("#djje").text() == "0") {
+            $("#conf2").attr("disabled", "disabled");
+            $("#reset2").attr("disabled", "disabled");
+            $("#skje").attr("disabled", "disabled");
+            $("#skje").val("");
+        }
+        else {
+            $("#skje").val('');
+            $("#skje").focus();
+        }
+        GetBillNo();
+    };
+    //检查，保存消费积分信息
+    function checkInput() {
+        if ($("#MemberID").val() == "" || $("#MemberID").val() == "0") {
+            alert("请输入卡号或查找客户！");
+            return;
+        }
+        if ($("#djje").text() != "0") {
+            alert("待结金额不为0");
+            return;
+        }
+        if (!confirm("请认真确认本次消费积分信息，你要保存吗？")) {
+            return;
+        }
+        $("#sub").attr("disabled", "disabled");
+        SaveConsume();
+    };
+    function ConsumePrintCard() {
+        try {
+            var para = callbackObj.getPrinterPara();
+            var left = para.split(',')[2];
+            var top = para.split(',')[3];
+            var czye = $("label[for='BalanceMoney']").text();
+            var kf = $("#cardtofee").val();  //储值卡支付
+            if (kf.length > 0) {
+                czye = parseInt(czye) - parseInt(kf);
+            }
+            var printtext = [];
+            printtext.push("");
+            printtext.push("会员卡号:" + $("#CardNo").val());
+            printtext.push("客户姓名:" + $("label[for='Name']").text());
+            printtext.push("车牌号码:" + $("label[for='CarNO']").text());
+
+            printtext.push("本次积分:" + $("#thissuminte").text());
+            printtext.push("剩余积分:" + $("#allsuminte").text());
+            if (czye > 0) {
+                printtext.push("储值余额:" + czye);
+            }
+            
+            if ($("#hdmsg").val() != "") {
+                var msg = $("#hdmsg").val();
+                var msgArr = new Array();
+
+                var maxlen = 10;
+                if (msg.length > 10) {
+                    var times = msg.length % maxlen;
+                    for (var i = 0; i < msg.length / maxlen; i++) {
+                        msgArr[i] = msg.substr(i * maxlen, maxlen);
+                    }
+                    for (var i = 0; i < msgArr.length; i++) {
+                        var hg = top + lineheg * (i + 8);
+                        printtext.push(msgArr[i]);
+                    }
+                }
+                else {
+                    printtext.push(msg);
+                }
+            }
+            var printdata = printtext.join('\n');
+            //打印卡
+            callbackObj.clearCard2();
+            callbackObj.printCard(0, parseInt(left), parseInt(top), printdata);
+            location.reload();
+        }
+        catch (err) {
+            alert("打印卡面发生错误。", err.description);
+        }
+    };
+    //查询客户
+    function SelectMemberByCarNo() {
+        if ($("#Mobile").val() == "" && $("#CarNO").val() == "") {
+            alert("请输入电话号码或车牌号码！");
+            return;
+        }
+        var mobile = $("#dianhua").val();
+        var carno = $("#chepai").val();
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxService.svc/SelectMemberByCarNo")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"mobile":"' + mobile + '","carno":"' + carno + '"}',
+            success: function (msg) {
+                var a = eval('(' + msg + ')');
+                //MemberID,Name,Mobile,CarNo,VinNO
+                if (a.d.length > 1) {
+                    SetMemberInfo(a.d);
+                }
+            }
+        });
+    };
+    //显示信息
+    function SetMemberInfo(infoStr) {
+        var arrs = infoStr.split(",");
+        $("#MemberID").val(arrs[0]);
+        $("label[for='Mobile']").text(arrs[1]);
+        $("label[for='CarNO']").text(arrs[2]);
+        $("label[for='Name']").text(arrs[3]);
+        $("label[for='ClientType']").text(arrs[4]);
+
+        $("label[for='CurBIntegral']").text(arrs[5]);
+        $("label[for='BalanceMoney']").text(arrs[6]);
+        $("label[for='CardLevel']").text(arrs[7]);
+        $("label[for='PartDiscount']").text(arrs[8]);
+        $("label[for='HourDiscount']").text(arrs[9]);
+
+        $("label[for='state']").text(arrs[10]);
+        $("label[for='Vinno']").text(arrs[11]);
+        $("label[for='SumIntegral']").text(arrs[12]);
+        $("label[for='LastTime']").text(arrs[13].split(" ")[0]);
+
+        $("#CardNo").val(arrs[14]);
+        $("label[for='SumGiveMoney']").text(arrs[15]);
+
+        //处理业务分类
+        var clienttype = $("label[for='ClientType']").text();
+        var cardlevel = $("label[for='CardLevel']").text();
+        if (clienttype != "" && cardlevel !="") {
+            $("#ser option[value!='" + clienttype + cardlevel + "']").remove();
+        }
+        if (arrs[10] == "正常") {
+            $("#sub").removeAttr("disabled");
+            GetSysSet();
+            SelectService();
+        }
+        else {
+            alert("该卡当前状态为" + arrs[10] + ",不能消费积分。");
+        }
+    };
+    //获取积分单号
+    function GetBillNo() {
+        if ($("label[for='BillNo']").text() == "") {
+            $.ajax({
+                type: 'post',
+                url: '@Url.Content("../AjaxService.svc/GetBillNo")',
+                contentType: 'application/json',
+                dataType: 'text',
+                success: function (msg) {
+                    var a = eval('(' + msg + ')');
+                    if (a.d.length > 1) {
+                        $("label[for='BillNo']").text(a.d);
+                    }
+                }
+            });
+        }
+    };
+    //业务分类,客户类型
+    function SelectService() {
+        var clienttype = $("label[for='ClientType']").text();
+        if (clienttype == "") clienttype = "个人客户";
+        var servicetype = $("#ser").find("option:selected").text();
+        var cardtype = $("label[for='CardLevel']").text();
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxService.svc/SelectServiceInte")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"clienttype":"' + clienttype + '","servicetype":"' + servicetype + '","cardtype":"' + cardtype + '"}',
+            success: function (msg) {
+                var a = eval('(' + msg + ')');
+                if (a.d.length > 1) {
+                    var attrs = a.d.split(",");
+                    $("#gsf").text(attrs[0]);
+                    $("#pjf").text(attrs[1]);
+                    $("#qtf").text(attrs[2]);
+                    $("#InteToMoneyMax").val(attrs[3]);
+                    InteToMoneyMax = $("#InteToMoneyMax").val();
+                    if (InteToMoneyMax == "") InteToMoneyMax = 20;
+                    $("#Fee1").focus();
+                }
+                else {
+                    alert("发生错误！未设置该客户类型对应的积分规则。");
+                }
+            }
+        });
+    };
+    var InteToMoneyRateArr;
+    var InteToMoneyMax;
+    //从配置文件中读取设置
+    function GetSysSet() {
+        var inteto = $("#InteToMoneyRate").val();
+        if (inteto == "") inteto = "1:1";
+
+        InteToMoneyRateArr = inteto.split(":");
+        if ($("label[for='CurBIntegral']").text() > 0) //剩余积分
+        {
+            var je = $("label[for='CurBIntegral']").text() * InteToMoneyRateArr[1] / InteToMoneyRateArr[0]
+            $("#maxto").text(je); //本项最多使用换取金额
+            $("#maxto").attr("title", $("label[for='CurBIntegral']").text() + "×" + InteToMoneyRateArr[1] + "/" + InteToMoneyRateArr[0]);
+        }
+    };
+    //异步保存
+    function SaveConsume() {
+        var billno = $("label[for='BillNo']").text();
+        var memberid = $("#MemberID").val();
+        var cardno = $("#CardNo").val();
+        var curbintegral = $("label[for='CurBIntegral']").text();
+        var thissuminte = $("#thissuminte").text();
+        var balancemoney = $("label[for='BalanceMoney']").text();
+
+        var thissumfee = $("#thissumfee").text();
+        var createdate = $("#sksj").val();
+        var creator = $("#username").text();
+        var sumtomoney = $("#sumtomoney").val();
+        var sumuseinte = $("#sumuseinte").val();
+        //BillNo,MemberID,CardNo,CurBIntegral,Integral,BalanceMoney,SumFee,CreateDate, Creator, InteToMoney, DeductInte
+        var billinfo = 'dms1' + "," + billno + "," + memberid + "," + cardno + "," + curbintegral + "," + thissuminte + "," + balancemoney + ",";
+        billinfo += thissumfee + "," + createdate + "," + creator + "," + sumtomoney + "," + sumuseinte;
+        //业务项目明细
+        var serviceitem = "";
+        $("#jslist").find("tr").each(function () {
+            var tempstr = "";
+            $(this).find("td").each(function () {
+                tempstr += "," + $(this).text();
+            });
+            if (tempstr != "") {
+                if (serviceitem == "") {
+                    serviceitem = tempstr.substr(1);
+                }
+                else {
+                    serviceitem += "|" + tempstr.substr(1);
+                }
+            }
+        });
+        if (serviceitem.length == 0) return false;
+        //收款明细
+        var sklist = "";
+        $("#sklist").find("tr").each(function () {
+            var tempstr = "";
+            $(this).find("td").each(function () {
+                tempstr += "," + $(this).text();
+            });
+            if (tempstr != "") {
+                if (sklist == "") {
+                    sklist = tempstr.substr(1);
+                }
+                else {
+                    sklist += "|" + tempstr.substr(1);
+                }
+            }
+        });
+        if (sklist.length == 0) return false;
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxService.svc/SaveConsume")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"billinfo":"' + billinfo + '","serviceitem":"' + serviceitem + '","sklist":"' + sklist + '"}',
+            success: function (msg) {
+                var a = eval('(' + msg + ')');
+                if (a.d.length > 0) {
+                    alert("保存成功。");
+                    if ($("#printcard").attr("checked") == true) {
+                        ConsumePrintCard();
+                    };
+                    ClearMemberInfo();
+                    ClearInput1();
+                    ReList();
+                    RePayList();
+                }
+                else {
+                    alert("保存失败！");
+                }
+            },
+            error: function () {
+                alert("发生错误！");
+            }
+        });
+    };
+</script>
+

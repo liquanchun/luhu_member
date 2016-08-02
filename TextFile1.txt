@@ -1,0 +1,149 @@
+﻿              <ul id="example1">
+                   <li><a id="a1" style=" line-height:25px;" href="#">基本资料</a>
+                      <ul id="ula" class="subitem">
+                           <li style="padding-left:18px;line-height: 23px;"><a style="border-left-style:none;border-top-style:none;border-right-style:none;" href="../Account/LogOn">．车主资料</a></li>
+                           <li style="padding-left:18px;line-height: 23px;"><a style="border-left-style:none;border-top-style:none;border-right-style:none;" href="../Account/Register">．会员资料</a></li>
+                           <li style="padding-left:18px;line-height: 23px;"><a style="border-left-style:none;border-top-style:none;border-right-style:none;" href="../Account/LogOn">．员工资料</a></li>
+                           <li style="padding-left:18px;line-height: 23px;"><a style="border-left-style:none;border-top-style:none;border-right-style:none;" href="../Account/Register">．分店资料</a></li>
+                           <li style="padding-left:18px;line-height: 23px;"><a style="border-left-style:none;border-top-style:none;border-right-style:none;" href="../Dictionary/Index">．词典定义</a></li>
+
+                      </ul>
+                   </li>
+                   <li><a id="a2" style=" line-height:25px;" href="#">会员管理</a>
+                      <ul id="ulb" class="subitem">
+                           <li style="padding-left:18px;line-height: 23px;"><a style="border-left-style:none;border-top-style:none;border-right-style:none;" href="../Account/LogOn">．会员卡设置</a></li>
+                           <li style="padding-left:18px;line-height: 23px;"><a style="border-left-style:none;border-top-style:none;border-right-style:none;" href="../Account/Register">．会员卡级别</a></li>
+                      </ul>
+                   </li>
+<<<<<<< .mine
+             </ul>
+
+    $.setupJMPopups({
+        screenLockerBackground: "#f0ffff",
+        screenLockerOpacity: "0.5"
+    });
+
+    function openStaticPopup() {
+        $.openPopupLayer({
+            name: "myStaticPopup",
+            width: 320,
+            target: "myHiddenDiv"
+        });
+    }
+
+			 <div id="myHiddenDiv" style=" display:none;">
+    <div class="popup">
+				<div class="popup-header">
+					<h2>新增积分比例设置</h2>
+					<a href="javascript:;" onclick="$.closePopupLayer('myStaticPopup')" title="Close" class="close-link">关闭</a>
+					<br clear="all" />
+				</div>
+				<div class="popup-body">
+                    <p><label for="clienttype">客户类型</label>@Html.DropDownList("ClientType", new SelectList(ViewBag.khlxList as System.Collections.IEnumerable,
+                        "ItemName", "ItemName",null))</p>
+	                <p><label for="servicetype">业务分类</label><input  id="servicetype" type="text" value="保养" /></p>
+                    <p><label for="hoursrate">工时积分比例</label><input id="hoursrate" type="text" /></p>
+                    <p><label for="partsrate">配件积分比例</label><input id="partsrate" type="text" /></p>
+                    <p><label for="otherrate">其他积分比例</label><input id="otherrate" type="text" /></p>
+
+					<p style="text-align:right;"><input type="button" onclick="SaveServiceType()" value="保存" />　　　</p>
+				</div>
+			</div>
+
+</div>
+
+
+        // 删除活动
+        [OperationContract]
+        public string DelActivity(int id)
+        {
+            SqlDbHelper sqlDb = new SqlDbHelper();
+            int RetVal = 0;
+            // 在此处添加操作实现
+            string sql = "Delete from Activity Where ID=" + id;
+            try
+            {
+                RetVal = sqlDb.ExecuteNonQuery(sql);
+            }
+            catch (Exception Err)
+            {
+                CommonCls.WriteXML(Err.StackTrace + Err.Message);
+            }
+            return RetVal.ToString();
+        }=======
+             </ul>
+
+
+
+
+
+			 <div id="nav" class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active" style="background-color:#7ba4e4;">
+               <div class="ui-accordion-header ui-helper-reset ui-state-active ui-corner-top" style="border-bottom-style:none; height:2px;background-color:#7ba4e4; background:0;"></div>
+               <div class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active" style="border-top-style:none;background-color:#7ba4e4;">
+                   <div id="navaccord" style="background-color:#7ba4e4;">
+                          <h3><a href="#">快速浏览</a></h3>
+                                <div>
+		                            <ul id="MyLi">
+                                        
+		                            </ul>
+	                            </div>
+                          <h3><a href="#" class="forset1">基础资料管理</a></h3>
+                                <div class="forset1">
+		                            <ul>
+			                            <li>@Html.ActionLink("新增客户资料", "Create", "Member")</li>
+                                        <li>@Html.ActionLink("查询客户资料", "Index", "Member")</li>
+                                        <li>@Html.ActionLink("审核客户资料", "AudiMember", "Member")</li>
+                                        <li>@Html.ActionLink("新增会员资料", "Create", "CardInfo")</li>
+			                            <li>@Html.ActionLink("查询会员资料", "Index", "CardInfo")</li>
+			                            <li>@Html.ActionLink("员工资料管理", "Index", "Employee")</li>
+                                        <li>@Html.ActionLink("分店资料管理", "Index", "Branch")</li>
+			                            <li>@Html.ActionLink("系统词典定义", "Index", "ItemList")</li>
+		                            </ul>
+	                            </div>
+                           <h3><a href="#" class="forset2">会员信息管理</a></h3>
+                                <div class="forset2">
+		                            <ul>
+                                        <li>@Html.ActionLink("会员消费结算", "Create", "Consume")</li>
+                                        <li>@Html.ActionLink("会员消费记录", "Index", "Consume")</li>
+                                        <li>@Html.ActionLink("会员级别定义", "Index", "CardType")</li>
+                                        <li>@Html.ActionLink("会员充值管理", "Create", "Recharge")</li>
+                                        <li>@Html.ActionLink("查询充值记录", "Index", "Recharge")</li>
+                                        <li>@Html.ActionLink("会员卡管理", "CardManger", "CardInfo")</li>
+                                        <li>@Html.ActionLink("会员积分营销", "Setting", "CardInfo")</li>
+
+		                            </ul>
+	                            </div>
+                            <h3><a href="#" class="forset3">会员关怀计划</a></h3>
+                                <div class="forset3">
+		                            <ul>
+                                        <li>@Html.ActionLink("客户预约管理", "About", "Home")</li>
+                                        <li>@Html.ActionLink("客户意见建议", "About", "Home")</li>
+                                        <li>@Html.ActionLink("客户信息提醒", "About", "Home")</li>
+                                        <li>@Html.ActionLink("维修保养回访", "About", "Home")</li>
+                                        <li>@Html.ActionLink("会员活动管理", "Index", "Activity")</li>
+                                        <li>@Html.ActionLink("会员生日祝福", "About", "Home")</li>
+                                        <li>@Html.ActionLink("智能短信服务", "About", "Home")</li>
+		                            </ul>
+	                            </div>
+                            <h3><a href="#" class="forset4">统计分析报表</a></h3>
+                                <div class="forset4">
+		                            <ul>
+                                        <li>@Html.ActionLink("客户分类统计表", "R_MemberStat", "Member")</li>
+                                        <li>@Html.ActionLink("新增会员明细表", "R_CardList", "CardInfo")</li>
+                                        <li>@Html.ActionLink("新增会员统计表", "R_CardStat", "CardInfo")</li>
+                                        <li>@Html.ActionLink("会员积分明细表", "R_InteList", "Consume")</li>
+                                        <li>@Html.ActionLink("会员积分统计表", "About", "Home")</li>
+                                        <li>@Html.ActionLink("会员充值明细表", "R_RechargeList", "Recharge")</li>
+                                        <li>@Html.ActionLink("会员充值统计表", "About", "Home")</li>
+                                        <li>@Html.ActionLink("积分兑换明细表", "About", "Home")</li>
+		                            </ul>
+	                            </div>
+                           <h3><a href="#">最近浏览</a></h3>
+                                <div>
+		                            <ul id="lastLi">
+                                        <li>@Html.ActionLink("首页", "Index", "Home")</li>
+		                            </ul>
+	                            </div>
+                    </div>
+                </div>
+            </div>>>>>>>> .r144

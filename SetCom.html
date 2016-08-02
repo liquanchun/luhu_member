@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body onload="load()">
+    串口：&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<input type="text" id="com" style="width:50px;" /> <br /><br />
+    地址：<input type="text" id="address" style="width:100px;" /> <br /><br />
+    打印左边距:<input type="text" id="prleft" style="width:60px;" /><br /><br />
+    打印上边距:<input type="text" id="prtop" style="width:60px;" /><br /><br />
+    <input type="button" onclick="SaveCom()" value="保存" />
+</body>
+</html>
+<script type="text/javascript">
+    document.getElementById("com").value = getCookie("com");
+    document.getElementById("address").value = getCookie("address");
+    document.getElementById("printleft").value = getCookie("printleft");
+    document.getElementById("printtop").value = getCookie("printtop");
+
+        function SaveCom() {
+            var com = document.getElementById("com").value;
+            var address = document.getElementById("address").value;
+            var prleft = document.getElementById("prleft").value;
+            var prtop = document.getElementById("prtop").value;
+
+            setCookie('com', com);
+            setCookie('address', address);
+            setCookie('printleft', prleft);
+            setCookie('printtop', prtop);
+
+            parent.document.getElementById("txtCom").value = com;
+            parent.document.getElementById("txtAddress").value = address;
+            parent.tb_remove();
+        }
+
+        function load() {
+            document.getElementById("com").focus();
+        }
+</script>

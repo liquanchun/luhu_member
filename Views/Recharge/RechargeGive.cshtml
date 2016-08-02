@@ -1,0 +1,244 @@
+﻿@model IEnumerable<MvcMember.Models.CardType>
+
+@{
+    ViewBag.Title = "会员储值赠送方案";
+}
+<h2>会员储值赠送方案</h2>
+<script type="text/javascript">
+    function DeleteItem(id) {
+        if (confirm("你确定要删除吗？")) {
+            $.ajax({
+                type: 'post',
+                url: '@Url.Content("../AjaxService.svc/DelRechargeGive")',
+                contentType: 'application/json',
+                dataType: 'text',
+                data: '{"id":' + id + '}',
+                success: function (msg) {
+                    var a = eval('(' + msg + ')');
+                    if (a.d == "1") {
+                        location.reload();
+                    }
+                    else {
+                        alert("删除失败!")
+                    }
+                }
+
+            });
+        }
+    }
+</script>
+<div id='loading'>正在加载</div>
+<p style="padding-left:5px;">
+    <a href="javascript:void(0)" onclick="AddRechargeGive()">新增储值赠送方案</a>
+</p>
+
+ <form id="firstform" action="">
+ <div class="formdiv" style="display:none; float:none;">
+       <input type="hidden" value="@ViewBag.dmsid" id="dmsid" />
+       <input type="hidden" value="@ViewBag.userid" id="userid" />
+        <div class="headp">　填写储值赠送方案</div>
+        <table>
+        <tr>
+            <td class="labtd">开始日期：</td><td><input type="text" name="startdate" id="startdate" /></td>
+            <td><div class="Validform_checktip"></div></td>
+        </tr>
+        <tr>
+            <td class="labtd">结束日期：</td><td><input type="text" name="enddate" id="enddate" /></td>
+            <td><div class="Validform_checktip"></div></td>
+        </tr>
+        <tr>
+            <td class="labtd">储值金额起：</td>
+                <td><input type="text" name="amount1" id="amount1" datatype="n" nullmsg="请输入储值金额起！"  errormsg="请输入储值金额起！" /> </td>
+            <td><div class="Validform_checktip"></div></td>
+         </tr>
+         <tr>
+            <td class="labtd">储值金额至：</td>
+                <td><input type="text" name="amount2" id="amount2" datatype="n" nullmsg="请输入储值金额至！"  errormsg="请输入储值金额至！"/></td>
+            <td><div class="Validform_checktip"></div></td>
+         </tr>
+         <tr>
+            <td class="labtd">赠送方案：</td>
+            <td>
+                <input type="radio" datatype="radio" class="pr1" id="fa1" name="fangan" checked="checked" value="1" /><label for="fa1">金额</label> 
+                <input type="radio" class="pr1" id="fa2" name="fangan" value="2" /><label for="fa2">积分</label>
+            </td>
+            <td></td>
+         </tr>
+         <tr id="sje">
+            　<td class="labtd">赠送金额：</td>
+            <td>
+                <input type="text" name="zsje" id="zsje" />
+                <input type="checkbox" name="bfbcheck" id="bfbcheck" style="width:18px;" /><label for="bfbcheck">按百分比赠送</label>
+                <input type="text" name="zsbfb" style="width:30px; display:none" id="zsbfb" />%
+            </td>
+            <td></td>
+         </tr>
+         <tr id="sjf">
+            　<td class="labtd">赠送积分：</td>
+            <td><input type="text" name="zsjf" id="zsjf" /></td><td></td>
+         </tr>
+         </table>
+        <p class="baidubtn">
+            <a href="javascript:void(0)" onclick="Commit()">提 交</a>
+        </p>
+        </div>
+  </form>
+
+ <div id="Intelst">
+        <table id="adinte">
+        <tr id="trth">
+            <th></th>
+            <th>开始日期</th>
+            <th>结束日期</th>
+            <th>储值金额起</th>
+            <th>储值金额至</th>
+            <th>赠送方案</th>
+            <th>新增时间</th>
+            <th>操作人</th>
+        </tr>
+    </table>
+</div>
+<script type="text/javascript">$('#loading').hide()</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#firstform").Validform({
+            tiptype: 2,
+            postonce: true,
+            ajaxPost: true,
+            callback: function (data) {
+                if (data.status == "y") {
+                    setTimeout(function () {
+                        $.Hidemsg(); //公用方法关闭信息提示框;
+                    }, 2000);
+                }
+            }
+        });
+        $("#startdate").datepicker();
+        $("#enddate").datepicker();
+        $("#amount1").numeral();
+        $("#amount2").numeral();
+        $("#zsje").numeral();
+        $("#zsjf").numeral();
+        $("#zsbfb").numeral();
+
+        $("input[name='fangan']").get(0).checked = true;
+        $("#bfbcheck").attr("checked", '');
+
+        $(".formdiv input[type='radio']").bind("change", function () {
+            if ($(this).val() == 1) {
+                $("#sjf").css("display", "none");
+                $("#zsjf").val("");
+                $("#sje").removeAttr("style");
+            }
+            else {
+                $("#sje").css("display", "none");
+                $("#zsje").val("");
+                $("#sjf").removeAttr("style");
+            }
+        });
+        //选择按百分比赠送
+        $("#bfbcheck").bind("change", function () {
+            if ($(this).attr("checked")) {
+                $("#zsbfb").css("display", "");
+                $("#zsje").css("display", "none");
+                $("#zsje").val("");
+                $("#zsbfb").focus();
+            }
+            else {
+                $("#zsje").css("display", "");
+                $("#zsbfb").css("display", "none");
+                $("#zsbfb").val("");
+                $("#zsje").focus();
+            }
+        });
+        $("#sjf").css("display", "none");
+        //输入框鼠标样式
+        $(".formdiv input[type='text']").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv select").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv input[type='text']").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+        $(".formdiv select").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+
+        try {
+            $.ajax({
+                type: 'post',
+                url: '@Url.Content("../AjaxService.svc/SelectRechargeGive")',
+                contentType: 'application/json',
+                dataType: 'text',
+                data: '{"dmsid":"' + $("#dmsid").val() + '"}',
+                success: function (msg) {
+                    var a = eval('(' + msg + ')');
+                    if (a.d.length > 1) {
+                        var arrs = a.d.split("|");
+                        var htmlstr = "";
+                        for (var i = 0; i < arrs.length; i++) {
+                            htmlstr += "<tr>";
+                            var valarrs = arrs[i].split(",");
+                            for (var j = 0; j < valarrs.length; j++) {
+                                var td = valarrs[j];
+                                if (j == 0) {
+                                    td = "<a id='" + valarrs[j] + "' onclick=\"DeleteItem(" + valarrs[j] + ")\"  title=\"删除\" href='javascript:void(0);'><img src=\"../../Content/Images/del.png\" />";
+                                }
+                                htmlstr += "<td>" + td + "</td>";
+                            }
+                            htmlstr += "</tr>";
+                        }
+                        $("#adinte").append(htmlstr);
+                    }
+                }
+            });
+        }
+        catch (err) {
+            alert(err.Description);
+        }
+
+    });
+    function AddRechargeGive() {
+        $(".formdiv").toggle("slow");
+    }
+    function Commit() {
+        if ($("#startdate").val() == "" || $("#enddate").val() == "" || $("#amount1").val() == "") {
+            return false;
+        }
+
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxServiceSave.svc/SaveRechargeGive")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"userid":"' + $("#userid").val() + '","dmsid":"' + $("#dmsid").val() + '","startdate":"' + $("#startdate").val() + '","enddate":"' + $("#enddate").val() + '","amount1":"' + $("#amount1").val() + '","amount2":"' + $("#amount2").val() + '","zsje":"' + $("#zsje").val() + '","zsbfb":"' + $("#zsbfb").val() + '","zsjf":"' + $("#zsjf").val() + '"}',
+            success: function (msg) {
+                var a = eval('(' + msg + ')');
+                if (a.d == 1) {
+                    alert("操作成功！");
+                    $("input[type='text']").val('');
+                    $(".formdiv").toggle("fast", function () {
+                        location.reload();
+                    });
+                }
+                else if (a.d == 2) {
+                    alert("该方案起始时间与其他方案冲突！");
+                }
+                else {
+                    alert("提交失败！");
+                }
+            },
+            error: function () {
+                alert("发生错误！");
+            },
+            beforeSend: function () {
+                $(".baidubtn a").text("正在提交...");
+            },
+            complete: function () {
+                $(".baidubtn a").text("提 交");
+            }
+        });
+    }
+</script>

@@ -1,0 +1,566 @@
+﻿@model MvcMember.Models.CardInfo
+
+@{
+    ViewBag.Title = "会员卡管理";
+    ViewBag.date1 = DateTime.Now.ToString();
+}
+<script src="../../Scripts/jquery.validate.min.js" type="text/javascript"></script>
+<script src="../../Scripts/jquery.metadata.js" type="text/javascript"></script>
+<script src="../../Scripts/jquery.jmpopups-0.5.1.js" type="text/javascript"></script>
+<h2>会员卡管理</h2>
+@if (ViewBag.authlist != null)
+{
+    foreach (var it in ViewBag.authlist)
+    {
+    <input type="hidden" id="@it.FunName" value="@it.IsUse" />
+    }
+}
+
+<div style="padding-left: 10px;">
+    <p style="background-color: #dbeafd; width: 80%">会员信息确认</p>
+    @Html.HiddenFor(model => model.MemberID)
+    @Html.Hidden("UserID", @Session["UserID"].ToString())
+    @Html.Hidden("UserName", @Session["UserName"].ToString())
+    <p>
+        会员卡号：@Html.EditorFor(model => model.CardNo)
+        <input type="button" value="读 卡" onclick="ReadCard()" />
+        <input type="button" value="补打结算积分信息" title="补打积分储值信息" onclick="ManagePrintCard()" />
+    </p>
+    <p>
+        客户姓名：
+            @Html.Editor("Name")
+        联系电话：
+            @Html.Editor("Mobile")
+        车牌号码：
+            @Html.Editor("CarNo")
+        @Html.Hidden("Vinno")
+        剩余积分：<input type="text" readonly="readonly" id="BalanceIntegral" name="BalanceIntegral" />
+        储值余额：<input type="text" readonly="readonly" id="Balance" name="Balance" />
+    </p> 
+    <p style="background-color: #dbeafd; width: 80%">
+        手动调整会员卡积分
+            <span style="display: inline-block; float: right;"><a href="javascript:void(0)" id="lookpass" title="查看历史调整记录" onclick="looklist(1)">查看历史调整记录</a> </span>
+    </p>
+    <p>
+        当前积分：<span id="jifen" class="bb"> </span><span class="sp">加（减）积分</span><input type="text" class="sp" id="jifen3" /><span class="sp">调整原因</span><input type="text" class="sp" id="reason" />
+        <input type="button" class="sp" id="jifen4" onclick="ChangeInte()" title="加减积分" value="保存" />
+        <input type="button" value="打印卡面" class="sp" id="jifen5" title="打印卡面" onclick="ManagePrintCard()" />
+    </p>
+    <hr />
+    <div id="Intelst" class="table70" style="height: 120px; display: none; overflow-y: scroll;">
+        <input type="hidden" id="date1" value="@ViewBag.date1" />
+        <table id="adinte">
+            <caption style="text-align: center;">调整积分历史记录</caption>
+            <tr id="trth">
+                <th>时间</th>
+                <th>车牌</th>
+                <th>会员卡号</th>
+                <th>调整积分</th>
+                <th>调整原因</th>
+                <th>操作人</th>
+            </tr>
+        </table>
+    </div>
+    <p style="background-color: #dbeafd; width: 80%">挂失、补卡</p>
+    <p>
+        当前状态：<span id="zhuangtai" class="bb"> </span><span class="sp">改为 </span>
+        <input id="zhuangtai3" class="sp" type="button" onclick="SetCardLoss()" title="挂失" value="保存" /><input id="buka" type="text" /><input type="button" id="buka2" title="补卡" onclick="ReplayCard();" value="保存" />
+    </p>
+    <p style="background-color: #dbeafd; width: 80%">会员过期续会</p>
+    <p>
+        当前有限期限：<span id="qixian" class="bb"> </span><span class="sp">续会到：</span><input id="year" class="sp" type="text" /><span class="sp">年</span><input id="month" class="sp" type="text" /><span class="sp">月</span><input id="day" class="sp" type="text" /><span class="sp">日</span><input id="qixian3" class="sp" type="button" onclick="AddEndDate()" title="会员过期续会" value="保存" />
+    </p>
+    <p style="background-color: #dbeafd; width: 80%">调整会员级别</p>
+    <p>
+        当前级别：<span id="jibie" class="bb"> </span>
+        <span class="sp">调整为：</span>
+        @Html.DropDownList("TypeID", new SelectList(ViewBag.TypeList as System.Collections.IEnumerable,
+            "TypeID", "CardLevel", 0))
+        <input type="button" class="sp" id="jibie3" onclick="ChangeCardLevel()" title="调整会员级别" value="保存" />
+    </p>
+    <input type="hidden" id="hdmsg" value="@ViewBag.hdxx" />
+    <input type="hidden" id="integral" />
+    <input type="hidden" id="deductinte" />
+    <input type="hidden" id="adjustinte" />
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#CardNo").keypress(function (e) {
+            var code = (e.keyCode ? e.keyCode : e.which);
+            if (code == 13) {
+                SelectMemberByCardNo();
+            }
+            $("#content input[type='button']").each(function (i) {
+                if (this.title != "") {
+                    if ($("#" + this.title).val() == "0") {
+                        $(this).css("display", "none");
+                    }
+                }
+            });
+            if ($("#查看历史调整记录").val() == "0") {
+                $("#lookpass").css("display", "none");
+            }
+            $("#CardNo").focus();
+        });
+        $("#sub").attr("disabled", "disabled");
+
+        $("#Name").attr("readonly", "readonly");
+        $("#Mobile").attr("readonly", "readonly");
+        $("#CarNo").attr("readonly", "readonly");
+        $("#CurBIntegral").attr("readonly", "readonly");
+
+        $("p").css("margin-bottom", "5px");
+        $("input[type='text']").css("width", "100px");
+        $("#reason").css("width", "180px");
+        $("#TypeID").css("width", "100px");
+        $("#year").css("width", "50px");
+        $("#month").css("width", "50px");
+        $("#day").css("width", "50px");
+        $("input[type='text']").val("");
+        $(".bb").css("color", "blue");
+        $(".bb").css("font-weight", "bold");
+
+        $(".sp").css("visibility", "hidden");
+        $("#TypeID").css("visibility", "hidden");
+        $("#buka").css("visibility", "hidden");
+        $("#buka2").css("visibility", "hidden");
+
+        $("#CardNo").numeral();
+        $("#jifen3").numeral();
+        $("#year").numeral();
+        $("#month").numeral();
+        $("#day").numeral();
+
+        $("#CardNO").focus();
+        LoadCardNo();
+    });
+    //自动分配新的卡号
+    function LoadCardNo() {
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxService.svc/NewCardNo")',
+            contentType: 'application/json',
+            dataType: 'text',
+            success: function (msg) {
+                var a = eval('(' + msg + ')');
+                if (a.d.length > 1) {
+                    $("#buka").val(a.d);
+                }
+            }
+        });
+    };
+    function ReadCard() {
+        if (typeof (callbackObj) == "undefined") {
+            return false;
+        };
+        alert("请将卡插入机器！");
+        var para = callbackObj.getPrinterPara();
+        var com = para.split(',')[0];
+        var address = para.split(',')[1];
+        if (com != "" && address != "") {
+            try {
+                if (callbackObj.getStatus() == "1") {
+                    callbackObj.cardIn();
+                }
+                else {
+                    callbackObj.openCom(parseInt(com));
+                    callbackObj.cardIn();
+                }
+                var cardno = callbackObj.readCard(address);
+                if (cardno != "") {
+                    $("#CardNo").val(cardno);
+                    $("#CardNo").blur();
+                    SelectMemberByCardNo();
+                    callbackObj.clearCard2();
+                }
+            }
+            catch (err) {
+                alert(err);
+            }
+        }
+        else {
+            alert("串口未设置");
+        }
+    };
+    function SelectMemberByCardNo() {
+        if ($("#CardNo").val() == "") {
+            alert("请输入会员卡号！");
+            return;
+        }
+        var cardno = $("#CardNo").val();
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxService.svc/SelectMemberByCardNo")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"dmsid":"' + $("#dmsid").val() + '","cardno":"' + cardno + '"}',
+            success: function (data) {
+                var a = eval('(' + data + ')');
+                if (a.d.length > 1) {
+                    var arrs = a.d.split(",");
+                    $("#MemberID").val(arrs[0]);
+                    $("#Mobile").val(arrs[1]);
+                    $("#CarNo").val(arrs[2]);
+                    $("#Name").val(arrs[3]);
+                    $("#Vinno").val(arrs[11]);
+                    $("#BalanceIntegral").val(arrs[5]);
+                    $("#Balance").val(arrs[6]);
+                    $("#sub").removeAttr("disabled");
+                }
+                else {
+                    alert("未找到该卡号相关资料，请确认是否发卡！");
+                    return;
+                }
+            },
+            error: function () {
+                alert("发生错误！");
+            }
+        });
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxService.svc/SelectCardInfo")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"cardno":"' + cardno + '"}',
+            success: function (data) {
+                var a = eval('(' + data + ')');
+                if (a.d.length > 1) {
+                    var arrs = a.d.split(",");
+
+                    $("#zhuangtai").empty();
+                    $("#zhuangtai").append(arrs[1]);
+                    if (arrs[1] == "正常") {
+                        $("#zhuangtai3").attr("value", "挂失");
+                    }
+                    if (arrs[1] == "挂失") {
+                        $("#zhuangtai3").attr("value", "补卡");
+                    }
+                    $("#qixian").empty();
+                    $("#qixian").append(arrs[2].split(" ")[0]);
+
+                    $("#jibie").empty();
+                    $("#jibie").append(arrs[3]);
+                    $(".sp").css("visibility", "visible");
+                    $("#TypeID").css("visibility", "visible");
+
+                    $("#password").val(arrs[4]);
+
+                    $("#SaleMan").val(arrs[5]);
+                }
+                else {
+                    alert("未找到该卡号相关资料，请确认是否发卡！");
+                }
+            },
+            error: function () {
+                alert("发生错误！");
+            }
+        });
+    }
+    //加减积分
+    function ChangeInte() {
+        if ($("#CardNo").val() == "") {
+            alert("请确认会员信息！");
+            return;
+        }
+
+        if ($("#jifen3").val() == "") {
+            alert("请输入积分！");
+            return;
+        }
+        if (checkNumber($("#jifen3").val()) == false) {
+            alert("请输入积分错误！");
+            return;
+        }
+        var cardno = $("#CardNo").val();
+        var userid = $("#UserName").val();
+        var integarl = $("#jifen3").val();
+        $("#adjustinte").val($("#jifen3").val());
+        var reason = $("#reason").val();
+        var memberid = $("#MemberID").val();
+
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxService.svc/UpdateIntegral")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"memberid":' + memberid + ',"cardno":"' + cardno + '","userid":"' + userid + '","blanceintegral":' + $("#BalanceIntegral").val() + ',"integarl":' + integarl + ',"reason":"' + reason + '"}',
+            success: function (msg) {
+                var a = eval('(' + msg + ')');
+                if (a.d == "2") {
+                    alert("保存成功！");
+                    SelectMemberByCardNo();
+                    var newjifen = parseInt($("#jifen").text()) + parseInt($("#jifen3").val());
+                    $("#jifen").text(newjifen);
+                    $("#jifen3").val("");
+                    $("#reason").val("");
+                    var d = new Date();
+                    var day = d.getDate();
+                    var month = d.getMonth() + 1;
+                    var year = d.getFullYear();
+                    var hours = d.getHours();
+                    var minu = d.getMinutes();
+                    var datestr = year + "-" + month + "-" + day + " " + hours + ":" + minu;
+                    $("#trth").after("<tr><td>" + $("#date1").val() + "</td><td>" + $("#CarNo").val() + "</td><td>" + cardno + "</td><td>" + integarl + "</td><td>" + reason + "</td><td>" + userid + "</td></tr>");
+                }
+            }
+        });
+    }
+    //挂失
+    function SetCardLoss() {
+        if ($("#CardNo").val() == "") {
+            alert("请确认会员信息！");
+            return;
+        }
+        if ($("#zhuangtai3").attr("value") == "补卡") {
+            $("#buka").css("visibility", "visible");
+            $("#buka2").css("visibility", "visible");
+            return;
+        }
+        if (!confirm("你确定要挂失吗？挂失之后该卡不能使用！")) {
+            return;
+        }
+        var cardno = $("#CardNo").val();
+        var userid = $("#UserID").val();
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxService.svc/SetCardLoss")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"cardno":"' + cardno + '","userid":"' + userid + '"}',
+            success: function (msg) {
+                var a = eval('(' + msg + ')');
+                if (a.d == "1") {
+                    alert("挂失成功！");
+                    $("#zhuangtai").empty();
+                    $("#zhuangtai").append("挂失");
+                    $("#zhuangtai3").attr("value", "补卡");
+                    $("#buka").css("visibility", "visible");
+                    $("#buka2").css("visibility", "visible");
+                }
+            }
+        });
+    }
+    //补卡
+    function ReplayCard() {
+        if ($("#CardNo").val() == "") {
+            alert("请确认会员信息！");
+            return;
+        }
+        if ($("#buka").val() == "") {
+            alert("请确认补卡卡号！");
+            return;
+        }
+        var cardno = $("#CardNo").val();
+        var userid = $("#UserID").val();
+        var newcardno = $("#buka").val();
+        
+        if (WriteCardNo(newcardno)) {
+            $.ajax({
+                type: 'post',
+                url: '@Url.Content("../AjaxService.svc/ReplaceCard")',
+                contentType: 'application/json',
+                dataType: 'text',
+                data: '{"cardno":"' + cardno + '","newcardno":"' + newcardno + '","userid":"' + userid + '"}',
+                success: function (msg) {
+                    var a = eval('(' + msg + ')');
+                    if (a.d != "0") {
+                        alert("补卡成功。");
+                        $("#zhuangtai").empty();
+                        $("#zhuangtai").append("正常");
+                        $("#zhuangtai3").attr("value", "挂失");
+                        $("#buka").css("visibility", "hidden");
+                        $("#buka2").css("visibility", "hidden");
+                    }
+                }
+            });
+        }
+    };
+    function WriteCardNo(newcardno) {
+        //写卡号
+        try {
+            if (typeof (callbackObj) == "undefined") {
+                return false;
+            };
+            alert("请将新卡插入打印机。");
+            var para = callbackObj.getPrinterPara();
+            var com = para.split(',')[0];
+            var address = para.split(',')[1];
+            //检查COM状态
+            if (callbackObj.getStatus() == "1") {
+                callbackObj.cardIn();
+                var wcard = callbackObj.writeCard(address, newcardno);
+                if (wcard == newcardno) {
+                    $("#CardNo").val(newcardno);
+                    //写卡成功
+                    ManagePrintCard();
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                var isopen = callbackObj.openCom(parseInt(com));
+                if (isopen == true) {
+                    callbackObj.cardIn();
+                    var wcard = callbackObj.writeCard(address, newcardno);
+                    if (wcard == newcardno) {
+                        $("#CardNo").val(newcardno);
+                        //写卡成功
+                        ManagePrintCard();
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                }
+                else {
+                    return false;
+                }
+            };
+        }
+        catch (err) {
+            alert(err.description);
+            return false;
+        }
+    };
+    //续会
+    function AddEndDate() {
+        if ($("#CardNo").val() == "") {
+            alert("请确认会员信息！");
+            return;
+        }
+        if ($("#year").val() == "" || $("#month").val() == "" || $("#day").val() == "") {
+            alert("请填写年月日！");
+            return;
+        }
+        if (!checkNumber($("#year").val()) || $("#year").val() < 2011) {
+            alert("年份填写错误！");
+            return;
+        }
+        if (!checkNumber($("#month").val()) || $("#month").val() > 12) {
+            alert("月份填写错误！");
+            return;
+        }
+        if (!checkNumber($("#day").val()) || $("#day").val() > 31) {
+            alert("日填写错误！");
+            return;
+        }
+        var cardno = $("#CardNo").val();
+        var userid = $("#UserID").val();
+        var newdate = $("#year").val() + "-" + $("#month").val() + "-" + $("#day").val();
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxService.svc/AddEndDate")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"cardno":"' + cardno + '","newdate":"' + newdate + '","userid":"' + userid + '"}',
+            success: function (msg) {
+                var a = eval('(' + msg + ')');
+                if (a.d == "1") {
+                    alert("续会成功，请将卡插入机器，重新写卡！");
+                    $("#qixian").empty();
+                    $("#qixian").append(newdate);
+                    $("#year").val();
+                    $("#month").val();
+                    $("#day").val();
+                }
+            }
+        });
+    }
+    //调整卡级别
+    function ChangeCardLevel() {
+        if ($("#CardNo").val() == "") {
+            alert("请确认会员信息！");
+            return;
+        }
+        if (!confirm("你确定要调整改会员级别吗？")) {
+            return;
+        }
+        var cardno = $("#CardNo").val();
+        var userid = $("#UserID").val();
+        var newlevelid = $("#TypeID").val();
+        var oldlevel = $("#jibie").text();
+        var newlevel = $("#TypeID").val();
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxService.svc/ChangeCardLevel")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"cardno":"' + cardno + '","oldlevel":"' + oldlevel + '","newlevel":"' + newlevel + '","newlevelid":' + newlevelid + ',"userid":"' + userid + '"}',
+            success: function (msg) {
+                var a = eval('(' + msg + ')');
+                if (a.d == "1") {
+                    alert("会员级别调整成功！");
+                }
+            }
+        });
+    }
+    function ManagePrintCard() {
+        try {
+            var para = callbackObj.getPrinterPara();
+            var left = para.split(',')[2];
+            var top = para.split(',')[3];
+
+            var printtext = [];
+            printtext.push("");
+            printtext.push("会员卡号:" + $("#CardNo").val());
+            printtext.push("客户姓名:" + $("#Name").val());
+            printtext.push("车牌号码:" + $("#CarNo").val());
+
+            printtext.push("剩余积分:" + $("#BalanceIntegral").val());
+            printtext.push("储值余额:" + $("#Balance").val());
+            var printdata = printtext.join('\n');
+            //打印卡
+            
+            callbackObj.printCard(1, parseInt(left), parseInt(top), printdata);
+            location.reload();
+        }
+        catch (err) {
+            alert("打印卡面发生错误。", err.description);
+        }
+    };
+    function looklist(tag) {
+        if (tag == 0) {
+            $("#Intelst").css("display", "none");
+        }
+        else {
+            $("#Intelst").css("display", "block");
+            var cardno = $("#CardNo").val();
+            if (cardno == "") {
+                alert("卡号为空！");
+                return;
+            }
+            var memberid = $("#MemberID").val();
+            try {
+                $.ajax({
+                    type: 'post',
+                    url: '@Url.Content("../AjaxService.svc/SelectAdjustInte")',
+                    contentType: 'application/json',
+                    dataType: 'text',
+                    data: '{"memberid":' + memberid + '}',
+                    success: function (msg) {
+                        var a = eval('(' + msg + ')');
+                        if (a.d.length > 1) {
+                            var arrs = a.d.split("|");
+                            var htmlstr = "";
+                            for (var i = 0; i < arrs.length; i++) {
+                                htmlstr += "<tr>";
+                                var valarrs = arrs[i].split(",");
+                                for (var j = 0; j < valarrs.length; j++) {
+                                    htmlstr += "<td>" + valarrs[j] + "</td>";
+                                }
+                                htmlstr += "</tr>";
+                            }
+                            $("#adinte").append(htmlstr);
+                        }
+                    }
+                });
+            }
+            catch (err) {
+                alert(err.Description);
+            }
+        }
+    }
+</script>

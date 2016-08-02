@@ -1,0 +1,200 @@
+﻿@model IEnumerable<MvcMember.Models.ServiceItem>
+@{
+    ViewBag.Title = "服务项目管理";
+}
+
+<h2>服务项目管理</h2>
+@Html.Partial("_LoadAuth")
+<p style="padding-left:5px;">
+    <a href="javascript:void(0)" onclick="AddItem()">新增服务项目</a>
+</p>
+<script type="text/javascript">
+    function DeleteItem(id) {
+        if (confirm("你确定要删除吗？")) {
+            $.ajax({
+                type: 'post',
+                url: '@Url.Content("../AjaxService.svc/DelServiceItem")',
+                contentType: 'application/json',
+                dataType: 'text',
+                data: '{"itemid":"' + id + '"}',
+                success: function (msg) {
+                    var a = eval('(' + msg + ')');
+                    if (a.d == "1") {
+                        location.reload();
+                    }
+                    if (a.d == "0") {
+                        alert("该服务项目已经有会员购买或者该项目是套餐服务项目之一，不能删除！");
+                    }
+                },
+                error: function () {
+                    alert("发生错误！");
+                }
+            });
+        }
+    }
+</script>
+ <form id="firstform">
+ <div class="formdiv" style="display:none; float:none;">
+       <input type="hidden" value="@ViewBag.dmsid" id="dmsid" />
+       <input type="hidden" value="@ViewBag.userid" id="userid" />
+        <div class="headp">　填写服务项目信息</div>
+        <table>
+
+         <tr>
+            <td class="labtd">项目类型：</td>
+                <td><input type="radio" datatype="radio" class="pr1" id="single" name="gender" checked="checked" value="1"><label for="male">单项服务</label>
+                     <input type="radio" class="pr1" id="double" name="gender" value="2" disabled="disabled" ><label for="female" title="暂时不可用！" class="vtip">套餐服务</label></td>
+            <td></td>
+         </tr>
+        <tr>
+            <td class="labtd">项目编号：</td><td><input type="text" name="ItemID" id="ItemID" datatype="*" nullmsg="请输入项目编号！"  errormsg="请输入项目编号！" /></td>
+            <td><div class="Validform_checktip"></div></td>
+        </tr>
+        <tr>
+            <td class="labtd">项目名称：</td><td><input type="text" name="ItemName" id="ItemName" datatype="s" nullmsg="请输入项目名称！"  errormsg="请输入项目名称！" /></td>
+            <td><div class="Validform_checktip"></div></td>
+        </tr>
+        <tr>
+            <td class="labtd">销售单价：</td>
+                <td><input type="text" name="Price" id="Price" datatype="n" nullmsg="请输入销售单价！"  errormsg="请输入销售单价！" /> </td>
+            <td></td>
+         </tr>
+         <tr>
+            <td class="labtd">积分：</td><td><input type="text" name="integral" id="integral" datatype="n" nullmsg="请输入积分！"  errormsg="请输入积分！" class="vtip" title="在服务完成结算时积分！" /></td>
+            <td></td>
+         </tr>
+         <tr>
+            　<td class="labtd">备注：</td><td><input type="text" name="Remark" id="Remark" /></td><td></td>
+         </tr>
+         </table>
+        <p class="baidubtn">
+            <a href="javascript:void(0)" onclick="Commit()">提 交</a>
+        </p>
+        </div>
+  </form>
+<div id="lstDiv">
+<table>
+    <tr>
+        <th style="width:50px;"></th>
+        <th>项目类型</th>
+        <th>项目编号</th>
+        <th>项目名称</th>
+        <th>销售单价</th>
+        <th>积分</th>
+        <th>修改日期</th>
+        <th>备注</th>
+    </tr>
+@foreach (var item in Model)
+{
+    <tr>
+        <td><a onclick="DeleteItem(@item.ID)"  title="删除" href="javascript:void(0);"><img src="@Url.Content("../../Content/Images/del.png")" /></a>&nbsp<a id="@item.ID" title="修改" href="javascript:void(0)" onclick="Update('@item.ID')"><img src="@Url.Content("../../Content/Images/edit.png")" /></a></td>
+        <td>@item.ItemType</td>
+        <td>@item.ItemID</td>
+        <td>@item.ItemName</td>
+        <td>@item.Price</td>
+        <td>@item.Integral</td>
+        <td>@String.Format("{0:g}", item.CreateDate)</td>
+        <td>@item.Remark</td>
+    </tr>
+}
+
+</table>
+
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#firstform").Validform({
+            tiptype: 2,
+            postonce: true,
+            ajaxPost: true,
+            callback: function (data) {
+                if (data.status == "y") {
+                    setTimeout(function () {
+                        $.Hidemsg(); //公用方法关闭信息提示框;
+                    }, 2000);
+                }
+            }
+        });
+        //输入框鼠标样式
+        $(".formdiv input[type='text']").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv select").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv input[type='text']").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+        $(".formdiv select").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+        $("#Price").numeral();
+        $("#integral").numeral();
+     });
+    function AddItem() {
+        $("#ItemID").removeAttr("disabled");
+        $("#ItemID").focus();
+        $(".formdiv").toggle("slow");
+    }
+    //string dmsid, string itemid, string itemname, string itemtype, string price, string integral, string remark, string creator
+    function Commit() {
+        if ($("#ItemID").val() == "" || $("#ItemName").val() == "" || $("#Price").val() == "") {
+            return false;
+        }
+        var itemtype = "单项服务";
+        if ($("#double").attr("checked") == true) {
+            itemtype = "套餐服务";
+        }
+        var op = 0; //判断是新增还是删除
+        if ($(".headp").text().indexOf("修改") > 0) {
+            op = 1;
+        }
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxServiceSave.svc/SaveServiceItem")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"op":"' + op + '","dmsid":"' + $("#dmsid").val() + '","itemid":"' + $("#ItemID").val() + '","itemname":"' + $("#ItemName").val() + '","itemtype":"' + itemtype + '","price":"' + $("#Price").val() + '","integral":"' + $("#integral").val() + '","remark":"' + $("#Remark").val() + '","creator":"' + $("#userid").val() + '"}',
+            success: function (msg) {
+                var a = eval('(' + msg + ')');
+                if (a.d == 1) {
+                    alert("操作成功！");
+                    $("input[type='text']").val('');
+                    $(".formdiv").toggle("slow");
+                    location.reload();
+                }
+                else if (a.d == 2) {
+                    alert("项目编号或项目名称已经存在！");
+                }
+                else {
+                    alert("提交失败！");
+                }
+            },
+            error: function () {
+                alert("发生错误！");
+            },
+            beforeSend: function () {
+                $(".baidubtn a").text("正在提交...");
+            },
+            complete: function () {
+                $(".baidubtn a").text("提 交");
+            }
+        });
+    }
+    function Update(id) {
+        $(".formdiv").toggle("slow");
+        var seltd1 = $("#" + id).parent().next()
+        var seltd2 = $(seltd1).next();
+        $("#ItemID").val($(seltd2).text());
+        var seltd3 = $(seltd2).next();
+        $("#ItemID").attr("disabled", "disabled");
+        $("#ItemName").val($(seltd3).text());
+        var seltd4 = $(seltd3).next();
+        $("#Price").val($(seltd4).text());
+        var seltd5 = $(seltd4).next();
+        $("#integral").val($(seltd5).text());
+        var seltd6 = $(seltd5).next().next();
+        $("#Remark").val($(seltd6).text());
+        $(".headp").text($(".headp").text() + "--修改");
+    }
+</script>

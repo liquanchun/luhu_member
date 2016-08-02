@@ -1,0 +1,96 @@
+﻿@model IEnumerable<MvcMember.Models.Activity>
+
+@{
+    ViewBag.Title = "会员活动管理";
+}
+
+<h2>活动管理</h2>
+@Html.Partial("_LoadAuth")
+<script type="text/javascript">
+    function DeleteItem(item) {
+        if (confirm("你确定要删除" + item.id + "吗？")) {
+            $.ajax({
+                type: 'post',
+                url: '@Url.Content("../AjaxService.svc/DelActivity")',
+                contentType: 'application/json',
+                dataType: 'text',
+                data: '{"id":"' + item.id + '"}',
+                success: function (msg) {
+                    var a = eval('(' + msg + ')');
+                    if (a.d == "1") {
+                        location.reload();
+                    }
+                }
+
+            });
+        }
+    }
+</script>
+<p style=" padding-left:8px;">
+    @Html.ActionLink("新增活动", "Create", null, new { title = "新增活动" })
+</p>
+<div style=" padding-left:8px;">
+<table>
+    <tr>
+        <th></th>
+        <th>
+            活动代码
+        </th>
+        <th>
+            活动名称
+        </th>
+        <th>
+            活动类别
+        </th>
+        <th>
+            活动积分
+        </th>
+        <th>
+            开始时间
+        </th>
+        <th>
+            结束时间
+        </th>
+        <th>
+            创建时间
+        </th>
+        <th>
+            创建人
+        </th>
+    </tr>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>
+            <a title="修改" href="/Activity/Edit/@item.ID"><img src="../../Content/Images/edit.png" /></a>&nbsp<a id="@item.ID" onclick="DeleteItem(this)"  title="删除" href="javascript:void(0);"><img src="../../Content/Images/del.png" /></a>
+        </td>
+        <td>
+            @item.ActNo
+        </td>
+        <td>
+            @item.Name
+        </td>
+        <td>
+            @item.ActType
+        </td>
+        <td>
+            @item.ActIntegral
+        </td>
+        <td>
+            @String.Format("{0:g}", item.StartTime)
+        </td>
+        <td>
+            @String.Format("{0:g}", item.EndTime)
+        </td>
+        <td>
+            @String.Format("{0:g}", item.CreateDate)
+        </td>
+        <td>
+            @item.Creator
+        </td>
+    </tr>
+}
+
+</table>
+</div>

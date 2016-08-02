@@ -1,0 +1,24 @@
+<?xml version="1.0" standalone="yes"?>
+<DocumentElement>
+  <Member>
+    <CardNo>800000</CardNo>
+  </Member>
+  <Member>
+    <CardNo>800001</CardNo>
+  </Member>
+  <Member>
+    <CardNo>800002</CardNo>
+  </Member>
+  <Member>
+    <CardNo>800003</CardNo>
+  </Member>
+  <Member>
+    <CardNo>800004</CardNo>
+  </Member>
+  <Member>
+    <CardNo>800005</CardNo>
+  </Member>
+  <Member>
+    <CardNo>800006</CardNo>
+  </Member>
+</DocumentElement>

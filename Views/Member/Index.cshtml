@@ -1,0 +1,119 @@
+﻿@model IEnumerable<MvcMember.Models.V_Member>
+
+@{
+    ViewBag.Title = "客户资料";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#Date1").datepicker();
+        $("#Date2").datepicker();
+    });
+    function chkDetail(cardno) {
+        if (cardno == "") {
+            return false;
+        }
+    }
+    function DeleteItem(memberid, cardno, userid) {
+        if (cardno != "" && cardno != undefined) {
+            alert("该客户已经发会员卡，不能删除！");
+            return;
+        }
+        if (confirm("你确定要删除吗？")) {
+            $.ajax({
+                type: 'post',
+                url: '@Url.Content("../AjaxService.svc/DelMember")',
+                contentType: 'application/json',
+                dataType: 'text',
+                data: '{"memberid":' + memberid + ',"userid":"' + userid + '"}',
+                success: function (msg) {
+                    var a = eval('(' + msg + ')');
+                    if (a.d == "1") {
+                        location.reload();
+                    }
+                    if (a.d == "2") {
+                        alert("该客户已经是会员不能删除。");
+                    }
+                }
+            });
+        }
+    }
+</script>
+<h2>客户资料</h2>
+@Html.Partial("_LoadAuth")
+@using (Ajax.BeginForm("Index", "Member", new AjaxOptions { UpdateTargetId = "grid" }))
+{
+    IDictionary<string, string> searchConditions = new Dictionary<string, string>();
+    if (TempData["SearchConditions"] != null)
+    {
+        searchConditions = TempData["SearchConditions"] as Dictionary<string, string>;
+    }
+    this.TempData["SearchConditions"] = searchConditions;
+    string date1 = searchConditions.Keys.Contains("Date1") ? searchConditions["Date1"] : string.Empty;
+    string date2 = searchConditions.Keys.Contains("Date2") ? searchConditions["Date2"] : string.Empty;
+    string name = searchConditions.Keys.Contains("Name") ? searchConditions["Name"] : string.Empty;
+    string mobile = searchConditions.Keys.Contains("Mobile") ? searchConditions["Mobile"] : string.Empty;
+    string carno = searchConditions.Keys.Contains("CarNo") ? searchConditions["CarNo"] : string.Empty;
+    string vinno = searchConditions.Keys.Contains("VinNo") ? searchConditions["VinNo"] : string.Empty;
+
+    var grid = new WebGrid(source: Model,
+        ajaxUpdateContainerId: "grid",
+        rowsPerPage: 12,
+        canPage: true,
+        pageFieldName: "paging",
+        sortFieldName: "sortField",
+        selectionFieldName: "SelectedRow");
+
+
+<p style="padding-left:5px; padding-bottom:2px; height:18px;">
+    @Html.ActionLink("新增客户资料", "Create", null, new { title = "新增客户资料" })
+</p>
+<div style="background-color:#dbeafd;margin-left:5px; margin-bottom:3px;" >
+    新增时间：@Html.TextBox("Date1", @date1, new { style = "width: 85px;" }) 到 @Html.TextBox("Date2", @date2, new { style = "width: 85px;" })
+    客户姓名：@Html.TextBox("Name", @name, new { style = "width: 60px;" })
+    电话号码：@Html.TextBox("Mobile", @mobile, new { style = "width: 90px;" })
+    车牌号码：@Html.TextBox("CarNo", @carno, new { style = "width: 70px;" })
+    车架号码：@Html.TextBox("VinNo", @vinno, new { style = "width: 105px;" })
+    <input type="submit" style="width:80px;" value="查 询"/>
+</div>    
+<div id="grid" style="padding-left:5px;">
+    @grid.GetHtml(
+    tableStyle: "grid",
+    headerStyle: "head",
+    selectedRowStyle: "alt",
+    alternatingRowStyle: "alt",
+    rowStyle: "webgrid-row-style",
+    nextText: "下一页",
+    previousText: "上一页",
+    numericLinksCount: 10,
+    columns: grid.Columns(
+                grid.Column(format:
+                @<text><a id="@item.MemberID" onclick="DeleteItem(@item.MemberID,'@item.CardNo','@ViewBag.UserID')"  title="删除" href="javascript:void(0);"><img src="@Url.Content("../../Content/Images/del.png")" />
+                </a>&nbsp&nbsp<a title="修改" href="/Member/Edit/@item.MemberID"><img src="@Url.Content("../../Content/Images/edit.png")" />
+                </a>&nbsp&nbsp<a title="查看详情" onclick="return chkDetail('@item.CardNo');" href="/Member/AllDetail/@item.MemberID"><img src="@Url.Content("../../Content/Images/detail.png")" /></a>
+                </text>),
+                grid.Column("CardNo", "会员卡号", format: (item) =>
+                {
+                    if (@item.CardNo != null && @item.CardNo != string.Empty)
+                    {
+                        return @item.CardNo;
+                    }
+                    else
+                    {
+                        return Html.ActionLink("入会发卡", "Create", "CardInfo", new { id = @item.MemberID }, new { title = "点击进行发卡登记" });
+                    }
+                }),
+                grid.Column("Name", "客户名称"),
+                grid.Column("ClientType", "客户类型"),
+                grid.Column("CarNo", "车牌号码"),
+                grid.Column("VinNO", "车架号"),
+                grid.Column("CarType", "车型"),
+                grid.Column("CarOwner", "车主/司机"),
+                grid.Column("Sex", "性别"),
+                grid.Column("Mobile", "联系电话"),
+                grid.Column("CreateDate", "修改日期", format: @<text>@item.CreateDate.ToShortDateString()</text>)
+
+              )
+          )
+</div>
+<p>　总记录数：@Html.Encode(grid.TotalRowCount)　总页数：@Html.Encode(grid.PageCount)</p>
+}

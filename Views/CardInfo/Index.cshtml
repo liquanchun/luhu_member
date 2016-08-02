@@ -1,0 +1,100 @@
+﻿@model IEnumerable<MvcMember.Models.V_CardInfo>
+
+@{
+    ViewBag.Title = "会员信息";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#Date1").datepicker();
+        $("#Date2").datepicker();
+    });
+    function DeleteItem(balanceinteral, cardno, memberid, userid) {
+        if (balanceinteral > 0) {
+            alert("该会员剩余积分不为零，不能删除！")
+            return;
+        }
+        if (confirm("你确定要删除吗？")) {
+            $.ajax({
+                type: 'post',
+                url: '@Url.Content("../AjaxService.svc/DelCardInfo")',
+                contentType: 'application/json',
+                dataType: 'text',
+                data: '{"cardno":"' + cardno + '","memberid":' + memberid + ',"userid":"' + userid + '"}',
+                success: function (msg) {
+                    var a = eval('(' + msg + ')');
+                    if (a.d == "1") {
+                        location.reload();
+                    }
+                    if (a.d == "2") {
+                        alert("该会员的卡余额不为0，不能删除。");
+                    }
+                }
+
+            });
+        }
+    }
+</script>
+<h2>会员信息</h2>
+@Html.Partial("_LoadAuth")
+@using (Ajax.BeginForm("Index", "CardInfo", new AjaxOptions { UpdateTargetId = "grid" }))
+{
+    IDictionary<string, string> searchConditions = new Dictionary<string, string>();
+    if (TempData["SearchConditions"] != null)
+    {
+        searchConditions = TempData["SearchConditions"] as Dictionary<string, string>;
+    }
+    this.TempData["SearchConditions"] = searchConditions;
+    string date1 = searchConditions.Keys.Contains("Date1") ? searchConditions["Date1"] : string.Empty;
+    string date2 = searchConditions.Keys.Contains("Date2") ? searchConditions["Date2"] : string.Empty;
+    string name = searchConditions.Keys.Contains("Name") ? searchConditions["Name"] : string.Empty;
+    string mobile = searchConditions.Keys.Contains("Mobile") ? searchConditions["Mobile"] : string.Empty;
+    string carno = searchConditions.Keys.Contains("CarNo") ? searchConditions["CarNo"] : string.Empty;
+    string cardno = searchConditions.Keys.Contains("CardNo") ? searchConditions["CardNo"] : string.Empty;
+
+    var grid = new WebGrid(source: Model,
+        ajaxUpdateContainerId: "grid",
+        rowsPerPage: 12,
+        canPage: true,
+        pageFieldName: "paging",
+        sortFieldName: "sortField",
+        selectionFieldName: "SelectedRow");
+
+
+<p style="padding-left:5px; padding-bottom:2px; height:18px;">
+    @Html.ActionLink("新增会员", "Create", null, new { title = "新增会员" })
+</p>
+<div style="background-color:#dbeafd;margin-left:5px; margin-bottom:3px;" >
+    入会时间：@Html.TextBox("Date1", @date1, new { style = "width: 85px;" }) 到 @Html.TextBox("Date2", @date2, new { style = "width: 85px;" })
+    会员姓名：@Html.TextBox("Name", @name, new { style = "width: 60px;" })
+    电话号码：@Html.TextBox("Mobile", @mobile, new { style = "width: 90px;" })
+    车牌号码：@Html.TextBox("CarNo", @carno, new { style = "width: 70px;" })
+    会员卡号：@Html.TextBox("CardNo", @cardno, new { style = "width: 70px;" })
+    <input type="submit" style="width:80px;" value="查 询"/>
+</div>    
+<div id="grid" style="padding-left:5px;">
+    @grid.GetHtml(
+    tableStyle: "grid",
+    headerStyle: "head",
+    selectedRowStyle: "alt",
+    alternatingRowStyle: "alt",
+    nextText: "下一页",
+    previousText: "上一页",
+    numericLinksCount: 10,
+    columns: grid.Columns(
+                grid.Column(format: @<text><a id="@item.CardNo" onclick="DeleteItem(@item.BalanceIntegral,@item.CardNo,@item.MemberID,'@ViewBag.UserID')"  title="删除" href="javascript:void(0);"><img src="@Url.Content("../../Content/Images/del.png")" /></a>&nbsp&nbsp<a title="查看详情" href="/Member/AllDetail/@item.MemberID"><img src="@Url.Content("../../Content/Images/detail.png")" /></a></text>),
+                grid.Column("DmsName", "分店"),
+                grid.Column("CardNo", "会员卡号"),
+                grid.Column("Name", "会员姓名"),
+                grid.Column("Mobile", "电话号码"),
+                grid.Column("CarNo", "车牌号码"),
+                grid.Column("CardLevel", "会员级别"),
+                grid.Column("StartDate", "入会日期", format: @<text>@item.StartDate.ToShortDateString()</text>),
+                grid.Column("SumConsumeIntegral", "累计积分"),
+                grid.Column("BalanceIntegral", "剩余积分"),
+                grid.Column("Balance", "余额"),
+                grid.Column("SumGiveMoney", "赠送金额")
+                            )
+                        )
+</div>
+<p>　总记录数：@Html.Encode(grid.TotalRowCount)　总页数：@Html.Encode(grid.PageCount)</p>
+}

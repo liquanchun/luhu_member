@@ -1,0 +1,35 @@
+<?xml version="1.0" standalone="yes"?>
+<DocumentElement>
+  <Member>
+    <carno>fsdfsf</carno>
+    <name>是舒舒服服</name>
+    <vinno>23422222222222222</vinno>
+    <mobile />
+    <memberid>178450</memberid>
+    <createdate>2014-01-12T19:24:00+08:00</createdate>
+  </Member>
+  <Member>
+    <carno>粤A00999</carno>
+    <name>李明明</name>
+    <vinno>43536666666666669</vinno>
+    <mobile>13466677788</mobile>
+    <memberid>178449</memberid>
+    <createdate>2014-01-10T20:18:00+08:00</createdate>
+  </Member>
+  <Member>
+    <carno>粤B23DE44</carno>
+    <name>张三</name>
+    <vinno>34256587678798535</vinno>
+    <mobile>12334444</mobile>
+    <memberid>178448</memberid>
+    <createdate>2013-12-23T22:15:00+08:00</createdate>
+  </Member>
+  <Member>
+    <carno>粤A4R442E</carno>
+    <name>李春</name>
+    <vinno>36547658687687684</vinno>
+    <mobile />
+    <memberid>178447</memberid>
+    <createdate>2013-12-23T21:48:00+08:00</createdate>
+  </Member>
+</DocumentElement>

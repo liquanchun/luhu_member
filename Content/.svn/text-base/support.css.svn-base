@@ -1,0 +1,62 @@
+﻿@import url("http://imgcache.qq.com/bossweb/support/css/global.css");
+@charset "utf-8";
+/* CSS Document */
+.theme { padding:0px 0 10px 10px; font-size:12px; line-height:14px; }
+.theme a { padding:0 5px; }
+/* 大家在说*/
+.discuss { padding-left:10px; }
+.discuss ul li { padding:12px 0 20px 0; border-bottom:1px solid #e1ecf0; }
+.discuss h3 { font-size:14px; line-height:30px; height:30px; }
+.discuss .comment { padding:0 20px; }
+.author_info, .floor_info { color:#8c8a8c; padding:2px 0 7px 0; }
+.floor_info .name { color:#333 }
+.floor_info .num { font-family:tahoma Helvetica, sans-serif; font-size:14px; }
+.discuss .answer { padding:11px 0 0 0; color:#8c8a8c; border:none; }
+/* 大家在说详细页面*/
+#dis_content { border-bottom:1px solid #b3cee4; }
+#dis_content .title { font-size:14px; background:url(http://imgcache.qq.com/bossweb/support/images/bg.png) no-repeat -395px -234px; padding-left:15px; position:relative; }
+#dis_content .comment { font-size:14px; padding-top:0; margin-top:0; min-height:150px; _height:150px; }
+#dis_content .detail { padding:0px 0px 30px 15px; line-height:25px; }
+#dis_content .comment p { padding-top:10px; }
+#dis_content .author_info{ padding:3px 0 0 0;}
+.answer .comment { font-size:14px; line-height:28px; padding:0px 20px 10px 37px; line-height:23px; min-height:60px; _height:60px; }
+.answer { padding:10px; border-bottom:1px dotted #b3cee4;}
+.answer .an_info { padding-top:5px; color:#333; }
+.comment .answer{ background:#fff;}
+.bgcolor { background:#f3f9ff; }
+/* faq*/
+#faq_title .title {background:#e7f1fb url(http://imgcache.qq.com/bossweb/support/images/bg.png) no-repeat -380px -358px; padding-left:30px; color:#39558c; }
+.top { background:url(http://imgcache.qq.com/bossweb/support/images/bg.png) no-repeat -55px -276px; display:block; width:40px; height:20px; position:absolute; cursor:pointer; top:5px; right:10px; }
+#faq_title .list { padding:0; font-size:14px; }
+#faq_title .list li { padding-left:20px; line-height:35px;  background:url(http://imgcache.qq.com/bossweb/support/images/bg.png) no-repeat -395px -327px; }
+#faq_content .title {background:url(http://imgcache.qq.com/bossweb/support/images/bg.png) no-repeat -395px -236px; padding-left:20px; }
+#faq_content .detail { padding:10px 10px 10px 0px; min-height:400px; }
+#faq_content .detail p { padding:5px 0 0 5px; font-size:14px; }
+
+#myinfo { position:relative; }
+#myinfo .mod_form { margin-left:100px; }
+#myinfo .pic_qqshow {width:70px; height:113px; position:absolute; left:28px; top: 38px; border:1px solid #99c6e9; padding:1px; overflow:hidden; }
+#write .mod_form { padding:5px 0 0 0px; }
+#write .ipt_text { width:350px; }
+.welcome { padding:5px 20px 5px 40px; background:#e7f1fb url(http://imgcache.qq.com/bossweb/support/images/bg.png) no-repeat -370px -357px; color:#39558c; font-weight:bold; font-size:14px; border-bottom:#c3dae8 solid 1px; margin-top:10px;}
+#write .option { margin-top:30px; padding:20px 0 0px 70px; border-top:1px solid #dfebf1; font-weight:bold; font-size:14px; }
+#write .option ul { padding:10px 0 20px 0px; }
+#write .option ul li { line-height:30px; font-size:12px; font-weight:normal; padding-left:30px; }
+#write .label{ width:95px;}
+#write .form_btn { padding:15px 0 10px 100px; clear:both;}
+/* 我说的话页面*/
+.com_table { width:100%; border-collapse:collapse; font-size:12px; text-align:left; }
+.com_table th { font-weight:normal; color:#333; background:#f1f7fa; border:#dfebf1 1px solid; line-height:25px; font-size:12px; padding-left:10px; height:30px; vertical-align: middle; font-size:14px;}
+.com_table td { border-bottom:1px dotted #d9dde1; line-height:25px; padding:5px 0 5px 10px; }
+.com_table .all { width:80px; text-align:left }
+.com_table .name { width:200px; }
+.com_table .date { width:90px; }
+#my_write .page_tips { margin:30px 0; }
+#my_write .detail { padding:0; margin-top:10px; }
+#login .detail { padding:0; background:url(http://imgcache.qq.com/bossweb/support/images/login_bg.png) no-repeat right; position:relative; }
+#login .iframe_login { width:425px; text-align:center; padding-top:30px; }
+#login .clew { width:335px; height:179px; position:absolute; left: 440px; top: 60px; }
+#itm { font-size:14px; text-align:justify; }
+.tis_area { width:500px; margin:0 auto; padding:30px 0; }
+
+/*  |xGv00|02d172862204c9a43d034034dc55ae53 */

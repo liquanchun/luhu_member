@@ -1,0 +1,50 @@
+1.修改表 ServiceItem ，字段ItemID为字符串型,设置ItemID为主键
+2.修改表 CardServiceItem ,字段ServiceItemID类型改为字符串
+3.修改表 ServiceItem2 ，字段ItemID、ChildItemID改为字符串
+4.修改表CardServiceItem表，增加字段PayType付款方式
+5.修改视图V_CardServiceItem 添加 PayType
+6.修改ReCharge表，GiveServiceID 字段数据类型为字符串
+7.修改CardType表 TypeID，NextTypeID类型改为字符串
+8.修改CardInfo表 TypeID改为字符串类型
+
+
+2011/8/6
+1.修改表CardInfo添加SumGiveMoney int 默认0
+2.修改T_Recharge 触发器
+3.修改V_CardInfo ,添加SumGiveMoney
+4.修改存储过程T_PayList
+
+2011/8/10
+1.增加Smssend表
+2.增加BookService表
+3.增加CallBack表
+4.增加Complain表
+5.增加RechargeGive表
+6.在itemlist表增加 投诉性质
+7.增加V_CallBack视图
+8.增加F_ServiceItem函数
+9.修改触发器T_Consume
+10.新增GiftSendRecord、GiftInfo表
+11.增加触发器T_SendGift
+12.增加视图V_ExchangePoint
+13.修改member2中，NextMaintainDate等等日期的值不为空。update member2 set yearcheckdate='' where yearcheckdate<getdate() or yearcheckdate is null
+
+
+2011.8.31
+1.修改触发器T_SendGift
+2.设置CarOwner、Address、Birthday、CarType字段默认值为'',update member set CarOwner='' where CarOwner is null
+3.修改表AdjustInte，添加字段blanceintegral，int
+4.修改表Recharge，添加字段blanceintegral，int
+5.增加存储过程Sp_PointList
+6.修改Member表 Sex字段数据类型为 nvarchar（50）
+
+
+2012.1.11
+1.增加视图V_AdminUser
+2.修改视图V_Member 增加 DmsName字段
+3.修改视图V_CardInfo 增加 DmsName 字段
+4.修改V_Consume  增加 DmsName 字段
+5.修改表Recharge 增加DmsID字段，更新值dms1
+6.修改视图V_Recharge 增加 DmsName 字段
+7.修改存储过程 R_RechargeList
+8.在表branch中增加分店信息

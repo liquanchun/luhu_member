@@ -1,0 +1,148 @@
+﻿@using Webdiyer.WebControls.Mvc
+@model Webdiyer.WebControls.Mvc.PagedList<MvcMember.Models.MemberUpdate>
+@{
+    ViewBag.Title = "客户资料审核";
+}
+
+<h2>客户资料审核</h2>
+@Html.Partial("_LoadAuth")
+<script type="text/javascript">
+    function AudiMember(id) {
+        var username = $("#UserName").val();
+        if (confirm("你确定要审核吗？")) {
+            $.ajax({
+                type: 'post',
+                url: '@Url.Content("../AjaxService.svc/AudiMember")',
+                contentType: 'application/json',
+                dataType: 'text',
+                data: '{"id":' + id + ',"username":"' + username + '"}',
+                success: function (msg) {
+                    var a = eval('(' + msg + ')');
+                    if (a.d == "1") {
+                        alert("审核完成");
+                        location.reload();
+                    }
+                }
+            });
+        }
+    }
+</script>
+@using (Ajax.BeginForm("AudiMember", "Member", new AjaxOptions { UpdateTargetId = "lstDiv" }))
+{
+<div style="width:100%;overflow:scroll" id="lstDiv" >
+<table class="tbover">
+    <tr>
+        <th></th>
+        <th>
+            客户名称
+        </th>
+        <th>
+            客户类型
+        </th>
+        <th>
+            车架号
+        </th>
+        <th>
+            车牌号码
+        </th>
+        <th>
+            车型
+        </th>
+
+        <th>
+            车主/司机
+        </th>
+        <th>
+            性别
+        </th>
+
+        <th>
+            生日
+        </th>
+        <th>
+            电话
+        </th>
+        <th>
+            地址
+        </th>
+        <th>
+            审核时间
+        </th>
+        <th>
+            审核人
+        </th>
+    </tr>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>
+            @if (item.Auditor == null)
+            {
+                <a id="@item.ID" href="javascript:void(0)" title="审核" onclick="AudiMember(@item.ID)">审核</a>
+            }
+            else
+            { 
+                 <a id="@item.ID" href="javascript:void(0)">已审核</a>
+            }
+        </td>
+        <td>
+            @item.Name
+        </td>
+        <td>
+            @item.ClientType
+        </td>
+        <td>
+            @item.VinNO
+        </td>
+        <td>
+            @item.CarNO
+        </td>
+        <td>
+            @item.CarType
+        </td>
+        <td>
+            @item.CarOwner
+        </td>
+        <td>
+            @item.Sex
+        </td>
+        <td>
+            @item.Mobile
+        </td>
+        <td>
+            @item.Birthday
+        </td>
+        <td>
+            @item.Address
+        </td>
+        <td>
+            @item.AudiTime
+        </td>
+        <td>
+            @item.Auditor
+        </td>
+    </tr>
+}
+</table>
+<div id="Pager">
+   @Html.Pager(Model, new PagerOptions
+{
+    PageIndexParameterName = "id",
+    CssClass = "pages",
+    FirstPageText = "首页",
+    LastPageText = "末页",
+    PrevPageText = "上一页",
+    NextPageText = "下一页",
+    CurrentPagerItemWrapperFormatString = "<span class=\"cpb\">{0}</span>",
+    ShowPageIndexBox = true,
+    NumericPagerItemWrapperFormatString = "<span class=\"item\">{0}</span>",
+    PageIndexBoxType = PageIndexBoxType.DropDownList,
+    ShowGoButton = false,
+    PageIndexBoxWrapperFormatString = " 转到{0}",
+    SeparatorHtml = ""
+})
+</div>
+<input type="hidden" value="@ViewBag.UserName" id="UserName" />
+</div>
+}

@@ -1,0 +1,70 @@
+﻿<script type="text/javascript">
+    //读取会员信息
+    function SelectMemberByCardNo() {
+        if ($("#CardNo").val() == "") {
+            alert("请输入会员卡号！");
+            return;
+        }
+        var cardno = $("#CardNo").val();
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxService.svc/SelectMemberByCardNo")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"cardno":"' + cardno + '"}',
+            success: function (msg) {
+                var a = eval('(' + msg + ')');
+                if (a.d.length > 1) {
+                    var arrs = a.d.split(",");
+                    $("#MemberID").val(arrs[0]);
+                    $("#CarNo").val(arrs[2]);
+                    $("#Name").val(arrs[3]);
+                    $("#KhType").val(arrs[4]);
+                    $("#CurBIntegral").val(arrs[5]);
+                    $("#DhPoint").val(arrs[5]);
+
+                    $("#Balance").val(arrs[6]);
+                    $("#CardLevel").val(arrs[7]);
+                }
+                else {
+                    alert("未找到该卡号相关资料，请确认是否发卡！");
+                }
+            }
+        });
+    };
+    //读卡
+    function ReadCard() {
+        if (typeof (callbackObj) == "undefined") {
+            return false;
+        };
+        alert("请将卡插入机器！");
+        var para = callbackObj.getPrinterPara();
+        var com = para.split(',')[0];
+        var address = para.split(',')[1];
+        if (com != "" && address != "") {
+            try {
+                if (callbackObj.getStatus() == "1") {
+                    callbackObj.cardIn();
+                }
+                else {
+                    callbackObj.openCom(parseInt(com));
+                    callbackObj.cardIn();
+                }
+                var cardno = callbackObj.readCard(address);
+                if (cardno != "") {
+                    $("#CardNo").val(cardno);
+                    $("#CardNo").blur();
+                    $("#printcard").attr("checked", "checked");
+                    SelectMemberByCardNo();
+                    callbackObj.clearCard2();
+                }
+            }
+            catch (err) {
+                alert(err);
+            }
+        }
+        else {
+            alert("串口未设置");
+        }
+    };
+</script>

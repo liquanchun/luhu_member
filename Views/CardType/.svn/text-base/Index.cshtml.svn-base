@@ -1,0 +1,208 @@
+﻿@model IEnumerable<MvcMember.Models.CardType>
+
+@{
+    ViewBag.Title = "会员卡级别管理";
+}
+
+<h2>会员卡级别管理</h2>
+@Html.Partial("_LoadAuth")
+@{
+    var grid = new WebGrid(source: Model, ajaxUpdateContainerId: "grid", defaultSort: "TypeID", rowsPerPage: 10,selectionFieldName:"SelectedRow");
+}
+<script type="text/javascript">
+    function DeleteItem(typeid, level) {
+        if (confirm("你确定要删除“" + level + "”吗？")) {
+            $.ajax({
+                type: 'post',
+                url: '@Url.Content("../AjaxService.svc/DelCardType")',
+                contentType: 'application/json',
+                dataType: 'text',
+                data: '{"typeid":' + typeid + '}',
+                success: function (msg) {
+                    var a = eval('(' + msg + ')');
+                    if (a.d == "1") {
+                        location.reload();
+                    }
+                    else {
+                        alert("删除失败，已经有“" + level + "”会员资料。")
+                    }
+                }
+
+            });
+        }
+    }
+</script>
+
+<p style="padding-left:5px;">
+    <a href="javascript:void(0)" onclick="AddCardType()">新增卡级别</a>
+</p>
+
+ <form id="firstform">
+ <div class="formdiv" style="display:none; float:none;">
+       <input type="hidden" value="@ViewBag.dmsid" id="dmsid" />
+        <div class="headp">　填写卡级别信息</div>
+        <table>
+        <tr>
+            <td class="labtd">卡级别代码：</td><td><input type="text" name="TypeID" id="TypeID" datatype="*" nullmsg="请输入卡级别代码！"  errormsg="请输入卡级别代码！" /></td>
+            <td><div class="Validform_checktip"></div></td>
+        </tr>
+        <tr>
+            <td class="labtd">卡级别名称：</td><td><input type="text" name="CardLevel" id="CardLevel" datatype="s" nullmsg="请输入卡级别名称！"  errormsg="请输入卡级别名称！" /></td>
+            <td><div class="Validform_checktip"></div></td>
+        </tr>
+        <tr>
+            <td class="labtd">工时费折扣：</td>
+                <td><input type="text" name="HourDiscount" id="HourDiscount" datatype="n" nullmsg="请输入工时费折扣！"  errormsg="请输入工时费折扣！" class="vtip" title="折扣范围1-10之间！" /> </td>
+            <td><div class="Validform_checktip"></div></td>
+         </tr>
+         <tr>
+            <td class="labtd">配件费折扣：</td>
+                <td><input type="text" name="PartDiscount" id="PartDiscount" datatype="n" nullmsg="请输入配件费折扣！"  errormsg="请输入配件费折扣！" class="vtip" title="折扣范围1-10之间！" /></td>
+            <td><div class="Validform_checktip"></div></td>
+         </tr>
+         <tr>
+            　<td class="labtd">开卡赠送积分：</td>
+            <td><input type="text" name="IniIntegral" id="IniIntegral" /></td><td></td>
+         </tr>
+         <tr>
+            　<td class="labtd">有限年限：</td>
+            <td><input type="text" name="CardYears" id="CardYears" datatype="n" nullmsg="请输入有限年限！"  errormsg="请输入有限年限！" /></td>
+            <td><div class="Validform_checktip"></div></td>
+         </tr>
+         <tr>
+            　<td class="labtd">升级累计积分：</td>
+            <td><input type="text" name="UpgradeIntegral" id="UpgradeIntegral" /></td><td></td>
+         </tr>
+         <tr>
+            　<td class="labtd">升级级别：</td>
+            <td><input type="text" name="NextTypeID" id="NextTypeID" /></td><td></td>
+         </tr>
+         </table>
+        <p class="baidubtn">
+            <a href="javascript:void(0)" onclick="Commit()">提 交</a>
+        </p>
+        </div>
+  </form>
+<div id="grid" style="padding-left:5px;">
+    @grid.GetHtml(
+    tableStyle: "grid",
+    headerStyle:"head",
+    selectedRowStyle:"alt",
+    alternatingRowStyle:"alt",
+    numericLinksCount:10,
+    columns:grid.Columns(
+                grid.Column(format: @<text><a id="@item.ID" onclick="DeleteItem(@item.TypeID,'@item.CardLevel')"  title="删除" href="javascript:void(0);"><img src="../../Content/Images/del.png" /></a>&nbsp<a title="修改" href="javascript:void(0)" onclick="Update('@item.ID')"><img src="../../Content/Images/edit.png" /></a></text>),
+                                    grid.Column("TypeID", "卡级别代码"),
+                                    grid.Column("CardLevel", "卡级别名称"),
+                                    grid.Column("CardYears", "有限年限"),
+                                    grid.Column("HourDiscount", "工时费折扣"),
+                                    grid.Column("PartDiscount", "配件费折扣"),
+                                    grid.Column("IniIntegral", "开卡赠送积分"),
+                                    grid.Column("UpgradeIntegral", "升级累计积分"),
+                                    grid.Column("NextTypeID", "升级到级别代码")
+        )
+    )
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#firstform").Validform({
+            tiptype: 2,
+            postonce: true,
+            ajaxPost: true,
+            callback: function (data) {
+                if (data.status == "y") {
+                    setTimeout(function () {
+                        $.Hidemsg(); //公用方法关闭信息提示框;
+                    }, 2000);
+                }
+            }
+        });
+        //输入框鼠标样式
+        $(".formdiv input[type='text']").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv select").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv input[type='text']").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+        $(".formdiv select").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+        $("#Price").numeral();
+        $("#integral").numeral();
+    });
+    function AddCardType() {
+        $("#TypeID").removeAttr("disabled");
+        $("#TypeID").focus();
+        $(".formdiv").toggle("slow");
+    }
+    function Commit() {
+        if ($("#TypeID").val() == "" || $("#CardLevel").val() == "") {
+            return false;
+        }
+        var op = 0; //判断是新增还是删除
+        if ($(".headp").text().indexOf("修改") > 0) {
+            op = 1;
+        }
+        //string op,string dmsid,string typeid, string cardsort, string cardlevel, string cardyears, string hoursdis, string partdis, string initegral, string updateintegral, string nexttypeid
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxServiceSave.svc/SaveCardType")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"op":"' + op + '","dmsid":"' + $("#dmsid").val() + '","typeid":"' + $("#TypeID").val() + '","cardsort":"积分储值卡","cardlevel":"' + $("#CardLevel").val() + '","cardyears":"' + $("#CardYears").val() + '","hoursdis":"' + $("#HourDiscount").val() + '","partdis":"' + $("#PartDiscount").val() + '","initegral":"' + $("#IniIntegral").val() + '","updateintegral":"' + $("#UpgradeIntegral").val() + '","nexttypeid":"' + $("#NextTypeID").val() + '"}',
+            success: function (msg) {
+                var a = eval('(' + msg + ')');
+                if (a.d == 1) {
+                    alert("操作成功！");
+                    $("input[type='text']").val('');
+                    $(".formdiv").toggle("slow");
+                    location.reload();
+                }
+                else if (a.d == 2) {
+                    alert("卡级别代码或卡级别名称已经存在！");
+                }
+                else {
+                    alert("提交失败！");
+                }
+            },
+            error: function () {
+                alert("发生错误！");
+            },
+            beforeSend: function () {
+                $(".baidubtn a").text("正在提交...");
+            },
+            complete: function () {
+                $(".baidubtn a").text("提 交");
+            }
+        });
+    }
+    function Update(id) {
+        $(".formdiv").toggle("slow");
+        var seltd1 = $("#" + id).parent();
+        var seltd2 = $(seltd1).next();
+        $("#TypeID").val($(seltd2).text());
+        $("#TypeID").attr("disabled", "disabled");
+
+        var seltd3 = $(seltd2).next();
+        
+        $("#CardLevel").val($(seltd3).text());
+        var seltd4 = $(seltd3).next();
+        $("#CardYears").val($(seltd4).text());
+        var seltd5 = $(seltd4).next();
+        $("#HourDiscount").val($(seltd5).text());
+        var seltd6 = $(seltd5).next();
+        $("#PartDiscount").val($(seltd6).text());
+        var seltd7 = $(seltd6).next();
+        $("#IniIntegral").val($(seltd7).text());
+        var seltd8 = $(seltd7).next();
+        $("#UpgradeIntegral").val($(seltd8).text());
+        var seltd9 = $(seltd8).next();
+        $("#NextTypeID").val($(seltd9).text());
+        $(".headp").text($(".headp").text() + "--修改");
+    }
+</script>
+

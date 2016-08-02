@@ -1,0 +1,201 @@
+﻿@model MvcMember.Models.V_Member
+
+@{
+    ViewBag.Title = "新增客户资料";
+}
+
+<h2>新增客户资料</h2>
+
+<form id="firstform">
+    <div id="contentdiv">
+        <div class="formdiv">
+            <input type="hidden" value="@ViewBag.DmsID" id="dmsid" />
+            <input type="hidden" value="@ViewBag.UserID" id="userid" />
+            <div class="headp" style="margin-bottom: 8px;">填写车主信息</div>
+            <table>
+                <tr>
+                    <td class="labtd">*客户名称:</td>
+                    <td>
+                        <input type="text" id="Name" name="Name" datatype="s" nullmsg="请输入客户名称！" errormsg="请输入客户名称！" /></td>
+                    <td>
+                        <div class="Validform_checktip"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="labtd">*客户类型:</td>
+                    <td>@Html.DropDownList("ClientType", new SelectList(ViewBag.khlxList as System.Collections.IEnumerable,
+            "ItemName", "ItemName", Model.ClientType))</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="labtd">*车牌号码:</td>
+                    <td>
+                        <input type="text" id="CarNo" name="CarNo" datatype="s" nullmsg="请输入车牌号码！" errormsg="请输入车牌号码！" /></td>
+                    <td>
+                        <div class="Validform_checktip"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="labtd">*车 架 号:</td>
+                    <td>
+                        <input type="text" id="VinNO" name="VinNO" datatype="*" nullmsg="请输入车架号！" errormsg="请输入17位车架号！" title="车架号长度是17位" class="vtip" /></td>
+                    <td>
+                        <div class="Validform_checktip"></div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="labtd">车型:</td>
+                    <td>@Html.DropDownList("CarType", new SelectList(ViewBag.cxList as System.Collections.IEnumerable,
+            "ItemName", "ItemName", Model.ClientType)) </td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td class="labtd">*车主/司机:</td>
+                    <td>
+                        <input type="text" id="CarOwner" name="CarOwner" datatype="s" nullmsg="请输入车主/司机！" errormsg="请输入车主/司机！" title="如果是公司客户请填写！" class="vtip" /></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td class="labtd">*性别:</td>
+                    <td>
+                        <input type="radio" datatype="radio" class="pr1" id="male" name="gender" checked="checked" value="1"><label for="male">男</label>
+                        <input type="radio" class="pr1" id="female" name="gender" value="2"><label for="female">女</label></td>
+                    <td>
+                        <div class="Validform_checktip"></div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="labtd">联系电话:</td>
+                    <td>
+                        <input type="text" id="Mobile" name="Mobile" /></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td class="labtd">生日:</td>
+                    <td>
+                        <input type="text" id="Birthday" name="Birthday" /></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="labtd">联系地址:</td>
+                    <td>
+                        <input type="text" id="Address" name="Address" /></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td class="labtd"></td>
+                    <td class="baidubtn"><a href="javascript:void(0)" style="margin-left: 0px; float: left;" onclick="Commit()">保 存</a><a href="javascript:void(0)" style="margin-left: 8px; float: left;" onclick="Commit2()">保存&入会</a></td>
+                    <td class="baidubtn"></td>
+                </tr>
+
+            </table>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+</form>
+<div style="padding-bottom: 10px; padding-left: 5px;">
+    @Html.ActionLink("返回列表", "Index")
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#Address").css("width", "210");
+        $("#Mobile").numeral();
+        $('#firstform').bind('keypress', function (e) {
+            return e.keyCode !== 13;
+        });
+        $('#Name').bind('change', function () {
+            if ($("#ClientType").find("option:selected").text() == "个人客户") {
+                $('#CarOwner').val($('#Name').val());
+            }
+        });
+        //输入框鼠标样式
+        $(".formdiv input[type='text']").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv select").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv input[type='text']").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+        $(".formdiv select").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+
+        $("#firstform").Validform({
+            tiptype: 2,
+            postonce: true,
+            ajaxPost: true,
+            callback: function (data) {
+                if (data.status == "y") {
+                    setTimeout(function () {
+                        $.Hidemsg(); //公用方法关闭信息提示框;
+                    }, 2000);
+                }
+            }
+        });
+
+        $("#VinNO").bind("keypress", function () {
+            if ($("#VinNO").val().length > 16) {
+                $("#VinNO").val($("#VinNO").val().substring(0, 16));
+            }
+        });
+    });
+    var memberid = 0;
+    function Commit() {
+        if ($("#Name").val() == "" || $("#CarNo").val() == "" || $("#VinNO").val() == "") {
+            return false;
+        }
+        var sex = "男";
+        if ($("#female").attr("checked") == true) {
+            sex = "女";
+        }
+        memberid = 0;
+        //int memberid,string cardno, int balance, int giveinte, int inmoney, string intype, string remark, string selitemid,int times,string userid
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxServiceSave.svc/SaveMember")',
+             contentType: 'application/json',
+             dataType: 'text',
+             data: '{"name":"' + $("#Name").val() + '","clienttype":"' + $("#ClientType").find("option:selected").text() + '","sex":"' + sex + '","mobile":"' + $("#Mobile").val() + '","birthday":"' + $("#Birthday").val() + '","address":"' + $("#Address").val() + '","carno":"' + $("#CarNo").val() + '","vinno":"' + $("#VinNO").val() + '","cartype":"' + $("#CarType").find("option:selected").text() + '","carowner":"' + $("#CarOwner").val() + '","userid":"' + $("#userid").val() + '","dmsid":"' + $("#dmsid").val() + '"}',
+             success: function (msg) {
+                 var a = eval('(' + msg + ')');
+                 if (a.d == 2) {
+                     alert("客户名称、车牌号码、车架号已经存在！");
+                 }
+                 else if (a.d == 0) {
+                     alert("保存失败！");
+                 }
+                 else {
+                     alert("保存成功！");
+                     $("input[type='text']").val('');
+                     memberid = a.d;
+                 }
+             },
+             error: function () {
+                 alert("发生错误！");
+             },
+             beforeSend: function () {
+                 $(".baidubtn a:first").text("正在保存...");
+             },
+             complete: function () {
+                 $(".baidubtn a:first").text("保 存");
+             }
+         });
+     }
+
+     function Commit2() {
+         Commit();
+         if (memberid > 0) {
+             $(".baidubtn a:last").text("正在跳转...");
+             window.location = "/cardinfo/create/" + memberid;
+         }
+     }
+</script>
+

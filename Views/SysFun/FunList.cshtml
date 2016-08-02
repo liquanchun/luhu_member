@@ -1,0 +1,64 @@
+﻿@model IEnumerable<MvcMember.Models.SysFun>
+
+@{
+    ViewBag.Title = "系统功能列表";
+}
+
+<h2>系统功能列表</h2>
+
+<p>
+    @Html.ActionLink("新增功能项目", "Create")
+</p>
+<div class="table60" style="height:400px;overflow-y:scroll">
+<table>
+    <tr>
+        <th></th>
+        <th>
+            功能ID
+        </th>
+        <th>
+            名称
+        </th>
+        <th>
+            父级ID
+        </th>
+        <th>
+            控制器
+        </th>
+        <th>
+            动作
+        </th>
+        <th>
+            参数
+        </th>
+    </tr>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>
+            @Html.ActionLink("删除", "Delete", new { id = item.FunID })
+        </td>
+        <td>
+            @item.FunID
+        </td>
+        <td>
+            @item.FunName
+        </td>
+        <td>
+            @item.ParentID
+        </td>
+        <td>
+            @item.ControlName
+        </td>
+        <td>
+            @item.ActionName
+        </td>
+        <td>
+            @item.Parameter
+        </td>
+    </tr>
+}
+</table>
+</div>
+<p>@Html.ActionLink("返回权限管理", "Index")</p>

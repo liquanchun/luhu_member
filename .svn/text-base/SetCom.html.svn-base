@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body onload="load()">
+    串口：<input type="text" id="com" style="width:50px;" /> <br />
+    打印左边距:<input type="text" id="prleft" style="width:50px;" /><br />
+    打印上边距:<input type="text" id="prtop" style="width:50px;" /><br />
+    <input type="button" onclick="SaveCom()" value="保存" />
+</body>
+</html>
+<script type="text/javascript">
+        function SaveCom() {
+            var com = document.getElementById("com").value;
+            document.getElementById("com").focus();
+            if (com != "") {
+                setCookie('com', com);
+                parent.document.getElementById("txtCom").value = com;
+            }
+            parent.tb_remove();
+        }
+        document.getElementById("com").value = getCookie("com");
+        document.getElementById("printleft").value = getCookie("printleft");
+        document.getElementById("printtop").value = getCookie("printtop");
+        function load() {
+            document.getElementById("com").focus();
+        }
+</script>

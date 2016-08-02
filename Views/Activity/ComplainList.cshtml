@@ -1,0 +1,107 @@
+﻿@model IEnumerable<MvcMember.Models.Complain>
+
+@{
+    ViewBag.Title = "客户投诉意见";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#Date1").datepicker();
+        $("#Date2").datepicker();
+    });
+    function DeleteItem(id, userid) {
+        if (confirm("你确定要删除吗？")) {
+            $.ajax({
+                type: 'post',
+                url: '@Url.Content("../AjaxService.svc/DelComplain")',
+                contentType: 'application/json',
+                dataType: 'text',
+                data: '{"id":' + id + ',"userid":"' + userid + '"}',
+                success: function (msg) {
+                    var a = eval('(' + msg + ')');
+                    if (a.d == "1") {
+                        location.reload();
+                    }
+                }
+            });
+        }
+    }
+</script>
+<h2>客户投诉意见</h2>
+@Html.Partial("_LoadAuth")
+@using (Ajax.BeginForm("ComplainList", "Activity", new AjaxOptions { UpdateTargetId = "grid" }))
+{
+    IDictionary<string, string> searchConditions = new Dictionary<string, string>();
+    if (TempData["SearchConditions"] != null)
+    {
+        searchConditions = TempData["SearchConditions"] as Dictionary<string, string>;
+    }
+    this.TempData["SearchConditions"] = searchConditions;
+    string date1 = searchConditions.Keys.Contains("Date1") ? searchConditions["Date1"] : string.Empty;
+    string date2 = searchConditions.Keys.Contains("Date2") ? searchConditions["Date2"] : string.Empty;
+    string name = searchConditions.Keys.Contains("Name") ? searchConditions["Name"] : string.Empty;
+    string mobile = searchConditions.Keys.Contains("Mobile") ? searchConditions["Mobile"] : string.Empty;
+    string carno = searchConditions.Keys.Contains("CarNo") ? searchConditions["CarNo"] : string.Empty;
+
+    var grid = new WebGrid(source: Model,
+        ajaxUpdateContainerId: "grid",
+        rowsPerPage: 12,
+        canPage: true,
+        pageFieldName: "paging",
+        sortFieldName: "sortField",
+        selectionFieldName: "SelectedRow");
+
+
+<p style="padding-left:5px; padding-bottom:2px; height:18px;">
+    @Html.ActionLink("新增客户意见投诉", "ComplainAdd", null, new { title = "新增客户意见投诉" })
+</p>
+<div style="background-color:#dbeafd;margin-left:5px; margin-bottom:3px;" >
+    新增时间：@Html.TextBox("Date1", @date1, new { style = "width: 85px;" }) 到 @Html.TextBox("Date2", @date2, new { style = "width: 85px;" })
+    客户姓名：@Html.TextBox("Name", @name, new { style = "width: 60px;" })
+    电话号码：@Html.TextBox("Mobile", @mobile, new { style = "width: 90px;" })
+    车牌号码：@Html.TextBox("CarNo", @carno, new { style = "width: 70px;" })
+    
+    <input type="submit" style="width:80px;" value="查 询"/>
+</div>    
+<div id="grid" style="padding-left:5px;">
+    @grid.GetHtml(
+    tableStyle: "grid",
+    headerStyle: "head",
+    selectedRowStyle: "alt",
+    alternatingRowStyle: "alt",
+    rowStyle: "webgrid-row-style",
+    nextText: "下一页",
+    previousText: "上一页",
+    numericLinksCount: 10,
+    columns: grid.Columns(
+                grid.Column(format:
+                @<text><a id="@item.ID" onclick="DeleteItem(@item.ID,'@ViewBag.UserID')"  title="删除" href="javascript:void(0);"><img src="@Url.Content("../../Content/Images/del.png")" />
+                </a>&nbsp&nbsp<a title="修改" href="ComplainEdit/@item.ID/0"><img src="@Url.Content("../../Content/Images/edit.png")" />
+                </a>&nbsp&nbsp<a title="查看详情" href="ComplainEdit/@item.ID/1"><img src="@Url.Content("../../Content/Images/detail.png")" /></a>
+                </text>),
+                                    grid.Column("Customer", "客户名称"),
+                                    grid.Column("Mobile", "联系电话"),
+                                    grid.Column("CarNO", "车牌号码"),
+                                    grid.Column("CTime", "投诉时间"),
+                                    grid.Column("Type", "投诉类型"),
+                                    grid.Column("ComeType", "投诉方式"),
+                                    grid.Column("Person", "投诉对象"),
+                                    grid.Column("EventType", "投诉性质"),
+                                    grid.Column("Handle", "处理结果", format: (item) =>
+                                    {
+                                        if (@item.Handle != "")
+                                        {
+                                            return @item.Handle;
+                                        }
+                                        else
+                                        {
+                                            return Html.ActionLink("处理", "ComplainEdit", "Activity", new { id = @item.ID }, new { title = "点击进行处理" });
+                                        }
+                                    }),
+                                    grid.Column("Creator", "创建人"),
+                                    grid.Column("CreateTime", "新增日期", format: @<text>@item.CreateTime.ToShortDateString()</text>)
+
+              )
+          )
+</div>
+<p>　总记录数：@Html.Encode(grid.TotalRowCount)　总页数：@Html.Encode(grid.PageCount)</p>
+}

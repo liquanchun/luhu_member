@@ -1,0 +1,99 @@
+﻿@model List<MvcMember.Models.ItemList>
+@{
+    ViewBag.Title = "词典定义";
+}
+<script type="text/javascript">
+    $(function () {
+        $("#accordion").accordion({
+            collapsible: true
+        });
+    });
+    $(document).ready(function () {
+        $(".additem").bind("click", function () {
+            var aitemID = $(this).attr("id");  //点击“添加”，a的ID
+            var strIDs = aitemID.split('-');
+            var IdIndex = strIDs.pop();
+            document.getElementById("newitem-" + IdIndex).style.visibility = "visible";
+            document.getElementById("newsave-" + IdIndex).style.visibility = "visible";
+            $(document.getElementById("newitem-" + IdIndex)).focus();
+
+        });
+        $(".newsave").bind("click", AddNew);
+        $(".accordion").accordion({
+            change: function (event, ui) {
+                alert(event.toString());
+            }
+        });
+    });
+
+    function AddNew() {
+        var aitemID = $(this).attr("id");  //点击“保存”，a的ID
+        var strIDs = aitemID.split('-');
+        var parentID = strIDs[1];
+        var itemName = $(document.getElementById("newitem-" + parentID)).val();
+        if (itemName == "") {
+            alert("请输入值！");
+            return;
+        }
+        var itemorder = 0;
+        var retVal = false;
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxService.svc/AddItemList")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"parentid":' + parentID + ',"itemname":"' + itemName + '","itemorder":"' + itemorder + '"}',
+            success: function (msg) {
+                var a = eval('(' + msg + ')');
+                if (a.d == "1") {
+                    $(document.getElementById("newitem-" + parentID)).val("true");
+                    var str = "<li>" + itemName + " &nbsp;&nbsp;"
+                    str += "<a href='javascript:void(0);' onclick='DeleteItem(" + itemName + ")'><img style='border-style:none; height:13px; width:13px;' src='@Url.Content("../../Content/themes/base/images2/delete.png")' /></a></li>";
+	                $("ol").append(str);
+                }
+                else {
+                    $(document.getElementById("newitem-" + parentID)).val("false");
+                }
+	        }
+        });
+    }
+    function DeleteItem(itemID) {
+        if (confirm("你确定要删除吗？") == false) return;
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxService.svc/DelItemList")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"itemID":' + itemID + '}',
+            success: function (msg) {
+                var a = eval('(' + msg + ')');
+                if (a.d == "1") {
+                    $("#" + itemID).remove();
+                }
+            }
+        });
+    }
+</script>
+
+<h2>词典定义</h2>
+@Html.Partial("_LoadAuth")
+
+<div id="accordion" style="padding-left:20px;">
+    @foreach (var dicParent in Model.Where(p => p.ItemParent == 0))
+    {
+        <h3 style="width:500px;"><a href="#" id="parentitem-@dicParent.ID" style="text-decoration:none">@dicParent.ItemName</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>
+	    <div style="width:500px;">
+		    <ol>
+                @foreach (var dicItem in Model.Where(p => p.ItemParent == dicParent.ID))
+                {
+			        <li id="@dicItem.ID">@dicItem.ItemName &nbsp;&nbsp;
+                        <a href="javascript:void(0);" title="删除" onclick="DeleteItem(@dicItem.ID)"><img style="border-style:none; height:13px; width:13px;" src="@Url.Content("../../Content/themes/base/images2/delete.png")" /></a>
+                    </li>
+                }
+            </ol>
+            &nbsp;&nbsp;<a href="#" id='additem-@dicParent.ID' title="添加" class="additem" style="color:Blue;" >添加</a>&nbsp;&nbsp;
+            <input id="newitem-@dicParent.ID" class="newitem" style="width:120px; visibility:hidden;" type="text" />
+            <input id="newsave-@dicParent.ID" class="newsave" type="button" value="保存" style="visibility:hidden;" />
+	    </div>
+    }
+</div>

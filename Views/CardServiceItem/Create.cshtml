@@ -1,0 +1,229 @@
+﻿@model MvcMember.Models.V_CardServiceItem
+
+@{
+    ViewBag.Title = "购买计次服务";
+}
+<h2>购买计次服务项目</h2>
+<form id="firstform">
+    <div id="contentdiv">
+        <div class="formdiv">
+            <input type="hidden" name="selitemid" id="selitemid" />
+            <input type="hidden" name="MemberID" id="MemberID" />
+            <input type="hidden" value="@ViewBag.username" id="userid" />
+            <div class="headp">填写购买计次服务项目信息</div>
+            <table>
+                <tr>
+                    <td class="labtd">会员卡号：</td>
+                    <td>
+                        <input type="text" name="CardNo" id="CardNo" datatype="n" nullmsg="请输入会员卡号！" errormsg="请输入会员卡号！" title="请输入6位数字卡号按回车键，或直接点击读卡按钮" class="vtip" />
+                        <input type="button" style="width: 60px;" value="读卡" onclick="ReadCard()" /></td>
+                    <td>
+                        <div class="Validform_checktip"></div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="labtd">购买服务项目：</td>
+                    <td>
+                        <select id="ServiceItem" name="ServiceItem">
+                            <option value="-1">--请选择--</option>
+                            @foreach (var si in ViewBag.ServiceItem)
+                            { 
+                                <option title="@si.Price" class="@si.ItemType" value="@si.ItemID">@si.ItemName</option>
+                            }
+                        </select>
+                        <span class="ts">次数</span>
+                        <input class="ts" style="width: 30px;" type="text" id="times" name="times" datatype="n" nullmsg="请输入购买次数！" errormsg="请输入购买次数！" />
+                    </td>
+                    <td>
+                        <div class="Validform_checktip"></div>
+                        <a href="/ServiceItem/Index">没有服务项目？</a></td>
+                </tr>
+
+                <tr>
+                    <td class="labtd">应付金额：</td>
+                    <td>
+                        <input type="text" name="Fee" id="Fee" readonly="readonly" class="noborderinput vtip" title="根据选择项目价格和购买次数计算" /></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="labtd">付款方式：</td>
+                    <td>    
+                            <select name="InType" id="InType" style="border: 1px solid rgb(204, 204, 204);">
+                            <option>现金</option>
+                            <option>银行卡</option>
+                            <option>支票</option>
+                            <option>储值卡</option>
+                            <option>优惠券</option>
+                            </select>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="labtd">备注：</td>
+                    <td>
+                        <input type="text" name="Remark" id="Remark" /></td>
+                    <td></td>
+                </tr>
+            </table>
+            <p><input type="checkbox" style="width:50px;margin-left: 110px;" id="printcard" /><span>打印卡面　　　</span></p>
+            <p class="baidubtn">
+                <a href="javascript:void(0)" onclick="Commit()">提 交</a>
+            </p>
+        </div>
+        @Html.Partial("_ViewCustomerInfo")
+    </div>
+</form>
+<div style="clear: both;"></div>
+<div id="backdiv">
+    @Html.ActionLink("返回列表", "Index")
+</div>
+@Html.Partial("_ViewReadCard")
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#firstform').bind('keypress', function (e) {
+            return e.keyCode !== 13;
+        });
+        $("#CardNo").keypress(function (e) {
+            var code = (e.keyCode ? e.keyCode : e.which);
+            if (code == 13) {
+                SelectMemberByCardNo();
+            }
+        });
+        //输入框鼠标样式
+        $(".formdiv input[type='text']").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv select").bind("mouseover", function () {
+            $(this).css("border", "1px solid #FFAA00");
+        });
+        $(".formdiv input[type='text']").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+        $(".formdiv select").bind("mouseout", function () {
+            $(this).css("border", "1px solid #CCCCCC");
+        });
+        $("#ServiceItem").bind("change", function () {
+            $("#Fee").val('');
+            $("#times").val('');
+            $("#times").focus();
+        });
+        $("#times").bind("keyup", function () {
+            SumFee();
+        });
+        $("#times").css("width", "30px");
+        $("#times").numeral();
+        $("#CardNo").numeral();
+        $("#Fee").numeral();
+        $("#CardNo").focus();
+
+        $("#firstform").Validform({
+            tiptype: 2,
+            postonce: true,
+            ajaxPost: true,
+            callback: function (data) {
+                if (data.status == "y") {
+                    setTimeout(function () {
+                        $.Hidemsg(); //公用方法关闭信息提示框;
+                    }, 2000);
+                }
+            }
+        });
+        $("#Fee").css("border-left-style", "none");
+        $("#Fee").css("border-right-style", "none");
+        $("#Fee").css("border-top-style", "none");
+    });
+    function SumFee() {
+        var ts = $("#times").val();
+        if (ts == "") ts = 0;
+        var pri = $("#ServiceItem").find("option:selected").attr("title");
+        if (!isNaN(pri) && pri > 0) {
+            $("#Fee").val(parseInt(ts) * parseInt(pri));
+        }
+        else {
+            $("#Fee").val('');
+        }
+    }
+
+    function Commit() {
+        if ($("#InType").find("option:selected").val() == -1 || $("#Fee").val() == "") {
+            return false;
+        }
+        if ($("#MemberID").val() == "") {
+            alert("请确认会员信息！");
+            return false;
+        }
+        if ($(".ts").css("visibility") == "visible") {
+            if ($("#times").val() == "") {
+                alert("请输入购买项目次数！");
+                return false;
+            }
+        }
+        if ($("#PayType").find("option:selected").text() == "储值卡") {
+            if (parseInt($("#Fee").val()) > parseInt(parseInt($("#Balance").val()))) {
+                alert("储值余额不足。");
+                return;
+            };
+        };
+        var conf = confirm("请确认会员卡号" + $("#CardNo").val() + "购买" + $("#ServiceItem").find("option:selected").text() + $("#times").val() + "次");
+        //string memberid, string cardno, string serviceitemid,string servicetype, string times, string fee, string paytype, string remark, string creator
+        if (conf) {
+            $.ajax({
+                type: 'post',
+                url: '@Url.Content("../AjaxServiceSave.svc/SaveCardServiceItem")',
+                contentType: 'application/json',
+                dataType: 'text',
+                data: '{"memberid":"' + $("#MemberID").val() + '","cardno":"' + $("#CardNo").val() + '","serviceitemid":"' + $("#ServiceItem").find("option:selected").val() + '","servicetype":"单次服务","times":"' + $("#times").val() + '","fee":"' + $("#Fee").val() + '","paytype":"' + $("#PayType").find("option:selected").text() + '","remark":"' + $("#Remark").val() + '","creator":"' + $("#userid").val() + '"}',
+                success: function (msg) {
+                    var a = eval('(' + msg + ')');
+                    if (a.d == 1) {
+                        alert("操作成功！");
+                        if ($("#printcard").attr("checked") == true) {
+                            ServiceItemPrintcard();
+                        }
+                        $("input[type='text']").val('');
+                    }
+                    else {
+                        alert("提交失败！");
+                    }
+                },
+                error: function () {
+                    alert("发生错误！");
+                },
+                beforeSend: function () {
+                    $(".baidubtn a").text("正在提交...");
+                },
+                complete: function () {
+                    $(".baidubtn a").text("提 交");
+                }
+            });
+        }
+    };
+    function ServiceItemPrintcard() {
+        //打印卡
+        try {
+            var para = callbackObj.getPrinterPara();
+            var left = para.split(',')[2];
+            var top = para.split(',')[3];
+            //储值余额
+            var czye = $("#Balance").val();
+            if ($("#PayType").find("option:selected").text() == "储值卡") {
+                czye = parseInt($("#Balance").val()) - parseInt($("#Fee").val());
+            };
+            var printtext = [];
+            printtext.push("");
+            printtext.push("会员卡号:" + $("#CardNo").val());
+            printtext.push("客户姓名:" + $("#Name").val());
+            printtext.push("车牌号码:" + $("#CarNo").val());
+            printtext.push("剩余积分:" + $("#CurBIntegral").val());
+            printtext.push("储值余额:" + czye);
+            var printdata = printtext.join('\n');
+            //打印卡
+            callbackObj.printCard(1, parseInt(left), parseInt(top), printdata);
+            location.reload();
+        }
+        catch (err) {
+            alert("打印卡面发生错误。" + err.description);
+        }
+    };
+</script>

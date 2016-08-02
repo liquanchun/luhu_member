@@ -1,0 +1,34 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using MvcMember.Models;
+namespace MvcMember.Controllers
+{
+    public class ClsSys : Controller
+    {
+        WebMemberDBContext DBContext = new WebMemberDBContext();
+        public void AddSysLog(string message,string action,string username)
+        {
+            try
+            {
+                SysLog syslog = new SysLog();
+                syslog.Creator = username;
+                syslog.CreateDate = DateTime.Now;
+                syslog.FunName = action;
+                syslog.Message = message;
+                if (Session != null)
+                {
+                    syslog.DmsID = Session["DmsID"].ToString();
+                }
+                DBContext.SysLogDb.Add(syslog);
+                DBContext.SaveChanges();
+            }
+            catch
+            { 
+                
+            }
+        }
+    }
+}

@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/WebMember1/!svn/ver/306/MvcMember/Controllers
+END
+MemberController.cs
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/WebMember1/!svn/ver/416/MvcMember/Controllers/MemberController.cs
+END
+ConsumeController.cs
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/WebMember1/!svn/ver/416/MvcMember/Controllers/ConsumeController.cs
+END
+CardServiceItemController.cs
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/WebMember1/!svn/ver/416/MvcMember/Controllers/CardServiceItemController.cs
+END
+CardTypeController.cs
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/WebMember1/!svn/ver/298/MvcMember/Controllers/CardTypeController.cs
+END
+ReportController.cs
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/WebMember1/!svn/ver/229/MvcMember/Controllers/ReportController.cs
+END
+ClsSys.cs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/WebMember1/!svn/ver/229/MvcMember/Controllers/ClsSys.cs
+END
+SysSettingController.cs
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/WebMember1/!svn/ver/298/MvcMember/Controllers/SysSettingController.cs
+END
+EmployeeController.cs
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/WebMember1/!svn/ver/229/MvcMember/Controllers/EmployeeController.cs
+END
+ServiceItemController.cs
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/WebMember1/!svn/ver/298/MvcMember/Controllers/ServiceItemController.cs
+END
+RechargeController.cs
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/WebMember1/!svn/ver/446/MvcMember/Controllers/RechargeController.cs
+END
+SysLogController.cs
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/WebMember1/!svn/ver/416/MvcMember/Controllers/SysLogController.cs
+END
+CardInfoController.cs
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/WebMember1/!svn/ver/416/MvcMember/Controllers/CardInfoController.cs
+END
+CheckLoginAttribute.cs
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/WebMember1/!svn/ver/199/MvcMember/Controllers/CheckLoginAttribute.cs
+END
+SuggestionController.cs
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/WebMember1/!svn/ver/112/MvcMember/Controllers/SuggestionController.cs
+END
+AdminUserController.cs
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/WebMember1/!svn/ver/446/MvcMember/Controllers/AdminUserController.cs
+END
+SysFunController.cs
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/WebMember1/!svn/ver/194/MvcMember/Controllers/SysFunController.cs
+END
+HomeController.cs
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/WebMember1/!svn/ver/446/MvcMember/Controllers/HomeController.cs
+END
+ItemListController.cs
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/WebMember1/!svn/ver/194/MvcMember/Controllers/ItemListController.cs
+END
+AccountController.cs
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/WebMember1/!svn/ver/315/MvcMember/Controllers/AccountController.cs
+END
+ActivityController.cs
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/WebMember1/!svn/ver/416/MvcMember/Controllers/ActivityController.cs
+END
+GuestBookController.cs
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/WebMember1/!svn/ver/194/MvcMember/Controllers/GuestBookController.cs
+END

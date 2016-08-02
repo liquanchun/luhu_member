@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>打印测试</title>
+    <style type="text/css">
+        input[type="button"] ,input[type="submit"] 
+        {
+           border-style:solid;cursor:pointer;text-align:center;
+           display:inline-block;/*FF2.0*/-moz-display:inline-block;
+           font-family:Verdana;*font-family:Georgia;_font-family:Tahoma;
+           padding:0 10px 1px;*padding:3px 3px 1px;_padding:0 4px 1px;
+           line-height:18px;*line-height:14px;_line-height:16px;
+           height:23px;font-size:12px;
+        }
+    </style>
+     <script type="text/javascript">
+         function test() {
+             var obj = new ActiveXObject("RDPrinter.ClsPrint");
+             var result = obj.HelloWorld("liquanchun");
+             alert(result);
+         }
+         function OpenCom() {
+             var obj = new ActiveXObject("RDPrinter.ClsPrint");
+             var result = obj.HelloWorld("liquanchun");
+             alert(result);
+             document.getElementById("commsg").innerHTML = "串口已打开！";
+         }
+         function CloseCom() {
+             var obj = new ActiveXObject("RDPrinter.ClsPrint");
+             var result = obj.HelloWorld("liquanchun");
+             document.getElementById("commsg").innerHTML = "串口已关闭！";
+         }
+         function PopupCard() {
+             var obj = new ActiveXObject("RDPrinter.ClsPrint");
+             var result = obj.HelloWorld("liquanchun");
+             alert(result);
+         }
+         function ClearCard() {
+             var obj = new ActiveXObject("RDPrinter.ClsPrint");
+             var result = obj.HelloWorld("liquanchun");
+             alert(result);
+         }
+         function CleanPrinter() {
+             var obj = new ActiveXObject("RDPrinter.ClsPrint");
+             var result = obj.HelloWorld("liquanchun");
+             alert(result);
+         }
+         function SearchCard() {
+             var obj = new ActiveXObject("RDPrinter.ClsPrint");
+             var result = obj.HelloWorld("liquanchun");
+             alert(result);
+         }
+         function ReadData() {
+             var obj = new ActiveXObject("RDPrinter.ClsPrint");
+             var result = obj.HelloWorld("liquanchun");
+             alert(result);
+         }
+         function WriteData() {
+             var obj = new ActiveXObject("RDPrinter.ClsPrint");
+             var result = obj.HelloWorld("liquanchun");
+             alert(result);
+         }
+         function PrintCard() {
+             var obj = new ActiveXObject("RDPrinter.ClsPrint");
+             var result = obj.HelloWorld("liquanchun");
+             alert(result);
+         }
+        //var obj = new ActiveXObject("Dayin.Print");
+        //var value = document.getElementById("username").value;
+        //var result = obj.HelloWorld("liquanchun");
+        //alert(result);
+    </script> 
+
+</head>
+<body>
+    <div style="padding-left:50px; margin-top:50px;border: 1px solid #AAAAAA;">
+    <p>荣大可视IC卡打印测试页</p>
+    <p><label id="commsg" style="color:Red; font-size:85%;">串口未打开！</label>　　　　　 <label id="msg" style="color:Blue">准备好了吗？</label></p>
+    <p>串口号：<input type="text" id="txtCom" />
+         <input type="button" onclick="OpenCom()" value="打开串口" />
+         <input type="button" onclick="CloseCom()" value="关闭串口" />
+         <input type="button" onclick="ClearCard()" value="清除卡面" />
+         <input type="button" onclick="PopupCard()" value="弹出卡片" />
+         <input type="button" onclick="CleanPrinter()" value="清洗机器" />
+         <input type="button" value="测试安装" onclick="test();" />
+    </p>
+    <p><input type="text" id="txtID" /><input type="button" onclick="SearchCard()" value="读卡号" /></p>
+    <p><input type="text" id="txtWData" /><input type="button" onclick="WriteData()" value="写数据" /></p>
+    <p><input type="text" id="txtRData" /><input type="button" onclick="ReadData()" value="读数据" /></p>
+    <p><textarea id="printTxt" cols="25" rows="15"></textarea><br />
+    <input type="button" onclick="PrintCard()" value="打印卡" /></p>
+    <p></p>
+    </div>
+</body>
+</html>
+
+

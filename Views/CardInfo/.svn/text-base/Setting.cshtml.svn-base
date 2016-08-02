@@ -1,0 +1,221 @@
+﻿@model IEnumerable<MvcMember.Models.ServiceInte>
+@{
+    ViewBag.Title = "会员积分营销";
+
+    IDictionary<string, string> searchConditions = new Dictionary<string, string>();
+    if (TempData["SearchConditions"] != null)
+    {
+        searchConditions = TempData["SearchConditions"] as Dictionary<string, string>;
+    }
+    var divstr = "<select id='sel' name='sel'>";
+    foreach(var it in ViewBag.khlxList)
+    {
+        divstr += "<option value='" + it.ItemName + "'>" + it.ItemName + "</option>";
+    }
+    divstr += "</select>";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("input[type='text']").css("width", "60px");
+        $("label").css("display", "inline-block");
+        $("label").css("width", "100px"); 
+        $("label").css("text-align", "right");
+        $("label").css("padding-right", "5px");
+
+        $("#ClientType").css("width", "120px");
+
+        $("#key5_0").numeral();
+        $("#key5_1").numeral();
+        $("#key6_0").numeral();
+
+        $("#content input[type='button']").each(function (i) {
+            if (this.title != "") {
+                if ($("#" + this.title).val() == "0") {
+                    $(this).css("display", "none");
+                }
+            }
+        });
+    });
+
+    function SaveSet(key1, key2) {
+        var val1 = $("#" + key1 + "_0").val();
+        var val2 = $("#" + key1 + "_1").val();
+        AjaxSave(key1, val1, val2);
+        if(key2 != "") {
+            SaveSet(key2, "");
+        }
+    }
+
+    function AjaxSave() {
+        var InteToMoneyRate = $("#key5_0").val() + ":" + $("#key5_1").val();
+        var InteToMoneyMax = $("#key6_0").val();
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxService.svc/SaveSetting")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"intetomoneyrate":"' + InteToMoneyRate + '","intetomoneymax":"' + InteToMoneyMax + '"}',
+            success: function (msg) {
+                var a = eval('(' + msg + ')');
+                if (a.d == "1") {
+                    alert("保存成功！");
+                }
+            }
+        });
+    }
+    //clienttype,servicetype,hoursrate,partsrate,otherrate
+    function SaveServiceType() {
+        var clienttype = $("#sel").val();
+        var servicetype = $("#servicetype").val();
+        var hoursrate = $("#hoursrate").val();
+        var partsrate = $("#partsrate").val();
+        var otherrate = $("#otherrate").val();
+        var dmsid = $("#DmsID").val();
+        if (clienttype == "" || servicetype == "" || hoursrate == "" || partsrate == "" || otherrate == "") {
+            alert("请填写完整");
+            return;
+        }
+        $.ajax({
+            type: 'post',
+            url: '@Url.Content("../AjaxService.svc/SaveServiceType")',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: '{"clienttype":"' + clienttype + '","servicetype":"' + servicetype + '","hoursrate":"' + hoursrate + '","partsrate":"' + partsrate + '","otherrate":"' + otherrate + '","dmsid":"' + dmsid + '"}',
+            success: function (msg) {
+                var a = eval('(' + msg + ')');
+                if (a.d == "1") {
+                    alert("保存成功！");
+                }
+            }
+        });
+    }
+    function DelService(id) {
+        if (confirm("你确定要删除吗？")) {
+            $.ajax({
+                type: 'post',
+                url: '@Url.Content("../AjaxService.svc/DelServiceType")',
+                contentType: 'application/json',
+                dataType: 'text',
+                data: '{"id":' + id + '}',
+                success: function (msg) {
+                    var a = eval('(' + msg + ')');
+                    if (a.d == "1") {
+                        location.reload();
+                    }
+                }
+            });
+        }
+    }
+ </script>
+<h2>会员积分营销</h2>
+@Html.Partial("_LoadAuth")
+<p style="background-color:#dbeafd; width:80%">不同客户类型、不同业务类型积分比率设置</p>
+<input type="hidden" value="@Session["DmsID"].ToString()" id="DmsID" />
+<div id="lstDiv">
+<table class="table70">
+    <tr>
+        <th>序号</th>
+        <th>客户类型</th>
+        <th>业务分类</th>
+        <th>工时积分比例</th>
+        <th>配件积分比例</th>
+        <th>其他积分比例</th>
+        <th><a href="javascript:void(0)" title="新增" onclick="AddServiceInte()">新增</a></th>
+    </tr>
+@foreach (var item in Model)
+{
+    <tr><td>@item.ID</td>
+        <td>@item.ClientType</td>
+        <td>@item.ServiceType</td>
+        <td>@item.HoursRate</td>
+        <td>@item.PartsRate</td>
+        <td>@item.OtherRate</td>
+        <td><a href="javascript:void(0)" title="删除" onclick="DelService(@item.ID)">删除</a></td>
+    </tr>
+}
+</table>
+</div>
+ <input type="hidden" id="InteToMoneyRate" value="@ViewBag.InteToMoneyRate" />
+ <input type="hidden" id="InteToMoneyMax" value="@ViewBag.InteToMoneyMax" />   
+    
+<p style="background-color:#dbeafd; width:80%">积分兑换消费结算金额</p>
+<p style="margin-left:3px;">在消费结算时，可以用会员剩余积分抵结算款。</p>
+<p style="margin-left:3px;"><input type="text" id="key5_0" value="@ViewBag.InteToMoneyRate.Split(new char[] { ':' })[0]" /> 积分抵 <input type="text" id="key5_1" value="@ViewBag.InteToMoneyRate.Split(new char[] { ':' })[1]" />元,
+    其中抵用金额不能超过结算金额百分之 <input type="text" id="key6_0" value="@ViewBag.InteToMoneyMax" /> <input type="button" title="积分兑换比例" value="保存" onclick="AjaxSave()" />
+</p>
+<input type="hidden" id="divstr" value="@divstr" />
+<script type="text/javascript">
+    function AddServiceInte() {
+        var txt = '<div style="background-color:#dbeafd;">新增积分比例设置</div>' +
+					'<div class="field"><label for="name">客户类型</label>' + $("#divstr").val() + '</div>' +
+					'<div class="field"><label for="tel">业务分类</label><input type="text" id="servicetype" name="servicetype" value="" /></div>' +
+                    '<div class="field"><label for="tel">工时积分比例</label><input type="text" id="hoursrate" name="hoursrate" value="" /></div>' +
+                    '<div class="field"><label for="tel">配件积分比例</label><input type="text" id="partsrate" name="partsrate" value="" /></div>' +
+                    '<div class="field"><label for="email">其他积分比例</label><input type="text" id="otherrate" name="otherrate" value="" /></div>'+
+                    '<p style="font-size:12px;color:blue;">注：积分比例设置请按正确格式填写，比如:10:3<p>';
+
+        $.prompt(txt, {
+            buttons: { 保存: true, 取消: false },
+            submit: function (v, m, f) {
+                var flag = true;
+                if (v) {
+                    if ($.trim(f.servicetype) =="") {
+                        m.find('#servicetype').addClass('error');
+                        flag = false;
+                    }
+                    else m.find('#servicetype').removeClass('error');
+
+                    if (checkRate(f.hoursrate) == false) {
+                        m.find('#hoursrate').addClass('error');
+                        flag = false;
+                    }
+                    else m.find('#hoursrate').removeClass('error');
+
+                    if (checkRate(f.partsrate) == false) {
+                        m.find('#partsrate').addClass('error');
+                        flag = false;
+                    }
+                    else m.find('#partsrate').removeClass('error');
+
+                    if (checkRate(f.otherrate) == false) {
+                        m.find('#otherrate').addClass('error');
+                        flag = false;
+                    }
+                    else m.find('#otherrate').removeClass('error');
+                }
+                //alert($("#sel").val());
+                return flag;
+            },
+            callback: function (v, m, f) {
+                if (v) {
+                    var clienttype = f.sel;
+                    var servicetype = f.servicetype;
+                    var hoursrate = f.hoursrate;
+                    var partsrate = f.partsrate;
+                    var otherrate = f.otherrate;
+                    if (clienttype == "" || servicetype == "" || hoursrate == "" || partsrate == "" || otherrate == "") {
+                        alert("请填写完整");
+                        return;
+                    }
+                    $.ajax({
+                        type: 'post',
+                        url: '@Url.Content("../AjaxService.svc/SaveServiceType")',
+                        contentType: 'application/json',
+                        dataType: 'text',
+                        data: '{"clienttype":"' + clienttype + '","servicetype":"' + servicetype + '","hoursrate":"' + hoursrate + '","partsrate":"' + partsrate + '","otherrate":"' + otherrate + '"}',
+                        success: function (msg) {
+                            var a = eval('(' + msg + ')');
+                            if (a.d == "1") {
+                                alert("保存成功！");
+                                location.reload();
+                            }
+                        }
+                    });
+                }
+                else { }
+            }
+        });
+        $("#name").focus();
+    }
+</script>

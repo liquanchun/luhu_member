@@ -1,0 +1,53 @@
+﻿@model IEnumerable<MvcMember.Models.Employee>
+
+@{
+    ViewBag.Title = "员工资料";
+}
+@{
+    var grid = new WebGrid(source: Model, ajaxUpdateContainerId: "grid", defaultSort: "EmployeeID", rowsPerPage: 10, selectionFieldName: "SelectedRow");
+}
+@Html.Partial("_LoadAuth")
+<script type="text/javascript">
+    function DeleteItem(item) {
+        if (confirm("你确定要删除吗？")) {
+            $.ajax({
+                type: 'post',
+                url: '@Url.Content("../AjaxService.svc/DelEmployee")',
+                contentType: 'application/json',
+                dataType: 'text',
+                data: '{"id":' + item + '}',
+                success: function (msg) {
+                    var a = eval('(' + msg + ')');
+                    if (a.d == "1") {
+                        location.reload();
+                    }
+                }
+
+            });
+        }
+    }
+</script>
+<h2>员工资料</h2>
+
+<p style="padding-left:5px;">
+    @Html.ActionLink("新增员工资料", "Create", null, new { title = "新增员工资料" })
+</p>
+<div id="grid" style="padding-left:5px;">
+    @grid.GetHtml(
+    tableStyle: "grid table70",
+    headerStyle: "head",
+    selectedRowStyle: "alt",
+    alternatingRowStyle: "alt",
+    numericLinksCount: 10,
+    columns: grid.Columns(
+                grid.Column(format: @<text><a id="@item.ID" onclick="DeleteItem(@item.ID)"  title="删除" href="javascript:void(0);"><img src="@Url.Content("../../Content/Images/del.png")" /></a>&nbsp<a title="修改" href="/Employee/Edit/@item.ID"><img src="@Url.Content("../../Content/Images/edit.png")" /></a></text>),
+                grid.Column("EmployeeID", "员工编号"),
+                grid.Column("Name", "姓名"),
+                grid.Column("Sex", "性别"),
+                grid.Column("Mobile", "电话"),
+                grid.Column("IDCard", "身份证号"),
+                grid.Column("Department", "部门"),
+                grid.Column("CardNo", "卡号")
+        )
+    )
+</div>

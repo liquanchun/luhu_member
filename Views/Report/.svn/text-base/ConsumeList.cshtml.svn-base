@@ -1,0 +1,180 @@
+﻿@using Webdiyer.WebControls.Mvc
+@model Webdiyer.WebControls.Mvc.PagedList<System.Data.DataRow>
+@{
+    ViewBag.Title = "消费结算明细表";
+    var pttime = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+    var daterange = DateTime.Today.ToShortDateString();
+}
+
+<h2>消费结算明细表</h2>
+<script type="text/javascript" src="../../Scripts/CheckActivX.js"></script>
+<object id="LODOP" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" style=" display:none; width:0; height:0"> 
+</object>
+<script type="text/javascript">
+    var LODOP = document.getElementById("LODOP"); //这行语句是为了符合DTD规范
+    CheckLodop();
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#Date1").datepicker();
+        $("#Date2").datepicker();
+        if ($("#Date1").val() == "") {
+            $("#Date1").val($("#daterange").val());
+            $("#Date2").val($("#daterange").val());
+        }
+        $("table").find("tr").each(function () {
+            $(this).find("td").each(function () {
+                if ($(this).text() == "0") $(this).text("");
+            });
+        });
+    });
+</script>
+@using (Ajax.BeginForm("ConsumeList", "Report", new AjaxOptions { UpdateTargetId = "lstDiv" }))
+{
+    IDictionary<string, string> searchConditions = new Dictionary<string, string>();
+    if (TempData["SearchConditions"] != null)
+    {
+        searchConditions = TempData["SearchConditions"] as Dictionary<string, string>;
+    }
+    this.TempData["SearchConditions"] = searchConditions;
+    string date1 = searchConditions.Keys.Contains("Date1") ? searchConditions["Date1"] : string.Empty;
+    string date2 = searchConditions.Keys.Contains("Date2") ? searchConditions["Date2"] : string.Empty;
+    string vinno = searchConditions.Keys.Contains("VinNo") ? searchConditions["VinNo"] : string.Empty;
+    string carno = searchConditions.Keys.Contains("CarNo") ? searchConditions["CarNo"] : string.Empty;
+    string cardno = searchConditions.Keys.Contains("CardNo") ? searchConditions["CardNo"] : string.Empty;
+
+<div style="background-color:#dbeafd; padding-left:5px; margin-bottom:3px;" >
+    日期范围：@Html.TextBox("Date1", @date1, new { style = "width: 85px;" }) 到 @Html.TextBox("Date2", @date2, new { style = "width: 85px;" })
+    会员卡号：@Html.TextBox("CardNo", @cardno, new { style = "width: 70px;" })
+    车牌：@Html.TextBox("CarNo", @carno, new { style = "width: 70px;" })
+    车架号：@Html.TextBox("VinNo", @vinno, new { style = "width: 90px;" })
+    <input type="submit" value="查询数据"/>
+    <input type="button" onclick="chart_preview1()" value="打印预览" />
+    <input type="button" onclick="chart_print1()"  value="直接打印" />
+    <input type="hidden" value="@pttime" id="pttime" />
+    <input type="hidden" value="@daterange" id="daterange" />
+</div>    
+<div id="lstDiv" style=" padding-left:3px; height:500px; overflow:scroll;">
+<table class="report">
+    <tr>
+        <th>序次</th>
+        <th>日期</th>
+        <th>会员卡号</th>
+        <th>客户名称</th>
+
+        <th>车牌</th>
+        <th>工时费</th>
+        <th>配件费</th>
+        <th>其他</th>
+        <th>消费合计</th>
+
+        <th>抵用金额</th>
+        <th>使用积分</th>
+        <th>实现积分</th>
+        <th>实际付款金额</th>
+        <th>现金</th>
+
+        <th>刷卡</th>
+        <th>支票</th>
+        <th>储值</th>
+        <th>优惠券</th>
+    </tr>
+@foreach (var item in Model)
+{
+    <tr>
+        <td>@item[0].ToString()</td>
+        <td>@item[1].ToString()</td>
+        <td>@item[2].ToString()</td>
+        <td>@item[3].ToString()</td>
+        <td>@item[4].ToString()</td>
+
+        <td class="tdr">@item[5].ToString()</td>
+        <td class="tdr">@item[6].ToString()</td>
+        <td class="tdr">@item[7].ToString()</td>
+        <td class="tdr">@item[8].ToString()</td>
+        <td class="tdr">@item[9].ToString()</td>
+
+        <td class="tdr">@item[10].ToString()</td>
+        <td class="tdr">@item[11].ToString()</td>
+        <td class="tdr">@item[12].ToString()</td>
+        <td class="tdr">@item[13].ToString()</td>
+        <td class="tdr">@item[14].ToString()</td>
+
+        <td class="tdr">@item[15].ToString()</td>
+        <td class="tdr">@item[16].ToString()</td>
+        <td class="tdr">@item[17].ToString()</td>
+    </tr>
+}
+<tr>
+<td colspan="5" class="tdr">合计:</td>
+<td tdata="allSum" format="#.##" class="tdr"><b>￥@ViewBag.sum1</b></td>
+<td tdata="allSum" format="#.##" class="tdr"><b>￥@ViewBag.sum2</b></td>
+<td tdata="allSum" format="#.##" class="tdr"><b>￥@ViewBag.sum3</b></td>
+<td tdata="allSum" format="#.##" class="tdr"><b>￥@ViewBag.sum4</b></td>
+<td tdata="allSum" format="#.##" class="tdr"><b>￥@ViewBag.sum5</b></td>
+<td tdata="allSum" format="#.##" class="tdr"><b>@ViewBag.sum6</b></td>
+
+<td tdata="allSum" format="#.##" class="tdr"><b>@ViewBag.sum7</b></td>
+<td tdata="allSum" format="#.##" class="tdr"><b>￥@ViewBag.sum8</b></td>
+<td tdata="allSum" format="#.##" class="tdr"><b>￥@ViewBag.sum9</b></td>
+<td tdata="allSum" format="#.##" class="tdr"><b>￥@ViewBag.sum10</b></td>
+<td tdata="allSum" format="#.##" class="tdr"><b>￥@ViewBag.sum11</b></td>
+<td tdata="allSum" format="#.##" class="tdr"><b>￥@ViewBag.sum12</b></td>
+<td tdata="allSum" format="#.##" class="tdr"><b>￥@ViewBag.sum13</b></td>
+</tr>
+<tfoot>
+    <tr>
+        <td tdata="pageNO" format="#" colspan="9" style=" border:0;" class="tdr">
+            第 #
+        </td>
+        <td tdata="pageCount" class="tdl" colspan="9" style="border:0;" format="#">
+            /# 页
+        </td>
+    </tr>
+</tfoot>
+</table>
+<p>共<span style="font-weight:bold;">@Model.Count</span>条记录</p>
+</div>
+<div id="Pager">
+   @Html.Pager(Model, new PagerOptions
+{
+    PageIndexParameterName = "id",
+    CssClass = "pages",
+    FirstPageText = "首页",
+    LastPageText = "末页",
+    PrevPageText = "上一页",
+    NextPageText = "下一页",
+    CurrentPagerItemWrapperFormatString = "<span class=\"cpb\">{0}</span>",
+    ShowPageIndexBox = true,
+    NumericPagerItemWrapperFormatString = "<span class=\"item\">{0}</span>",
+    PageIndexBoxType = PageIndexBoxType.DropDownList,
+    ShowGoButton = false,
+    PageIndexBoxWrapperFormatString = " 转到{0}",
+    SeparatorHtml = ""
+})
+
+</div>
+}
+
+ <script language="javascript" type="text/javascript">
+     function chart_preview1() {
+         CreatePrintPage();
+         LODOP.PREVIEW();
+     };
+     function chart_print1() {
+         LODOP.PRINT();
+     };
+     function CreatePrintPage() {
+         LODOP.PRINT_INIT("会员系统打印报表");
+         LODOP.SET_PRINT_PAGESIZE(2, 0, 0, "A4");
+         LODOP.SET_PRINT_STYLE("FontSize", 18);
+         LODOP.ADD_PRINT_TEXT(45, 10, 200, 10, "消费结算明细表");
+         LODOP.SET_PRINT_STYLEA(1, "Horient", 2);
+         LODOP.SET_PRINT_STYLE("FontSize", 11);
+         LODOP.ADD_PRINT_TEXT(85, 30, 400, 10, "日期:" + $("#Date1").val() + "―" + $("#Date2").val());
+         LODOP.ADD_PRINT_TEXT(85, 750, 300, 10, "打印时间:" + $("#pttime").val());
+         LODOP.SET_PRINT_STYLE("FontSize", 11);
+         LODOP.ADD_PRINT_TABLE(110, 20, 1470, 650, document.documentElement.innerHTML);
+     };
+</script> 
+
